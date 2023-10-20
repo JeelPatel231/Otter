@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mangaDetailsInfoFragment"
+        android:icon="@drawable/round_info_24"
+        android:title="Info"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mangaDetailsReadFragment"
+        android:icon="@drawable/round_menu_book_24"
+        android:title="Read"
+        app:showAsAction="never" />
+</menu>

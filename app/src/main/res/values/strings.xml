@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">otter</string>
+
+    <!-- Custom Additions -->
+    <string name="action_settings">Settings</string>
+
+    <string name="media_release_data"> %s | %s | %s </string>
+
+
+    <string name="popular_anime">Popular Anime</string>
+    <string name="trending_anime">Trending Anime</string>
+    <string name="current_season">Current Season</string>
+    <string name="recently_updated">Recently Updated</string>
+
+    <string name="popular_manga">Popular Manga</string>
+    <string name="trending_manga">Trending Manga</string>
+    <string name="trending_novel">Trending Novel</string>
+
+
+    <string name="total_media">Total %s</string>
+
+</resources>

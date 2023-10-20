@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="tel.jeelpa.otter.MainActivity">
+    <item
+        android:id="@+id/animeFragment"
+        android:icon="@drawable/round_movie_filter_24"
+        android:title="Anime"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/homeContainerFragment"
+        android:icon="@drawable/round_home_24"
+        android:title="Home"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mangaFragment"
+        android:icon="@drawable/round_menu_book_24"
+        android:title="Manga"
+        app:showAsAction="never" />
+</menu>

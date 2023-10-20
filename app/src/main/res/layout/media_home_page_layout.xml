@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginVertical="16dp"
+            android:id="@+id/first_row_text"
+            android:paddingHorizontal="18dp"
+            style="?attr/textAppearanceHeadline5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="First Row Title" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/first_row_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/media_small_layout" />
+
+            <include android:id="@+id/first_row_shimmer_view" layout="@layout/media_card_shimmer_list" />
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_marginVertical="16dp"
+            android:id="@+id/second_row_text"
+            android:paddingHorizontal="18dp"
+            style="?attr/textAppearanceHeadline5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Second Row Title" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/second_row_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/media_small_layout" />
+
+            <include android:id="@+id/second_row_shimmer_view" layout="@layout/media_card_shimmer_list" />
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_marginVertical="16dp"
+            android:id="@+id/third_row_text"
+            android:paddingHorizontal="18dp"
+            style="?attr/textAppearanceHeadline5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Third Row Title" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/third_row_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/media_small_layout" />
+
+            <include android:id="@+id/third_row_shimmer_view" layout="@layout/media_card_shimmer_list" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

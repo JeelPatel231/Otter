@@ -1,0 +1,69 @@
+query currentUserMedia($userId: Int!, $type: MediaType, $status: MediaListStatus){
+    MediaListCollection(userId: $userId, type: $type, status: $status , sort: UPDATED_TIME ) {
+        lists {
+            entries {
+                progress
+                private
+                score(format:POINT_100)
+                status
+                media {
+                    id
+                    idMal
+                    type
+                    isAdult
+                    status
+                    chapters
+                    episodes
+                    nextAiringEpisode {
+                        episode
+                    }
+                    meanScore
+                    isFavourite
+                    bannerImage
+                    coverImage {
+                        large
+                    }
+                    title {
+                        english
+                        romaji
+                        userPreferred
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+query getViewerData {
+    Viewer {
+        name
+        options {
+            displayAdultContent
+        }
+        avatar {
+            medium
+        }
+        bannerImage
+        id
+        mediaListOptions {
+            rowOrder
+            animeList {
+                sectionOrder
+                customLists
+            }
+            mangaList {
+                sectionOrder
+                customLists
+            }
+        }
+        statistics{
+            anime {
+                episodesWatched
+            }
+            manga {
+                chaptersRead
+            }
+        }
+    }
+}

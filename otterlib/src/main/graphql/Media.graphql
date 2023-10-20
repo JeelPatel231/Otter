@@ -1,0 +1,239 @@
+query MediaBaseline($page: Int!, $perPage : Int!, $sort: [MediaSort!]!, $type: MediaType!, $format: MediaFormat) {
+    Page(page: $page, perPage: $perPage){
+        media(type: $type, sort: $sort, format: $format){
+            id
+            idMal
+            type
+            title {
+                english
+                romaji
+                userPreferred
+                native
+            }
+            coverImage {
+                large
+            }
+            bannerImage
+            status
+            episodes
+            nextAiringEpisode {
+                episode
+            }
+            chapters
+            isAdult
+            meanScore
+        }
+    }
+}
+
+query MediaSearch($search: String!, $page:Int = 1, $perPage:Int = 30, $type: MediaType!){
+    Page(page: $page, perPage: $perPage){
+        media(search: $search, type: $type){
+            id
+            type
+            idMal
+            title {
+                english
+                romaji
+                userPreferred
+                native
+            }
+            coverImage {
+                large
+            }
+            bannerImage
+            status
+            episodes
+            chapters
+            isAdult
+            meanScore
+        }
+    }
+}
+
+query AnimeRecentlyUpdated( $lesser: Int!, $greater:Int = 0, $page: Int = 1, $perPage: Int = 50){
+    Page(page: $page, perPage: $perPage) {
+        pageInfo {
+            hasNextPage
+            total
+        }
+        airingSchedules(
+            airingAt_lesser: $lesser,
+            airingAt_greater: $greater,
+            sort: TIME_DESC,
+        ){
+            media {
+                id
+                idMal
+                status
+                chapters
+                episodes
+                nextAiringEpisode {
+                    episode
+                }
+                chapters
+                isAdult
+                type
+                meanScore
+                isFavourite
+                bannerImage
+                countryOfOrigin
+                coverImage {
+                    large
+                }
+                title {
+                    english
+                    romaji
+                    native
+                    userPreferred
+                }
+                mediaListEntry {
+                    progress
+                    private
+                    score(format: POINT_100)
+                    status
+                }
+            }
+        }
+    }
+}
+
+query getMediaDetails($id: Int!){
+    Media(id: $id) {
+        id
+        idMal
+        nextAiringEpisode {
+            episode
+        }
+        countryOfOrigin
+        isAdult
+        isFavourite
+        type
+
+        bannerImage
+        coverImage {
+            large
+            extraLarge
+        }
+        title {
+            english
+            romaji
+            native
+            userPreferred
+        }
+        meanScore
+        status
+        episodes
+        chapters
+        duration
+        format
+        source
+        studios(isMain:true) {
+            nodes {
+                name
+            }
+        }
+        season
+        startDate {
+            day
+            month
+            year
+        }
+        endDate {
+            day
+            month
+            year
+        }
+        description
+        synonyms
+        trailer {
+            id
+            site
+            thumbnail
+        }
+#        OPENINGS/ENDINGS NOT AVAILABLE IN ANILIST
+        genres
+        tags {
+            name
+        }
+
+        recommendations(sort:[RATING_DESC]){
+            edges {
+                node {
+                    mediaRecommendation {
+                        id
+                        status
+                        title {
+                            romaji
+                            native
+                            userPreferred
+                            english
+                        }
+                        type
+                        isAdult
+                        meanScore
+                        coverImage {
+                             large
+                        }
+                        nextAiringEpisode {
+                            episode
+                        }
+                        episodes
+                        chapters
+                    }
+                }
+            }
+        }
+
+        relations {
+            edges {
+                relationType(version: 2)
+                node {
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                        userPreferred
+                    }
+                    status
+                    type
+                    isAdult
+                    meanScore
+                    coverImage {
+                        large
+                    }
+                    nextAiringEpisode {
+                        episode
+                    }
+                    episodes
+                    chapters
+                }
+            }
+        }
+
+        characters(sort:[RELEVANCE, ROLE]){
+            edges {
+                role
+                node {
+                    id
+                    image {
+                        medium
+                    }
+                    name {
+                        full
+                    }
+                }
+            }
+        }
+
+#       idk when i will use this
+        mediaListEntry {
+            progress
+            private
+            score(format: POINT_100)
+            status
+        }
+
+    }
+}
