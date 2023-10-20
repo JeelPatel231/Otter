@@ -58,22 +58,22 @@
 <!--        android:name="tel.jeelpa.otter.ui.fragments.plugins.PluginFragment"-->
 <!--        android:label="PluginFragment"-->
 <!--        tools:layout="@layout/fragment_plugin"/>-->
-    <fragment
-        android:id="@+id/exoplayerFragment"
-        android:name="tel.jeelpa.otter.ui.fragments.exoplayer.ExoplayerFragment"
-        android:label="ExoplayerFragment"
-        tools:layout="@layout/fragment_exoplayer">
-        <argument
-            android:name="fullscreen"
-            app:argType="boolean"
-            android:defaultValue="true" />
-        <argument
-            android:name="orientation"
-            app:argType="string"
-            android:defaultValue="landscape" />
-        <argument
-            android:name="cleanExit"
-            app:argType="boolean"
-            android:defaultValue="true"/>
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/exoplayerFragment"-->
+<!--        android:name="tel.jeelpa.otter.ui.fragments.exoplayer.ExoplayerFragment"-->
+<!--        android:label="ExoplayerFragment"-->
+<!--        tools:layout="@layout/fragment_exoplayer">-->
+<!--        <argument-->
+<!--            android:name="fullscreen"-->
+<!--            app:argType="boolean"-->
+<!--            android:defaultValue="true" />-->
+<!--        <argument-->
+<!--            android:name="orientation"-->
+<!--            app:argType="string"-->
+<!--            android:defaultValue="landscape" />-->
+<!--        <argument-->
+<!--            android:name="cleanExit"-->
+<!--            app:argType="boolean"-->
+<!--            android:defaultValue="true"/>-->
+<!--    </fragment>-->
 </navigation>
