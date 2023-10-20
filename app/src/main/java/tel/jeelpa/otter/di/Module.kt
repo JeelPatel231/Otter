@@ -4,12 +4,9 @@ import android.app.Application
 import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
-import androidx.media3.exoplayer.ExoPlayer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
-import dagger.hilt.android.scopes.FragmentScoped
 import dagger.hilt.components.SingletonComponent
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
@@ -69,13 +66,13 @@ class DIModule {
 }
 
 
-@Module
-@InstallIn(FragmentComponent::class)
-class DIFragmentModule {
-
-    @Provides
-    @FragmentScoped
-    fun providesExoplayer(application: Application) : ExoPlayer {
-        return ExoPlayer.Builder(application).build()
-    }
-}
+//@Module
+//@InstallIn(FragmentComponent::class)
+//class DIFragmentModule {
+//
+//    @Provides
+//    @FragmentScoped
+//    fun providesExoplayer(application: Application) : ExoPlayer {
+//        return ExoPlayer.Builder(application).build()
+//    }
+//}

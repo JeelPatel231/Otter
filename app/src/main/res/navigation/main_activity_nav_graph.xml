@@ -34,9 +34,9 @@
         <action
             android:id="@+id/toMangaDetailsFragment"
             app:destination="@id/mangaDetailsFragment" />
-        <action
-            android:id="@+id/toExoplayerFragment"
-            app:destination="@id/exoplayerFragment" />
+<!--        <action-->
+<!--            android:id="@+id/toExoplayerFragment"-->
+<!--            app:destination="@id/exoplayerFragment" />-->
     </fragment>
     <fragment
         android:id="@+id/mangaDetailsFragment"

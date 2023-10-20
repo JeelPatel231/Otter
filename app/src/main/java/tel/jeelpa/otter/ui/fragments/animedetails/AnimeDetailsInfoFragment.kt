@@ -44,9 +44,10 @@ class AnimeDetailsInfoFragment :
         binding.totalMediaItemText.text = getString(R.string.total_media, "Episodes")
         val maxLines = binding.synopsisTextHolder.maxLines
         binding.videoView.setFullscreenButtonClickListener {
-            getOuterNavController().navigate(
-                AnimeDetailsFragmentDirections.toExoplayerFragment(cleanExit = false)
-            )
+            showToast("Not Implemented")
+//            getOuterNavController().navigate(
+//                AnimeDetailsFragmentDirections.toExoplayerFragment(cleanExit = false)
+//            )
         }
 
         initRecycler(

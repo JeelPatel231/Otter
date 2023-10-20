@@ -8,6 +8,9 @@ plugins {
     // kotlin navigation safe args plugin
     // NOTE: if you are using java, remove `.kotlin`
     id("androidx.navigation.safeargs.kotlin")
+
+    // serialization
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
 }
 
 android {
@@ -57,6 +60,9 @@ dependencies {
     implementation("io.coil-kt:coil:2.3.0")
     // markwon markdown
     implementation("io.noties.markwon:core:4.6.2")
+
+    // serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
     // exoplayer
     val media3_version = "1.1.1"
