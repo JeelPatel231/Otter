@@ -9,6 +9,6 @@ class MangaDetailsReadFragment : ViewBindingFragment<SampleTextScreenLayoutBindi
     private val mangaDetailsViewModel: MangaDetailsViewModel by viewModels({ getNavParentFragment() })
 
     override fun onCreateBindingView() {
-        binding.textView.text = "Manga ${mangaDetailsViewModel.navArgs.id}"
+        binding.textView.text = "Manga ${mangaDetailsViewModel.navArgs.media.id}"
     }
 }

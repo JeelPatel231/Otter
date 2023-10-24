@@ -1,5 +1,7 @@
 package tel.jeelpa.otterlib.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import tel.jeelpa.otter.CurrentUserMediaQuery
 import tel.jeelpa.otter.type.MediaListStatus
@@ -53,7 +55,8 @@ data class AppDate(
     }
 }
 
-data class MediaCardData(
+@Parcelize
+open class MediaCardData(
     val id: Int,
     val type: AppMediaType,
     val isAdult: Boolean,
@@ -64,7 +67,7 @@ data class MediaCardData(
     val episodes: Int?,
     val nextAiringEpisode: Int?,
     val chapters: Int?,
-)
+) : Parcelable
 
 
 data class MediaRelationCardData(
@@ -79,7 +82,18 @@ data class MediaRelationCardData(
     val nextAiringEpisode: Int?,
     val chapters: Int?,
     val relation: MediaRelationType,
-)
+){
+    fun toMediaCardData() : MediaCardData {
+        return MediaCardData(
+            id, type, isAdult,
+            status,meanScore,
+            coverImage, title,
+            episodes,
+            nextAiringEpisode,
+            chapters
+        )
+    }
+}
 
 enum class MediaRelationType(val value: String) {
     ADAPTATION("ADAPTATION"),

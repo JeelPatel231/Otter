@@ -9,11 +9,11 @@ import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
 
 class MediaCardAdapter(
-    private val onItemClick : (Int, String, AppMediaType) -> Unit
+    private val onItemClick : (MediaCardData) -> Unit
 ): GenericRecyclerAdapter<MediaCardData, MediaSmallLayoutBinding>(MediaSmallLayoutBinding::inflate) {
     override fun onBind(binding: MediaSmallLayoutBinding, entry: MediaCardData, position: Int) {
         binding.root.setOnClickListener {
-            onItemClick(entry.id, entry.title, entry.type)
+            onItemClick(entry)
         }
         binding.coverImage.load(entry.coverImage){
             scale(Scale.FILL)

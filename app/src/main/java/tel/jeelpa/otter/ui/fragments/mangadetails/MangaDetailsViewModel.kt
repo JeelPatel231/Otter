@@ -23,7 +23,7 @@ class MangaDetailsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _mangaDetails.value = mangaClient.getMangaDetails(navArgs.id)
+            _mangaDetails.value = mangaClient.getMangaDetails(navArgs.media.id)
         }
     }
 }

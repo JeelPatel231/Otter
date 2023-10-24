@@ -18,7 +18,7 @@ class MangaDetailsFragment :
     override fun onCreateBindingView() {
         val navHostFragment = childFragmentManager.findFragmentById(binding.mediaDetailsFragmentContainer.id) as NavHostFragment
         binding.bottomNavigationBar.setupWithNavController(navHostFragment.navController)
-        binding.mediaTitle.text = mangaDetailsViewModel.navArgs.title
+        binding.mediaTitle.text = mangaDetailsViewModel.navArgs.media.title
 
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner) {
             it?.let {

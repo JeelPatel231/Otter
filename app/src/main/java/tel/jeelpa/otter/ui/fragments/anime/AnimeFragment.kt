@@ -10,16 +10,17 @@ import tel.jeelpa.otter.ui.generic.ViewBindingFragment
 import tel.jeelpa.otter.ui.generic.getOuterNavController
 import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otterlib.models.AppMediaType
+import tel.jeelpa.otterlib.models.MediaCardData
 
 
 @AndroidEntryPoint
 class AnimeFragment: ViewBindingFragment<MediaHomePageLayoutBinding>(MediaHomePageLayoutBinding::inflate){
     private val animeHomeViewModel : AnimeFragmentViewModel by viewModels()
 
-    private fun navigateToAnimeDetails(id: Int, title: String, type: AppMediaType){
-        val destination = when(type) {
-            AppMediaType.ANIME -> MainFragmentDirections.toAnimeDetailsFragment(id, title)
-            AppMediaType.MANGA -> MainFragmentDirections.toMangaDetailsFragment(id, title)
+    private fun navigateToAnimeDetails(mediaCardData: MediaCardData){
+        val destination = when(mediaCardData.type) {
+            AppMediaType.ANIME -> MainFragmentDirections.toAnimeDetailsFragment(mediaCardData)
+            AppMediaType.MANGA -> MainFragmentDirections.toMangaDetailsFragment(mediaCardData)
             else -> throw IllegalStateException("Unknown Media Type")
         }
         getOuterNavController().navigate(destination)

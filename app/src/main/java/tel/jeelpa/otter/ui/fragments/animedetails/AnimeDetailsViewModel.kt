@@ -31,7 +31,7 @@ class AnimeDetailsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _animeDetails.value = animeClient.getAnimeDetails(navArgs.id)
+            _animeDetails.value = animeClient.getAnimeDetails(navArgs.media.id)
             val malId = animeDetails.value?.idMal ?: return@launch
 
             _mediaOpenings.value = animeClient.getOpenings(malId)

@@ -5,6 +5,9 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 
+    // parcel impl
+    id("kotlin-parcelize")
+
     // apollo graphql
     id("com.apollographql.apollo3") version "3.8.2"
 

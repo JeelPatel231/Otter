@@ -21,6 +21,7 @@ import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.visibilityGone
 import tel.jeelpa.otterlib.models.AppMediaType
+import tel.jeelpa.otterlib.models.MediaCardData
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,10 +31,10 @@ class AnimeDetailsInfoFragment :
 
     @Inject lateinit var markwon: Markwon
 
-    private fun navigateToDetails(id: Int, title: String, type: AppMediaType) {
-        val destination = when (type) {
-            AppMediaType.ANIME -> AnimeDetailsFragmentDirections.toSelf(id, title)
-            AppMediaType.MANGA -> AnimeDetailsFragmentDirections.toMangaDetailsFragment(id, title)
+    private fun navigateToDetails(mediaCardData: MediaCardData) {
+        val destination = when (mediaCardData.type) {
+            AppMediaType.ANIME -> AnimeDetailsFragmentDirections.toSelf(mediaCardData)
+            AppMediaType.MANGA -> AnimeDetailsFragmentDirections.toMangaDetailsFragment(mediaCardData)
             else -> throw IllegalStateException("Unknown Media Type")
         }
         getOuterNavController().navigate(destination)
