@@ -18,7 +18,7 @@ import tel.jeelpa.otter.CurrentUserMediaQuery
 import tel.jeelpa.otter.GetViewerDataQuery
 import tel.jeelpa.otter.type.MediaListStatus
 import tel.jeelpa.otter.type.MediaType
-import tel.jeelpa.otterlib.models.ANILIST_DATA
+import tel.jeelpa.otterlib.models.AnilistData
 import tel.jeelpa.otterlib.models.AnilistRequestBody
 import tel.jeelpa.otterlib.models.AnilistResponseBody
 import tel.jeelpa.otterlib.models.AppMediaListStatus
@@ -53,6 +53,7 @@ class AuthorizationInterceptor(
 }
 
 class TrackerClientImpl(
+    private val anilistData: AnilistData,
     private val httpClient: OkHttpClient,
     private val userStore: UserStore,
 ): TrackerClient {
@@ -85,9 +86,9 @@ class TrackerClientImpl(
                 Json.encodeToString(
                     AnilistRequestBody(
                         grant_type = "authorization_code",
-                        client_id = ANILIST_DATA.id,
-                        client_secret = ANILIST_DATA.secret,
-                        redirect_uri = ANILIST_DATA.redirectUri,
+                        client_id = anilistData.id,
+                        client_secret = anilistData.secret,
+                        redirect_uri = anilistData.redirectUri,
                         code = code
                     )
                 ).toRequestBody()

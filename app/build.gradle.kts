@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -13,6 +15,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
 }
 
+val configProperties = Properties().apply { load(rootProject.file("config.properties").inputStream()) }
+
 android {
     namespace = "tel.jeelpa.otter"
     compileSdk = 34
@@ -25,6 +29,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    applicationVariants.all {
+        configProperties.entries.forEach {
+            buildConfigField("String", it.key.toString(), it.value.toString())
+        }
     }
 
     buildTypes {
@@ -46,6 +56,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
