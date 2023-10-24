@@ -75,9 +75,6 @@ class MangaDetailsInfoFragment :
         }
 
 
-        // TODO : fix exoplayer scoping issues
-        binding.videoView.visibilityGone()
-
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner) {
             it ?: return@observeFlow
 
@@ -103,19 +100,6 @@ class MangaDetailsInfoFragment :
                         synopsisTextHolder.maxLines = Int.MAX_VALUE
                     }
                 }
-
-//                if(it.trailer == null ){
-//                    videoView.visibilityGone()
-//                } else {
-//                    exoplayer.apply {
-//                        val url = "https://invidious.slipfox.xyz/latest_version?id=${it.trailer!!.id}&local=true"
-//                        println("TRAILER LINK : $url")
-//                        val mediaSource = mangaDetailsViewModel.createMediaSourceFromUri(url, VideoType.CONTAINER)
-//                        videoView.player = this
-//                        setMediaSource(mediaSource)
-//                    }
-//                }
-
 
                 for(i in it.synonyms) {
                     synomynsChipGroup.addView( Chip(ctx).apply { text = i } )

@@ -43,12 +43,6 @@ class AnimeDetailsInfoFragment :
     override fun onCreateBindingView() {
         binding.totalMediaItemText.text = getString(R.string.total_media, "Episodes")
         val maxLines = binding.synopsisTextHolder.maxLines
-        binding.videoView.setFullscreenButtonClickListener {
-            showToast("Not Implemented")
-//            getOuterNavController().navigate(
-//                AnimeDetailsFragmentDirections.toExoplayerFragment(cleanExit = false)
-//            )
-        }
 
         initRecycler(
             RelationsAdapter(::navigateToDetails),
@@ -78,11 +72,6 @@ class AnimeDetailsInfoFragment :
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
 
-        ///
-        // TODO : fix exoplayer scoping issues
-        binding.videoView.visibilityGone()
-
-
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner) {
             it ?: return@observeFlow
 
@@ -100,22 +89,6 @@ class AnimeDetailsInfoFragment :
                 endDateHolder.text = it.endDate.toString()
 
                 markwon.setMarkdown(synopsisTextHolder, it.description)
-
-//                if (it.trailer == null) {
-//                    videoView.visibilityGone()
-//                } else {
-//                    exoplayer.apply {
-//                        val sources = listOf(
-//                            "https://iv.nboeck.de/latest_version?id=${it.trailer!!.id}",
-//                            "https://iv.nboeck.de/latest_version?id=${it.trailer!!.id}&local=true",
-//                        )
-//                        val mediaSources = sources.map { link ->
-//                            createMediaSourceFromUri(link, VideoType.CONTAINER)
-//                        }.listIterator()
-//                        videoView.player = this
-//                        exoplayer.setMediaSource(mediaSources.next())
-//                    }
-//                }
 
                 synopsisTextHolder.setOnClickListener {
                     if (synopsisTextHolder.maxLines == Int.MAX_VALUE) {
