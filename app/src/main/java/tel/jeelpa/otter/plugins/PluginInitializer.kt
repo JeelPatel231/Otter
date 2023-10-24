@@ -16,7 +16,7 @@ class PluginInitializer (
     operator fun invoke(pathToJar: String) {
         val classLoader = DexClassLoader(
             pathToJar,
-            context.codeCacheDir.absolutePath,
+            context.codeCacheDir.absolutePath, // can be null, but crashes with NPE on Nougat
             null,
             context.classLoader
         )
