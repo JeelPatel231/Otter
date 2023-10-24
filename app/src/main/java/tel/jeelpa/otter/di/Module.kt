@@ -11,6 +11,12 @@ import dagger.hilt.components.SingletonComponent
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import okhttp3.OkHttpClient
+import tel.jeelpa.otter.plugins.PluginInitializer
+import tel.jeelpa.otter.reference.ExtractorManager
+import tel.jeelpa.otter.reference.ParserManager
+import tel.jeelpa.otter.reference.RegisterExtractorUseCase
+import tel.jeelpa.otter.reference.RegisterParserUseCase
+import tel.jeelpa.otter.reference.RegisterUseCase
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromUri
 import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
 import java.io.File
@@ -63,6 +69,36 @@ class DIModule {
     ) : CreateMediaSourceFromUri {
         return CreateMediaSourceFromUri(okHttpClient, simpleVideoCache)
     }
+
+
+    // plugin manager
+    @Provides
+    @Singleton
+    fun providesParserManager(): ParserManager {
+        return ParserManager()
+    }
+
+    @Provides
+    @Singleton
+    fun providesExtractorManager(): ExtractorManager {
+        return ExtractorManager()
+    }
+
+    @Provides
+    @Singleton
+    fun providesPluginInstantiator(
+        application: Application,
+        httpClient: OkHttpClient,
+        extractorManager: ExtractorManager,
+        parserManager: ParserManager
+    ): PluginInitializer {
+        val registerUseCase = RegisterUseCase(
+            RegisterExtractorUseCase(extractorManager),
+            RegisterParserUseCase(parserManager),
+        )
+        return PluginInitializer(application, httpClient, registerUseCase)
+    }
+
 }
 
 

@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 rootProject.name = "otter"
 include(":app")
 include(":otterlib")
+include(":reference")
+include(":plugin")

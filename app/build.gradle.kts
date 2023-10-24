@@ -98,6 +98,11 @@ dependencies {
 
     // data layer
     implementation(project(mapOf("path" to ":otterlib")))
+    // common plugin middleware reference
+    implementation(project(mapOf("path" to ":reference")))
+
+    // reflection
+    implementation(kotlin("reflect"))
 }
 
 kapt {
