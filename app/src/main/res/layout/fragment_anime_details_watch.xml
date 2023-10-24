@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:id="@+id/text_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +15,7 @@
         <AutoCompleteTextView
             android:id="@+id/parser_service_selector"
             android:layout_width="match_parent"
+            android:inputType="none"
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>

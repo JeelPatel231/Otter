@@ -6,7 +6,7 @@
         android:angle="270"
         android:startColor="#00ffffff"
         android:centerColor="#00ffffff"
-        android:endColor="?attr/colorSurface"
+        android:endColor="@color/design_default_color_surface"
         />
 
     <corners android:radius="0dp" />
