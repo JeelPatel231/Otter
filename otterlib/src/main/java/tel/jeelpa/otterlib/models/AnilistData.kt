@@ -8,5 +8,5 @@ data class AnilistData(
 val ANILIST_DATA = AnilistData(
     "6604",
     "15UaWKmaJtkxoUGloCFq4zEwRaM9AHHtQ2nQXiJ1",
-    "saikou://logintracker/anilist"
+    "otter://logintracker/anilist"
 )

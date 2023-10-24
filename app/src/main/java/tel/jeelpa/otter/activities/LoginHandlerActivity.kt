@@ -26,14 +26,14 @@ class LoginHandlerActivity : AppCompatActivity() {
         }
     }
 
-    suspend fun handleLogin(){
+    private suspend fun handleLogin(){
         val data = intent?.data ?: return showToast("Intent Data Null/Invalid!", Toast.LENGTH_SHORT)
 
         if(data.authority != "logintracker") {
             return showToast("Invalid Link Authority!", Toast.LENGTH_SHORT)
         }
 
-        //"saikou://logintracker/anilist/?access_token=...&token_type=...")
+        //"otter://logintracker/anilist/?access_token=...&token_type=...")
         when(data.path){
             "/anilist" -> userHandler.login(data)
 
