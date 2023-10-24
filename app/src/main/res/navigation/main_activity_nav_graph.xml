@@ -34,7 +34,10 @@
         <action
             android:id="@+id/toMangaDetailsFragment"
             app:destination="@id/mangaDetailsFragment" />
-<!--        <action-->
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <!--        <action-->
 <!--            android:id="@+id/toExoplayerFragment"-->
 <!--            app:destination="@id/exoplayerFragment" />-->
     </fragment>
@@ -52,6 +55,9 @@
         <action
             android:id="@+id/toAnimeDetailsFragment"
             app:destination="@id/animeDetailsFragment" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/pluginFragment"-->

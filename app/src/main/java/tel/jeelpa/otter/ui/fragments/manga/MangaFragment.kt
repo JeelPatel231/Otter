@@ -15,10 +15,10 @@ import tel.jeelpa.otterlib.models.AppMediaType
 class MangaFragment : ViewBindingFragment<MediaHomePageLayoutBinding>(MediaHomePageLayoutBinding::inflate){
     private val mangaFragmentViewModel : MangaFragmentViewModel by viewModels()
 
-    private fun navigateToDetails(id: Int, type: AppMediaType){
+    private fun navigateToDetails(id: Int, title: String, type: AppMediaType){
         val destination = when(type) {
-            AppMediaType.ANIME -> MainFragmentDirections.toAnimeDetailsFragment(id)
-            AppMediaType.MANGA -> MainFragmentDirections.toMangaDetailsFragment(id)
+            AppMediaType.ANIME -> MainFragmentDirections.toAnimeDetailsFragment(id, title)
+            AppMediaType.MANGA -> MainFragmentDirections.toMangaDetailsFragment(id, title)
             else -> throw IllegalStateException("Unknown Media Type")
         }
         getOuterNavController().navigate(destination)

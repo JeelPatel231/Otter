@@ -10,7 +10,7 @@ import tel.jeelpa.otterlib.models.MediaRelationCardData
 import tel.jeelpa.otterlib.models.MediaRelationType
 
 class RelationsAdapter(
-    private val onItemClick : (Int, AppMediaType) -> Unit
+    private val onItemClick : (Int, String, AppMediaType) -> Unit
 ): GenericRecyclerAdapter<MediaRelationCardData, MediaRelationSmallLayoutBinding>(MediaRelationSmallLayoutBinding::inflate) {
 
     private fun getRelationDrawable(relation: MediaRelationType): Int {
@@ -23,7 +23,7 @@ class RelationsAdapter(
 
     override fun onBind(binding: MediaRelationSmallLayoutBinding, entry: MediaRelationCardData, position: Int) {
         binding.root.setOnClickListener {
-            onItemClick(entry.id, entry.type)
+            onItemClick(entry.id, entry.title, entry.type)
         }
         binding.coverImage.load(entry.coverImage){
             scale(Scale.FILL)

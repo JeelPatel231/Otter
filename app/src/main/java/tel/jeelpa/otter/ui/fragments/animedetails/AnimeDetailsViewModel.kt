@@ -18,7 +18,7 @@ class AnimeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val animeClient: AnimeClient
 ): ViewModel() {
-    private val navArgs = AnimeDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
+    val navArgs = AnimeDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val _animeDetails: MutableStateFlow<MediaDetailsFull?> = MutableStateFlow(null)
     val animeDetails = _animeDetails.asStateFlow()

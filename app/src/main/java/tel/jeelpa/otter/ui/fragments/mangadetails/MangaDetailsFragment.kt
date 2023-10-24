@@ -18,14 +18,13 @@ class MangaDetailsFragment :
     override fun onCreateBindingView() {
         val navHostFragment = childFragmentManager.findFragmentById(binding.mediaDetailsFragmentContainer.id) as NavHostFragment
         binding.bottomNavigationBar.setupWithNavController(navHostFragment.navController)
-
+        binding.mediaTitle.text = mangaDetailsViewModel.navArgs.title
 
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner) {
             it?.let {
                 binding.coverImage.load(it.coverImage) {
                     scale(Scale.FILL)
                 }
-                binding.mediaTitle.text = it.title
             }
         }
     }

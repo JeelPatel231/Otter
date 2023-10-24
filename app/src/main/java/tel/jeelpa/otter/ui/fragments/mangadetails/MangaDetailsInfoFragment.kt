@@ -29,10 +29,10 @@ class MangaDetailsInfoFragment :
     @Inject lateinit var markwon: Markwon
 
 
-    private fun navigateToDetails(id: Int, type: AppMediaType){
+    private fun navigateToDetails(id: Int, title: String, type: AppMediaType){
         val destination = when(type) {
-            AppMediaType.ANIME -> MangaDetailsFragmentDirections.toAnimeDetailsFragment(id)
-            AppMediaType.MANGA -> MangaDetailsFragmentDirections.toSelf(id)
+            AppMediaType.ANIME -> MangaDetailsFragmentDirections.toAnimeDetailsFragment(id, title)
+            AppMediaType.MANGA -> MangaDetailsFragmentDirections.toSelf(id, title)
             else -> throw IllegalStateException("Unknown Media Type")
         }
         getOuterNavController().navigate(destination)
