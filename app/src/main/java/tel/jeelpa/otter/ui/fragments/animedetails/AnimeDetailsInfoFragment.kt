@@ -123,7 +123,7 @@ class AnimeDetailsInfoFragment :
         binding.openingsRecyclerView.apply {
             adapter = openingsAdapter
             layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
 
         val endingsAdapter = SimpleTextRecyclerAdapter(
@@ -134,7 +134,7 @@ class AnimeDetailsInfoFragment :
         binding.endingsRecyclerView.apply {
             adapter = endingsAdapter
             layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         }
 
         animeDetailsViewModel.mediaOpenings.observeFlow(viewLifecycleOwner) { ops ->
