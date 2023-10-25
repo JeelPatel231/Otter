@@ -8,6 +8,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import tel.jeelpa.otter.reference.ExtractorManager
+import tel.jeelpa.otter.reference.Parser
+import tel.jeelpa.otter.reference.ParserManager
+import tel.jeelpa.otter.reference.models.Episode
+import tel.jeelpa.otter.reference.models.ShowResponse
+import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otterlib.models.MediaDetailsFull
 import tel.jeelpa.otterlib.repository.AnimeClient
 import javax.inject.Inject
@@ -16,7 +22,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AnimeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val animeClient: AnimeClient
+    private val animeClient: AnimeClient,
+    private val parserManager: ParserManager,
+    private val extractorManager: ExtractorManager,
 ): ViewModel() {
     val navArgs = AnimeDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
@@ -28,6 +36,46 @@ class AnimeDetailsViewModel @Inject constructor(
 
     private val _mediaEndings: MutableStateFlow<List<String>?> = MutableStateFlow(null)
     val mediaEndings = _mediaEndings.asStateFlow()
+
+    val parsers
+        get() = parserManager.parsers
+
+    // Watch Fragment Data
+    private val _selectedParser: MutableStateFlow<Parser?> = MutableStateFlow(null)
+    private val _searchedAnimes = MutableStateFlow(emptyList<ShowResponse>())
+    private val _selectedAnime: MutableStateFlow<ShowResponse?> = MutableStateFlow(null)
+    private val _episodesScraped = MutableStateFlow(emptyList<Episode>())
+
+    val selectedParser
+        get() = _selectedParser.asStateFlow()
+    val searchedAnimes
+        get() = _searchedAnimes.asStateFlow()
+    val selectedAnime
+        get() = _selectedAnime.asStateFlow()
+    val episodesScraped
+        get() = _episodesScraped.asStateFlow()
+
+    fun startSearch(parser: Parser) {
+        _selectedParser.value = parser
+        _searchedAnimes.value = parser.search(navArgs.media.title)
+        _selectedAnime.value = searchedAnimes.value.first()
+        loadEpisodes()
+    }
+
+    // TODO : show searchedAnimes in the bottom sheet
+    // TODO : loadEpisodes() on clicking an entry from the bottom sheet
+    // TODO : scrape links on clicking Episode Link in recycler view
+
+    fun getVideoLinks(episodeLink: String) : List<Video> {
+        val parser = selectedParser.value!!
+        return parser.loadVideoServers(episodeLink).flatMap {
+            extractorManager.extract(it.embed.url)
+        }
+    }
+
+    private fun loadEpisodes(){
+        _episodesScraped.value = selectedParser.value!!.loadEpisodes(selectedAnime.value!!.link)
+    }
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

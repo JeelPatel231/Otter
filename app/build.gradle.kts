@@ -11,6 +11,9 @@ plugins {
     // NOTE: if you are using java, remove `.kotlin`
     id("androidx.navigation.safeargs.kotlin")
 
+    // kotlin parcel
+    id("kotlin-parcelize")
+
     // serialization
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
 }

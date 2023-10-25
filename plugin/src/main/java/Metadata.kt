@@ -1,6 +1,7 @@
 import okhttp3.OkHttpClient
 import tel.jeelpa.otter.reference.PluginMetadata
 import tel.jeelpa.otter.reference.RegisterUseCase
+import tel.jeelpa.plugin.DummyExtractor
 import tel.jeelpa.plugin.DummyParser
 
 class Metadata(
@@ -8,6 +9,7 @@ class Metadata(
     registerUseCase: RegisterUseCase,
 ) : PluginMetadata {
     override val plugins = listOf(
-        DummyParser(okHttpClient, registerUseCase)
+        DummyParser(okHttpClient, registerUseCase),
+        DummyExtractor(okHttpClient, registerUseCase)
     )
 }

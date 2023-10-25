@@ -1,5 +1,7 @@
 package tel.jeelpa.otter.reference.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
@@ -28,6 +30,7 @@ data class VideoContainer(
  * The Class which contains all the information about a Video
  * **/
 @Serializable
+@Parcelize
 data class Video(
     /**
      * Will represent quality to user in form of `"${quality}p"` (1080p)
@@ -66,7 +69,7 @@ data class Video(
      * Ex: "Backup" which could be used if the site provides some
      * **/
     val extraNote: String? = null,
-) {
+) : Parcelable {
     constructor(
         quality: Int?,
         format: VideoType,

@@ -2,6 +2,9 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
 
+    // kotlin parcel
+    id("kotlin-parcelize")
+
     // serialization
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
 }

@@ -12,13 +12,7 @@ import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.BaseMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import okhttp3.OkHttpClient
-
-
-enum class VideoType {
-    CONTAINER,
-    M3U8,
-    DASH
-}
+import tel.jeelpa.otter.reference.models.VideoType
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class CreateMediaSourceFromUri(

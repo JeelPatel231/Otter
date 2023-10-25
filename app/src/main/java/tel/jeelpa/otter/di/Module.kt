@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
+import androidx.media3.exoplayer.ExoPlayer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -97,6 +98,14 @@ class DIModule {
             RegisterParserUseCase(parserManager),
         )
         return PluginInitializer(application, httpClient, registerUseCase)
+    }
+
+    @Provides
+    @Singleton
+    fun providesExoplayer(
+        application: Application
+    ) : ExoPlayer {
+        return ExoPlayer.Builder(application).build()
     }
 
 }
