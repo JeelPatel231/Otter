@@ -10,9 +10,19 @@ import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.BaseMediaSource
+import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import okhttp3.OkHttpClient
+import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otter.reference.models.VideoType
+
+class CreateMediaSourceFromVideo(
+     private val createMediaSourceFromUri: CreateMediaSourceFromUri
+) {
+    operator fun invoke(video: Video): MediaSource {
+        return createMediaSourceFromUri(video.url.url, video.format, video.url.headers)
+    }
+}
 
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class CreateMediaSourceFromUri(

@@ -1,6 +1,11 @@
 package tel.jeelpa.otter.ui.fragments.animedetails
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
@@ -12,7 +17,7 @@ import tel.jeelpa.otter.ui.adapters.CharacterCardAdapter
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
 import tel.jeelpa.otter.ui.adapters.SimpleTextRecyclerAdapter
-import tel.jeelpa.otter.ui.generic.ViewBindingFragment
+import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.copyToClipboard
 import tel.jeelpa.otter.ui.generic.getNavParentFragment
 import tel.jeelpa.otter.ui.generic.getOuterNavController
@@ -25,10 +30,9 @@ import tel.jeelpa.otterlib.models.MediaCardData
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AnimeDetailsInfoFragment :
-    ViewBindingFragment<MediaInfoLayoutBinding>(MediaInfoLayoutBinding::inflate) {
+class AnimeDetailsInfoFragment: Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by viewModels(ownerProducer = { getNavParentFragment() })
-
+    private var binding: MediaInfoLayoutBinding by autoCleared()
     @Inject lateinit var markwon: Markwon
 
     private fun navigateToDetails(mediaCardData: MediaCardData) {
@@ -41,7 +45,12 @@ class AnimeDetailsInfoFragment :
     }
 
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
-    override fun onCreateBindingView() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = MediaInfoLayoutBinding.inflate(inflater, container, false)
         binding.totalMediaItemText.text = getString(R.string.total_media, "Episodes")
         val maxLines = binding.synopsisTextHolder.maxLines
 
@@ -151,5 +160,7 @@ class AnimeDetailsInfoFragment :
             if (eds.isEmpty()) binding.endings.visibilityGone()
             else endingsAdapter.setData(eds)
         }
+
+        return binding.root
     }
 }

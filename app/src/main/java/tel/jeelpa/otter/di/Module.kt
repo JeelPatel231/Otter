@@ -8,6 +8,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.scopes.FragmentScoped
 import dagger.hilt.components.SingletonComponent
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
@@ -19,6 +21,7 @@ import tel.jeelpa.otter.reference.RegisterExtractorUseCase
 import tel.jeelpa.otter.reference.RegisterParserUseCase
 import tel.jeelpa.otter.reference.RegisterUseCase
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromUri
+import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
 import java.io.File
 import javax.inject.Singleton
@@ -67,8 +70,9 @@ class DIModule {
     fun providesCreateMediaSourceFromUri(
         okHttpClient: OkHttpClient,
         simpleVideoCache: SimpleCache
-    ) : CreateMediaSourceFromUri {
-        return CreateMediaSourceFromUri(okHttpClient, simpleVideoCache)
+    ) : CreateMediaSourceFromVideo {
+        val uriSource = CreateMediaSourceFromUri(okHttpClient, simpleVideoCache)
+        return CreateMediaSourceFromVideo(uriSource)
     }
 
 
@@ -100,24 +104,24 @@ class DIModule {
         return PluginInitializer(application, httpClient, registerUseCase)
     }
 
-    @Provides
-    @Singleton
-    fun providesExoplayer(
-        application: Application
-    ) : ExoPlayer {
-        return ExoPlayer.Builder(application).build()
-    }
+//    @Provides
+//    @Singleton
+//    fun providesExoplayer(
+//        application: Application
+//    ) : ExoPlayer {
+//        return ExoPlayer.Builder(application).build()
+//    }
 
 }
 
 
-//@Module
-//@InstallIn(FragmentComponent::class)
-//class DIFragmentModule {
-//
-//    @Provides
-//    @FragmentScoped
-//    fun providesExoplayer(application: Application) : ExoPlayer {
-//        return ExoPlayer.Builder(application).build()
-//    }
-//}
+@Module
+@InstallIn(FragmentComponent::class)
+class DIFragmentModule {
+
+    @Provides
+    @FragmentScoped
+    fun providesExoplayer(application: Application) : ExoPlayer {
+        return ExoPlayer.Builder(application).build()
+    }
+}

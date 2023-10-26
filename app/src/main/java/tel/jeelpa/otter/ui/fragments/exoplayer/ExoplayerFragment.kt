@@ -1,64 +1,51 @@
 package tel.jeelpa.otter.ui.fragments.exoplayer
 
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.MediaSource
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
 import tel.jeelpa.otter.databinding.FragmentExoplayerBinding
-import tel.jeelpa.otter.reference.models.Video
-import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromUri
-import tel.jeelpa.otter.ui.generic.ViewBindingFragment
+import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
+import tel.jeelpa.otter.ui.generic.autoCleared
 import javax.inject.Inject
-
-@HiltViewModel
-class ExoplayerViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    val exoPlayer: ExoPlayer,
-    val createMediaSourceFromUri: CreateMediaSourceFromUri,
-): ViewModel(){
-    val args = ExoplayerFragmentArgs.fromSavedStateHandle(savedStateHandle)
-
-    fun createMediaSource(video: Video): MediaSource {
-        return createMediaSourceFromUri(
-            video.url.url,
-            video.format,
-            video.url.headers
-        )
-    }
-}
 
 @AndroidEntryPoint
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
-class ExoplayerFragment : ViewBindingFragment<FragmentExoplayerBinding>(FragmentExoplayerBinding::inflate) {
-
-    private val exoplayerViewModel: ExoplayerViewModel by viewModels()
-    private val exoplayer
-        get() = exoplayerViewModel.exoPlayer
-
-    override fun onDestroyBindingView() {
-        if(exoplayerViewModel.args.fresh) {
-            exoplayer.stop()
-        }
-        binding.root.player = null
+class ExoplayerFragment : Fragment() {
+    private var binding: FragmentExoplayerBinding by autoCleared()
+    private val args: ExoplayerFragmentArgs by navArgs()
+    @Inject lateinit var exoplayer: ExoPlayer
+    @Inject lateinit var createMediaSourceFromVideo : CreateMediaSourceFromVideo
+    override fun onDestroyView() {
+        super.onDestroyView()
+        exoplayer.release()
+    }
+    override fun onPause() {
+        super.onPause()
+        exoplayer.pause()
+    }
+    override fun onResume() {
+        super.onResume()
+        exoplayer.play()
     }
 
-    override fun onCreateBindingView() {
-        // clear the exoplayer instance
-        exoplayer.apply {
-            if (exoplayerViewModel.args.fresh) {
-                stop()
-                clearMediaItems()
-            }
-            prepare()
-            play()
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentExoplayerBinding.inflate(inflater, container, false)
 
         binding.root.player = exoplayer
+        exoplayer.prepare()
 
-        val firstVideoSource = exoplayerViewModel.args.videos.first()
-        exoplayer.setMediaSource(exoplayerViewModel.createMediaSource(firstVideoSource))
+        val firstVideoSource = args.videos.first()
+        exoplayer.setMediaSource(createMediaSourceFromVideo(firstVideoSource))
+
+        return binding.root
     }
 }

@@ -1,6 +1,11 @@
 package tel.jeelpa.otter.ui.fragments.mangadetails
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
@@ -11,7 +16,7 @@ import tel.jeelpa.otter.databinding.MediaInfoLayoutBinding
 import tel.jeelpa.otter.ui.adapters.CharacterCardAdapter
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
-import tel.jeelpa.otter.ui.generic.ViewBindingFragment
+import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavParentFragment
 import tel.jeelpa.otter.ui.generic.getOuterNavController
 import tel.jeelpa.otter.ui.generic.initRecycler
@@ -23,8 +28,8 @@ import tel.jeelpa.otterlib.models.MediaCardData
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MangaDetailsInfoFragment :
-    ViewBindingFragment<MediaInfoLayoutBinding>(MediaInfoLayoutBinding::inflate) {
+class MangaDetailsInfoFragment : Fragment() {
+    private var binding: MediaInfoLayoutBinding by autoCleared()
     private val mangaDetailsViewModel: MangaDetailsViewModel by viewModels(ownerProducer = { getNavParentFragment() })
 
     @Inject lateinit var markwon: Markwon
@@ -39,7 +44,13 @@ class MangaDetailsInfoFragment :
         getOuterNavController().navigate(destination)
     }
 
-    override fun onCreateBindingView() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = MediaInfoLayoutBinding.inflate(inflater, container, false)
+
         binding.totalMediaItemText.text = getString(R.string.total_media, "Chapters")
         binding.averageDurationHolder.visibilityGone()
         binding.averageDurationText.visibilityGone()
@@ -120,5 +131,7 @@ class MangaDetailsInfoFragment :
                 }
             }
         }
+
+        return binding.root
     }
 }
