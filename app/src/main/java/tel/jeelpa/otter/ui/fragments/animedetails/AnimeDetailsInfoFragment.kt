@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,30 +19,22 @@ import tel.jeelpa.otter.ui.adapters.RelationsAdapter
 import tel.jeelpa.otter.ui.adapters.SimpleTextRecyclerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.copyToClipboard
-import tel.jeelpa.otter.ui.generic.getNavParentFragment
-import tel.jeelpa.otter.ui.generic.getOuterNavController
 import tel.jeelpa.otter.ui.generic.initRecycler
+import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.visibilityGone
-import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AnimeDetailsInfoFragment: Fragment() {
-    private val animeDetailsViewModel: AnimeDetailsViewModel by viewModels(ownerProducer = { getNavParentFragment() })
+    private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
     private var binding: MediaInfoLayoutBinding by autoCleared()
     @Inject lateinit var markwon: Markwon
 
-    private fun navigateToDetails(mediaCardData: MediaCardData) {
-        val destination = when (mediaCardData.type) {
-            AppMediaType.ANIME -> AnimeDetailsFragmentDirections.toSelf(mediaCardData)
-            AppMediaType.MANGA -> AnimeDetailsFragmentDirections.toMangaDetailsFragment(mediaCardData)
-            else -> throw IllegalStateException("Unknown Media Type")
-        }
-        getOuterNavController().navigate(destination)
-    }
+    private fun navigateToDetails(mediaCardData: MediaCardData) =
+        requireContext().navigateToMediaDetails(mediaCardData)
 
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     override fun onCreateView(

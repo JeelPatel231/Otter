@@ -1,67 +1,68 @@
 package tel.jeelpa.otter
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.OkHttpClient
 import tel.jeelpa.otter.databinding.ActivityMainBinding
-import tel.jeelpa.otter.ui.generic.getOuterNavController
-import java.util.logging.Level
-import java.util.logging.Logger
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
+    private var _binding: ActivityMainBinding? = null
+    val binding
+        get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        Logger.getLogger(OkHttpClient::class.qualifiedName!!).level = Level.FINE;
-
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        val navHostFragment = supportFragmentManager.findFragmentById(binding.mainFragmentContainerView.id) as NavHostFragment
+        binding.mainBottomNav.setupWithNavController(navHostFragment.navController)
 
-        // https://developer.android.com/guide/navigation/navigation-ui#argument
-        getOuterNavController().addOnDestinationChangedListener { _, _, arguments ->
-            val fullscreen = arguments?.getBoolean("fullscreen", false) == true
-            val orientation = arguments?.getString("orientation")?.uppercase()
+//        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+//        windowInsetsController.systemBarsBehavior =
+//            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
+//        // https://developer.android.com/guide/navigation/navigation-ui#argument
+//        getOuterNavController().addOnDestinationChangedListener { _, _, arguments ->
+//            val fullscreen = arguments?.getBoolean("fullscreen", false) == true
+//            val orientation = arguments?.getString("orientation")?.uppercase()
+//
+//
+//            when (fullscreen) {
+//                // hide system-bars when fullscreen
+//                true -> windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+//                // show system-bars when not fullscreen
+//                false -> windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+//            }
+//
+//            // lock orientation to its value if set, else based on sensor
+//            requestedOrientation = when (orientation) {
+//                "LANDSCAPE" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+//                "PORTRAIT" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+//                else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+//            }
+//        }
 
-            when (fullscreen) {
-                // hide system-bars when fullscreen
-                true -> windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-                // show system-bars when not fullscreen
-                false -> windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
-            }
-
-            // lock orientation to its value if set, else based on sensor
-            requestedOrientation = when (orientation) {
-                "LANDSCAPE" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                "PORTRAIT" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-                else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            }
-        }
 
         // code start
-        onBackPressedDispatcher.addCallback(this) {
-            // Back is pressed... Finishing the activity
-            if (getOuterNavController().popBackStack().not()) {
-                finish()
-            }
-        }
+//        onBackPressedDispatcher.addCallback(this) {
+//            // Back is pressed... Finishing the activity
+//            if (getOuterNavController().popBackStack().not()) {
+//                finish()
+//            }
+//        }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

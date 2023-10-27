@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import tel.jeelpa.otter.databinding.SampleTextScreenLayoutBinding
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.getNavParentFragment
 
 class MangaDetailsReadFragment : Fragment() {
     private var binding: SampleTextScreenLayoutBinding by autoCleared()
-    private val mangaDetailsViewModel: MangaDetailsViewModel by viewModels({ getNavParentFragment() })
+    private val mangaDetailsViewModel: MangaDetailsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,7 +20,7 @@ class MangaDetailsReadFragment : Fragment() {
     ): View {
         binding = SampleTextScreenLayoutBinding.inflate(inflater, container, false)
 
-        binding.textView.text = "Manga ${mangaDetailsViewModel.navArgs.media.id}"
+        binding.textView.text = "Manga ${mangaDetailsViewModel.navArgs.id}"
 
         return binding.root
     }

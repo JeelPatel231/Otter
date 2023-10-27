@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,32 +17,24 @@ import tel.jeelpa.otter.ui.adapters.CharacterCardAdapter
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.getNavParentFragment
-import tel.jeelpa.otter.ui.generic.getOuterNavController
 import tel.jeelpa.otter.ui.generic.initRecycler
+import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.visibilityGone
-import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MangaDetailsInfoFragment : Fragment() {
     private var binding: MediaInfoLayoutBinding by autoCleared()
-    private val mangaDetailsViewModel: MangaDetailsViewModel by viewModels(ownerProducer = { getNavParentFragment() })
+    private val mangaDetailsViewModel: MangaDetailsViewModel by activityViewModels()
 
     @Inject lateinit var markwon: Markwon
 
+    private fun navigateToDetails(mediaCardData: MediaCardData) =
+        requireContext().navigateToMediaDetails(mediaCardData)
 
-    private fun navigateToDetails(mediaCardData: MediaCardData){
-        val destination = when(mediaCardData.type) {
-            AppMediaType.ANIME -> MangaDetailsFragmentDirections.toAnimeDetailsFragment(mediaCardData)
-            AppMediaType.MANGA -> MangaDetailsFragmentDirections.toSelf(mediaCardData)
-            else -> throw IllegalStateException("Unknown Media Type")
-        }
-        getOuterNavController().navigate(destination)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

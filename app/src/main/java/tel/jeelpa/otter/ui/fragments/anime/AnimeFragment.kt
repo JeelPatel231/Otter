@@ -1,5 +1,6 @@
 package tel.jeelpa.otter.ui.fragments.anime
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
-import tel.jeelpa.otter.ui.fragments.MainFragmentDirections
+import tel.jeelpa.otter.ui.fragments.animedetails.AnimeActivity
+import tel.jeelpa.otter.ui.fragments.mangadetails.MangaActivity
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.getOuterNavController
 import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
@@ -25,12 +26,14 @@ class AnimeFragment: Fragment(){
     private val animeHomeViewModel : AnimeFragmentViewModel by viewModels()
 
     private fun navigateToAnimeDetails(mediaCardData: MediaCardData){
-        val destination = when(mediaCardData.type) {
-            AppMediaType.ANIME -> MainFragmentDirections.toAnimeDetailsFragment(mediaCardData)
-            AppMediaType.MANGA -> MainFragmentDirections.toMangaDetailsFragment(mediaCardData)
+        val activity = when(mediaCardData.type) {
+            AppMediaType.ANIME -> AnimeActivity::class.java
+            AppMediaType.MANGA -> MangaActivity::class.java
             else -> throw IllegalStateException("Unknown Media Type")
         }
-        getOuterNavController().navigate(destination)
+        val newIntent = Intent(requireContext(), activity)
+            .putExtra("data", mediaCardData)
+        startActivity(newIntent)
     }
 
 

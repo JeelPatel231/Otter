@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/anime_activity_nav_graph"
+    app:startDestination="@id/animeDetailsFragment">
+
+    <fragment
+        android:id="@+id/animeDetailsFragment"
+        android:name="tel.jeelpa.otter.ui.fragments.animedetails.AnimeDetailsFragment"
+        android:label="AnimeDetailsFragment"
+        tools:layout="@layout/fragment_anime_details">
+        <action
+            android:id="@+id/toExoplayerFragment"
+            app:destination="@id/exoplayerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/exoplayerFragment"
+        android:name="tel.jeelpa.otter.ui.fragments.exoplayer.ExoplayerFragment"
+        android:label="ExoplayerFragment"
+        tools:layout="@layout/fragment_exoplayer" />
+
+</navigation>

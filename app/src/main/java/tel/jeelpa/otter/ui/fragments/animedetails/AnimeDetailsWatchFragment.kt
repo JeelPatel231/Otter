@@ -5,24 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.getNavParentFragment
-import tel.jeelpa.otter.ui.generic.getOuterNavController
+import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
 import tel.jeelpa.otter.ui.generic.observeFlow
 
 class AnimeDetailsWatchFragment : Fragment() {
-    private val animeDetailsViewModel: AnimeDetailsViewModel by viewModels({ getNavParentFragment() })
+    private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
     private var binding: FragmentAnimeDetailsWatchBinding by autoCleared()
     private var episodeScrapeJob: Job? = null
     override fun onCreateView(
@@ -34,11 +32,11 @@ class AnimeDetailsWatchFragment : Fragment() {
 
 
         val episodesAdapter = EpisodeAdapter(lifecycleScope) {
-            val videoLinks = withContext(Dispatchers.IO) {
-                animeDetailsViewModel.getVideoLinks(it.link).toList().toTypedArray()
-             }
-            getOuterNavController().navigate(
-                AnimeDetailsFragmentDirections.toExoplayerFragment(videoLinks, fresh = true)
+//            val videoLinks = withContext(Dispatchers.IO) {
+//                animeDetailsViewModel.getVideoLinks(it.link).toList().toTypedArray()
+//             }
+            requireActivity().getNavControllerFromHost(R.id.anime_activity_container_view).navigate(
+                AnimeDetailsFragmentDirections.toExoplayerFragment()
             )
         }
 

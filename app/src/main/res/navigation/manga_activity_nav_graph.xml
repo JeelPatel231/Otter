@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/manga_activity_nav_graph"
+    app:startDestination="@id/mangaDetailsFragment">
+
+    <fragment
+        android:id="@+id/mangaDetailsFragment"
+        android:name="tel.jeelpa.otter.ui.fragments.mangadetails.MangaDetailsFragment"
+        android:label="MangaDetailsFragment"
+        tools:layout="@layout/fragment_manga_details"/>
+
+</navigation>

@@ -6,10 +6,13 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
@@ -22,16 +25,30 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import tel.jeelpa.otter.R
+import tel.jeelpa.otter.ui.fragments.animedetails.AnimeActivity
+import tel.jeelpa.otter.ui.fragments.mangadetails.MangaActivity
+import tel.jeelpa.otterlib.models.AppMediaType
+import tel.jeelpa.otterlib.models.MediaCardData
 
 
-fun FragmentActivity.getOuterNavController() : NavController {
-    val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_activity_container_view) as NavHostFragment
-    return navHostFragment.navController
-}
+//fun FragmentActivity.getOuterNavController() : NavController {
+//    val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_activity_container_view) as NavHostFragment
+//    return navHostFragment.navController
+//}
 
 // only works in single activity app, because the requireActivity() will point to the main activity
-fun Fragment.getOuterNavController() : NavController = requireActivity().getOuterNavController()
+//fun Fragment.getOuterNavController() : NavController = requireActivity().getOuterNavController()
+
+
+fun FragmentManager.getNavControllerFromHost(resId: Int) =
+    (findFragmentById(resId) as NavHostFragment).navController
+
+fun FragmentActivity.getNavControllerFromHost(@IdRes resId: Int): NavController =
+     supportFragmentManager.getNavControllerFromHost(resId)
+
+fun Fragment.getNavControllerFromHost(@IdRes resId: Int) : NavController =
+    childFragmentManager.getNavControllerFromHost(resId)
+
 
 suspend fun <A, B> Collection<A>.asyncForEach(f: suspend (A) -> B): List<B> = coroutineScope {
     map { async { f(it) } }.awaitAll()
@@ -73,6 +90,38 @@ fun crossfadeViews(contentView: View, loadingView: View) {
 
 }
 
+// Parcelables Extension
+//inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+//    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+//    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
+//}
+//
+//inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
+//    SDK_INT >= 33 -> getParcelable(key, T::class.java)
+//    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+//}
+//
+//inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? = when {
+//    SDK_INT >= 33 -> getParcelableArrayList(key, T::class.java)
+//    else -> @Suppress("DEPRECATION") getParcelableArrayList(key)
+//}
+//
+//inline fun <reified T : Parcelable> Intent.parcelableArrayList(key: String): ArrayList<T>? = when {
+//    SDK_INT >= 33 -> getParcelableArrayListExtra(key, T::class.java)
+//    else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
+//}
+
+
+fun Context.navigateToMediaDetails(mediaCardData: MediaCardData){
+    val activity = when(mediaCardData.type) {
+        AppMediaType.ANIME -> AnimeActivity::class.java
+        AppMediaType.MANGA -> MangaActivity::class.java
+        else -> throw IllegalStateException("Unknown Media Type")
+    }
+    val newIntent = Intent(this, activity)
+        .putExtra("data", mediaCardData)
+    startActivity(newIntent)
+}
 
 fun View.visibilityGone() {
     this.visibility = View.GONE
@@ -82,7 +131,7 @@ fun <X> Flow<X>.observeFlow(lifecycleOwner: LifecycleOwner,callback: (X) -> Unit
     lifecycleOwner.lifecycleScope.launch { flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(callback) }
 
 
-fun Activity.showToast(text:String, duration: Int){
+fun Activity.showToast(text:String, duration: Int = Toast.LENGTH_SHORT){
     runOnUiThread { Toast.makeText(this, text, duration).show() }
 }
 
@@ -93,7 +142,7 @@ fun Context.copyToClipboard(label: String,text:String){
 
 
 // https://stackoverflow.com/a/60356890
-fun Fragment.getNavParentFragment() = requireParentFragment().requireParentFragment()
+//fun Fragment.getNavParentFragment() = requireParentFragment().requireParentFragment()
 
 fun Fragment.showToast(text:String, duration: Int = Toast.LENGTH_SHORT) =
     requireActivity().showToast(text, duration)

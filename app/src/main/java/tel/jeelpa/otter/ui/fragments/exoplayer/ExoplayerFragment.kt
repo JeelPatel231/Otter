@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.databinding.FragmentExoplayerBinding
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
@@ -18,8 +17,8 @@ import javax.inject.Inject
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class ExoplayerFragment : Fragment() {
     private var binding: FragmentExoplayerBinding by autoCleared()
-    private var bottomSheet: BottomSheetSourceSelector by autoCleared()
-    private val args: ExoplayerFragmentArgs by navArgs()
+//    private var bottomSheet: BottomSheetSourceSelector by autoCleared()
+//    private val args: ExoplayerFragmentArgs by navArgs()
 
     @Inject lateinit var exoplayer: ExoPlayer
     @Inject lateinit var createMediaSourceFromVideo : CreateMediaSourceFromVideo
@@ -30,7 +29,7 @@ class ExoplayerFragment : Fragment() {
     }
     override fun onPause() {
         super.onPause()
-        bottomSheet.dismiss()
+//        bottomSheet.dismiss()
         exoplayer.pause()
     }
     override fun onResume() {
@@ -48,13 +47,13 @@ class ExoplayerFragment : Fragment() {
         binding.root.player = exoplayer
         exoplayer.prepare()
 
-        val adapter = SourceSelectionAdapter(args.videos.toList()){
-            val mediaSource = createMediaSourceFromVideo(it)
-            exoplayer.setMediaSource(mediaSource)
-        }
+//        val adapter = SourceSelectionAdapter(args.videos.toList()){
+//            val mediaSource = createMediaSourceFromVideo(it)
+//            exoplayer.setMediaSource(mediaSource)
+//        }
 
-        bottomSheet = BottomSheetSourceSelector(adapter)
-        bottomSheet.show(childFragmentManager, "BottomSheetSourceSelector")
+//        bottomSheet = BottomSheetSourceSelector(adapter)
+//        bottomSheet.show(childFragmentManager, "BottomSheetSourceSelector")
 
         return binding.root
     }

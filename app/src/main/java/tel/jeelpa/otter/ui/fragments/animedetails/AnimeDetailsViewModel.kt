@@ -17,6 +17,7 @@ import tel.jeelpa.otter.reference.ParserManager
 import tel.jeelpa.otter.reference.models.Episode
 import tel.jeelpa.otter.reference.models.ShowResponse
 import tel.jeelpa.otter.reference.models.Video
+import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.MediaDetailsFull
 import tel.jeelpa.otterlib.repository.AnimeClient
 import javax.inject.Inject
@@ -29,7 +30,7 @@ class AnimeDetailsViewModel @Inject constructor(
     private val parserManager: ParserManager,
     private val extractorManager: ExtractorManager,
 ) : ViewModel() {
-    val navArgs = AnimeDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
+    val navArgs = savedStateHandle.get<MediaCardData>("data")!!
 
     private val _animeDetails: MutableStateFlow<MediaDetailsFull?> = MutableStateFlow(null)
     val animeDetails = _animeDetails.asStateFlow()
@@ -60,7 +61,7 @@ class AnimeDetailsViewModel @Inject constructor(
 
     suspend fun startSearch(parser: Parser) = withContext(Dispatchers.IO) {
         _selectedParser.value = parser
-        _searchedAnimes.value = parser.search(navArgs.media.title)
+        _searchedAnimes.value = parser.search(navArgs.title)
         _selectedAnime.value = searchedAnimes.value.first()
         loadEpisodes()
     }
@@ -84,7 +85,7 @@ class AnimeDetailsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _animeDetails.value = animeClient.getAnimeDetails(navArgs.media.id)
+            _animeDetails.value = animeClient.getAnimeDetails(navArgs.id)
             val malId = animeDetails.value?.idMal ?: return@launch
 
             _mediaOpenings.value = animeClient.getOpenings(malId)
