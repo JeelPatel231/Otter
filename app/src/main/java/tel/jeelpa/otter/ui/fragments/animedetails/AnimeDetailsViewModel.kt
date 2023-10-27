@@ -5,18 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import tel.jeelpa.otter.reference.ExtractorManager
 import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.reference.ParserManager
 import tel.jeelpa.otter.reference.models.Episode
 import tel.jeelpa.otter.reference.models.ShowResponse
-import tel.jeelpa.otter.reference.models.Video
+import tel.jeelpa.otter.reference.models.VideoServer
 import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.MediaDetailsFull
 import tel.jeelpa.otterlib.repository.AnimeClient
@@ -28,7 +25,6 @@ class AnimeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val animeClient: AnimeClient,
     private val parserManager: ParserManager,
-    private val extractorManager: ExtractorManager,
 ) : ViewModel() {
     val navArgs = savedStateHandle.get<MediaCardData>("data")!!
 
@@ -70,13 +66,8 @@ class AnimeDetailsViewModel @Inject constructor(
     // TODO : loadEpisodes() on clicking an entry from the bottom sheet
     // TODO : scrape links on clicking Episode Link in recycler view
 
-    suspend fun getVideoLinks(episodeLink: String): Flow<Video> = channelFlow {
-        val selectedParser = selectedParser.value!!
-//        val tempList = mutableListOf<Video>()
-        selectedParser
-            .loadVideoServers(episodeLink)
-            .flatMap { extractorManager.extract(it) }
-            .forEach { send(it) }
+    suspend fun getVideoServers(episodeLink: String): List<VideoServer> = withContext(Dispatchers.IO){
+        return@withContext selectedParser.value!!.loadVideoServers(episodeLink)
     }
 
     private suspend fun loadEpisodes() {

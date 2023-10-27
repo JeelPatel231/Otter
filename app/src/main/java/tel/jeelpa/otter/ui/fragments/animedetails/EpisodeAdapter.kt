@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import tel.jeelpa.otter.databinding.SimpleTextViewBinding
 import tel.jeelpa.otter.reference.models.Episode
 import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
+import tel.jeelpa.otter.ui.generic.nullOnBlank
 
 class EpisodeAdapter(
     private val lifecycleCoroutineScope: LifecycleCoroutineScope,
@@ -19,6 +20,6 @@ class EpisodeAdapter(
                 onItemClick(entry)
             }
         }
-        binding.simpleTextView.text = "Episode ${position + 1} : ${entry.title}"
+        binding.simpleTextView.text = entry.title?.nullOnBlank() ?: entry.number
     }
 }

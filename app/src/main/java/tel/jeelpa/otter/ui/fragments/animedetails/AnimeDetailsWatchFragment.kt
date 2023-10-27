@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.reference.Parser
+import tel.jeelpa.otter.ui.fragments.exoplayer.ExoPlayerViewModel
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
@@ -21,6 +22,7 @@ import tel.jeelpa.otter.ui.generic.observeFlow
 
 class AnimeDetailsWatchFragment : Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
+    private val exoPlayerViewModel: ExoPlayerViewModel by activityViewModels()
     private var binding: FragmentAnimeDetailsWatchBinding by autoCleared()
     private var episodeScrapeJob: Job? = null
     override fun onCreateView(
@@ -30,11 +32,8 @@ class AnimeDetailsWatchFragment : Fragment() {
     ): View {
         binding = FragmentAnimeDetailsWatchBinding.inflate(inflater, container, false)
 
-
         val episodesAdapter = EpisodeAdapter(lifecycleScope) {
-//            val videoLinks = withContext(Dispatchers.IO) {
-//                animeDetailsViewModel.getVideoLinks(it.link).toList().toTypedArray()
-//             }
+            exoPlayerViewModel.videoServers = animeDetailsViewModel.getVideoServers(it.link)
             requireActivity().getNavControllerFromHost(R.id.anime_activity_container_view).navigate(
                 AnimeDetailsFragmentDirections.toExoplayerFragment()
             )

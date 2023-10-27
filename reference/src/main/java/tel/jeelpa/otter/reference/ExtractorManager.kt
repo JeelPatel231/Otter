@@ -1,6 +1,8 @@
 package tel.jeelpa.otter.reference
 
 import android.net.Uri
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otter.reference.models.VideoServer
 
@@ -10,11 +12,11 @@ class ExtractorManager {
     val extractors
         get() = _extractorsLoaded.toList()
 
-    suspend fun extract(server: VideoServer): List<Video> {
+    suspend fun extract(server: VideoServer): List<Video> = withContext(Dispatchers.IO){
         val host = Uri.parse(server.embed.url).host
             ?: throw IllegalStateException("Invalid Url, Failed to parse URI")
 
-        return _extractorsLoaded
+        return@withContext _extractorsLoaded
             .also { println("DEBUG : LOADED EXTRACTORS : $it") }
             .filter { it.canExtract(host) }
             .also { println("DEBUG: FILTERED EXTRACTORS : $it") }
