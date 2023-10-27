@@ -19,10 +19,15 @@ abstract class GenericRecyclerAdapter<TData, TBindingType: ViewBinding>(
     val data: List<TData>
         get() = _data
 
-    fun fillData(newData: Collection<TData>) {
+    fun addAll(newData: Collection<TData>) {
         val oldDataSize = data.size
         _data.addAll(newData)
         notifyItemRangeInserted(oldDataSize, newData.size)
+    }
+
+    fun add(newData: TData) {
+        _data.add(newData)
+        notifyItemRangeInserted(data.size-1, data.size)
     }
 
     fun setData(newData: Collection<TData>) {
@@ -69,7 +74,7 @@ fun <TFlowSource, TData, TBinding, TAdapter: GenericRecyclerAdapter<TData, TBind
 
     flowSource.observeFlow(viewLifecycleOwner){
         it?.let {
-            adapter.setData(flowData(it))
+            adapter.addAll(flowData(it))
             crossfadeViews(recyclerView, shimmerFrameLayout)
         }
     }

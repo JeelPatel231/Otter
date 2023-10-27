@@ -119,7 +119,7 @@ class MangaDetailsInfoFragment : Fragment() {
 
                 it.characters.let { characters ->
                     if (characters.isEmpty()) charactersText.visibilityGone()
-                    else characterAdapter.setData(characters)
+                    else characterAdapter.addAll(characters)
                 }
             }
         }
