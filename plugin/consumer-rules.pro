@@ -1,0 +1,1 @@
+-keep class tel.jeelpa.plugin.** { *; }
