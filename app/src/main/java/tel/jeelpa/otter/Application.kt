@@ -4,6 +4,7 @@ import android.app.Application
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import tel.jeelpa.otter.plugins.PluginInitializer
+import java.io.File
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -24,9 +25,10 @@ class OtterApplication: Application() {
     private fun loadPlugins(){
         // find the directory and create if they dont exist,
         // if its null, throw exception
-        val pluginPath = getExternalFilesDir("plugins")
-            ?.apply { if(!exists()) mkdirs() }
-            ?: throw IllegalStateException()
+//        val pluginPath = getExternalFilesDir("plugins")
+        val pluginPath = File(filesDir,"plugins")
+            .apply { if(!exists()) mkdirs() }
+//            ?: throw IllegalStateException()
 
         // list all files with ".jar" extension and load them as plugins
         pluginPath.listFiles()

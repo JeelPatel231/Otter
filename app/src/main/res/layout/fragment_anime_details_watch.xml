@@ -12,10 +12,12 @@
         android:layout_height="wrap_content"
         android:hint="Select Item" >
 
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/parser_service_selector"
             android:layout_width="match_parent"
             android:inputType="none"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>

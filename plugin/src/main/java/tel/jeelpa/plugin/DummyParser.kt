@@ -19,7 +19,7 @@ class DummyParser(
 
     override val dubAvailable: Boolean = false
 
-    override fun search(query: String): List<ShowResponse> {
+    override suspend fun search(query: String): List<ShowResponse> {
         return listOf(
             ShowResponse(
                 "Mock Name",
@@ -29,7 +29,7 @@ class DummyParser(
         )
     }
 
-    override fun loadEpisodes(animeLink: String): List<Episode> {
+    override suspend fun loadEpisodes(animeLink: String): List<Episode> {
         return listOf(
             Episode(
                 "Episode 1",
@@ -50,7 +50,7 @@ class DummyParser(
         )
     }
 
-    override fun loadVideoServers(episodeLink: String): List<VideoServer> {
+    override suspend fun loadVideoServers(episodeLink: String): List<VideoServer> {
         return listOf(
             VideoServer(
                 "Mock Video Server 1",

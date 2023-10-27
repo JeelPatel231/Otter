@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/source_selection_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/select_source_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Source"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/source_selection_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/simple_text_view" />
+
+</LinearLayout>

@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tel.jeelpa.otter.reference.ExtractorManager
 import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.reference.ParserManager
@@ -25,7 +28,7 @@ class AnimeDetailsViewModel @Inject constructor(
     private val animeClient: AnimeClient,
     private val parserManager: ParserManager,
     private val extractorManager: ExtractorManager,
-): ViewModel() {
+) : ViewModel() {
     val navArgs = AnimeDetailsFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
     private val _animeDetails: MutableStateFlow<MediaDetailsFull?> = MutableStateFlow(null)
@@ -55,7 +58,7 @@ class AnimeDetailsViewModel @Inject constructor(
     val episodesScraped
         get() = _episodesScraped.asStateFlow()
 
-    fun startSearch(parser: Parser) {
+    suspend fun startSearch(parser: Parser) = withContext(Dispatchers.IO) {
         _selectedParser.value = parser
         _searchedAnimes.value = parser.search(navArgs.media.title)
         _selectedAnime.value = searchedAnimes.value.first()
@@ -66,14 +69,16 @@ class AnimeDetailsViewModel @Inject constructor(
     // TODO : loadEpisodes() on clicking an entry from the bottom sheet
     // TODO : scrape links on clicking Episode Link in recycler view
 
-    fun getVideoLinks(episodeLink: String) : List<Video> {
-        val parser = selectedParser.value!!
-        return parser.loadVideoServers(episodeLink).flatMap {
-            extractorManager.extract(it.embed.url)
-        }
+    suspend fun getVideoLinks(episodeLink: String): Flow<Video> = channelFlow {
+        val selectedParser = selectedParser.value!!
+//        val tempList = mutableListOf<Video>()
+        selectedParser
+            .loadVideoServers(episodeLink)
+            .flatMap { extractorManager.extract(it) }
+            .forEach { send(it) }
     }
 
-    private fun loadEpisodes(){
+    private suspend fun loadEpisodes() {
         _episodesScraped.value = selectedParser.value!!.loadEpisodes(selectedAnime.value!!.link)
     }
 

@@ -13,19 +13,24 @@ import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.generic.autoCleared
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class ExoplayerFragment : Fragment() {
     private var binding: FragmentExoplayerBinding by autoCleared()
+    private var bottomSheet: BottomSheetSourceSelector by autoCleared()
     private val args: ExoplayerFragmentArgs by navArgs()
+
     @Inject lateinit var exoplayer: ExoPlayer
     @Inject lateinit var createMediaSourceFromVideo : CreateMediaSourceFromVideo
+
     override fun onDestroyView() {
         super.onDestroyView()
         exoplayer.release()
     }
     override fun onPause() {
         super.onPause()
+        bottomSheet.dismiss()
         exoplayer.pause()
     }
     override fun onResume() {
@@ -43,8 +48,13 @@ class ExoplayerFragment : Fragment() {
         binding.root.player = exoplayer
         exoplayer.prepare()
 
-        val firstVideoSource = args.videos.first()
-        exoplayer.setMediaSource(createMediaSourceFromVideo(firstVideoSource))
+        val adapter = SourceSelectionAdapter(args.videos.toList()){
+            val mediaSource = createMediaSourceFromVideo(it)
+            exoplayer.setMediaSource(mediaSource)
+        }
+
+        bottomSheet = BottomSheetSourceSelector(adapter)
+        bottomSheet.show(childFragmentManager, "BottomSheetSourceSelector")
 
         return binding.root
     }

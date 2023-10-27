@@ -16,10 +16,13 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import tel.jeelpa.otter.R
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import tel.jeelpa.otter.R
 
 
 fun FragmentActivity.getOuterNavController() : NavController {
@@ -30,6 +33,9 @@ fun FragmentActivity.getOuterNavController() : NavController {
 // only works in single activity app, because the requireActivity() will point to the main activity
 fun Fragment.getOuterNavController() : NavController = requireActivity().getOuterNavController()
 
+suspend fun <A, B> Collection<A>.asyncForEach(f: suspend (A) -> B): List<B> = coroutineScope {
+    map { async { f(it) } }.awaitAll()
+}
 
 fun crossfadeViews(contentView: View, loadingView: View) {
 

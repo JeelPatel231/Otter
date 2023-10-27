@@ -9,11 +9,11 @@ interface Parser : Plugin {
     val isNSFW: Boolean
     val dubAvailable: Boolean
 
-    fun search(query: String): List<ShowResponse>
+    suspend fun search(query: String): List<ShowResponse>
 
-    fun loadEpisodes(animeLink: String): List<Episode>
+    suspend fun loadEpisodes(animeLink: String): List<Episode>
 
-    fun loadVideoServers(episodeLink: String): List<VideoServer>
+    suspend fun loadVideoServers(episodeLink: String): List<VideoServer>
 }
 
 abstract class BaseParser : Parser {

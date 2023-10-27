@@ -1,6 +1,9 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+
+    // serialization
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
 }
 
 android {
@@ -46,63 +49,88 @@ dependencies {
 
 
 val JarName = "JeelsWeebPack.jar"
-tasks.register<Copy>("unzip") {
-    dependsOn("build")
-    val inputAar = file("$buildDir/outputs/aar/plugin-debug.aar")
-    val output = file("$buildDir/outputs/unzipped/")
-    from(zipTree(inputAar))
-    into(output)
-}
+val packageName = "tel.jeelpa.otter"
+val packagePath = file("/data/data/$packageName/files/plugins/$JarName")
+val pluginDex = file("$buildDir/outputs/$JarName")
+
+//tasks.register<Copy>("unzip") {
+//    dependsOn("build")
+//    val inputAar = file("$buildDir/outputs/aar/plugin-debug.aar")
+//    val output = file("$buildDir/outputs/unzipped/")
+//    from(zipTree(inputAar))
+//    into(output)
+//}
 
 tasks.register<Exec>("dexJar") {
-    val output = file("$buildDir/outputs/")
     val referenceBuildDir = project(":reference").buildDir
     val classPathJar = file("$referenceBuildDir/intermediates/full_jar/debug/full.jar")
-    dependsOn("unzip")
+    dependsOn(":plugin:build")
+    val dexExec =
+        file(android.sdkDirectory.absolutePath + "/build-tools/" + android.buildToolsVersion + "/d8")
+    commandLine(
+        dexExec,
+        "$buildDir/outputs/aar/plugin-debug.aar",
+        "--classpath",
+        classPathJar,
+        "--output",
+        "$pluginDex"
+    )
+}
 
-    val dexExec = file(android.sdkDirectory.absolutePath + "/build-tools/" + android.buildToolsVersion + "/d8")
-    commandLine(dexExec,"$buildDir/outputs/unzipped/classes.jar","--classpath",classPathJar,"--output", "$output/plugindex.jar")
+tasks.register<Exec>("pluginCleanup") {
+    commandLine(android.adbExecutable, "shell", "rm", "-rf", "/data/local/tmp/*")
+    commandLine(android.adbExecutable, "shell", "run-as", packageName, "rm", "-rf", packagePath)
+    println("Clean Up success!")
+}
+
+fun printlnVarArgs(vararg args: Any?) {
+    args.forEach { print("$it ") }
+    println()
 }
 
 tasks.register<Exec>("pushPlugin") {
-    val packageName = "tel.jeelpa.otter"
-    dependsOn("dexJar")
-    val pluginDex = file("$buildDir/outputs/plugindex.jar")
-    val packagePath = file("/data/data/$packageName/files/plugins/$JarName")
-    commandLine(android.adbExecutable, "push", pluginDex, "/data/local/tmp")
-    commandLine(android.adbExecutable, "shell","run-as", packageName, "cp", "/data/local/tmp/plugindex.jar", packagePath)
+    commandLine(android.adbExecutable, "push", pluginDex, "/data/local/tmp/$JarName")
+    commandLine(
+        android.adbExecutable,
+        "shell",
+        "run-as",
+        packageName,
+        "cp",
+        "/data/local/tmp/$JarName",
+        packagePath.path
+    )
 }
 
 
 
-//data class Plugin(
-//    val name: String,
-//    val classes: List<String>,
-//    val author: String,
-//)
-//
-//val AuthorName = "JeelPatel231"
-//
-//tasks.register<Copy>("dumpClasses") {
-//    dependsOn("build")
-//    val folder = "debug" // "release"
-//
-//    val outputDir = file("${buildDir.absolutePath}/tmp/kotlin-classes/$folder/")
-//    val classesDir = fileTree(outputDir) {
-//        include("**/*.class")
-//    }.filter {
-//        '$' !in it.name
-//    }.map {
-//        it.relativeTo(outputDir).path.removeSuffix(".class").replace('/','.')
-//    }
-//
-//    val plugin = Plugin(
-//        name = JarName,
-//        classes = classesDir,
-//        author = AuthorName
-//    )
-//
-//    val str = com.google.gson.Gson().toJson(plugin)
-//    file("${project.rootDir}/nice.json").writeText(str)
-//
-//}
+data class Plugin(
+    val name: String,
+    val classes: List<String>,
+    val author: String,
+)
+
+val AuthorName = "JeelPatel231"
+
+tasks.register<Copy>("dumpClasses") {
+    dependsOn("build")
+    val folder = "debug" // "release"
+
+    val outputDir = file("${buildDir.absolutePath}/tmp/kotlin-classes/$folder/")
+    val classesDir = fileTree(outputDir) {
+        include("**/*.class")
+    }.filter {
+        '$' !in it.name
+    }.map {
+        it.relativeTo(outputDir).path.removeSuffix(".class").replace('/', '.')
+    }
+
+    val plugin = Plugin(
+        name = JarName,
+        classes = classesDir,
+        author = AuthorName
+    )
+
+    val str = com.google.gson.Gson().toJson(plugin)
+    file("${project.rootDir}/nice.json").writeText(str)
+
+}

@@ -8,8 +8,12 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.OkHttpClient
 import tel.jeelpa.otter.databinding.ActivityMainBinding
 import tel.jeelpa.otter.ui.generic.getOuterNavController
+import java.util.logging.Level
+import java.util.logging.Logger
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -18,6 +22,9 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Logger.getLogger(OkHttpClient::class.qualifiedName!!).level = Level.FINE;
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

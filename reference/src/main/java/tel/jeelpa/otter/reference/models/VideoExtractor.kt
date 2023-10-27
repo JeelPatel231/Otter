@@ -16,8 +16,10 @@ data class VideoServer(
     val name: String,
     val embed: FileUrl,
     val extraData: Map<String, String> = emptyMap(),
-)
-
+) {
+    constructor(name: String, embedUrl: String, extraData: Map<String, String> = emptyMap())
+            : this(name, FileUrl(embedUrl), extraData)
+}
 /**
  * A Container for keeping video & subtitles, so you dont need to check backend
  * **/
@@ -32,6 +34,7 @@ data class VideoContainer(
 @Serializable
 @Parcelize
 data class Video(
+    val title: String,
     /**
      * Will represent quality to user in form of `"${quality}p"` (1080p)
      *
@@ -71,18 +74,19 @@ data class Video(
     val extraNote: String? = null,
 ) : Parcelable {
     constructor(
+        title: String,
         quality: Int?,
         format: VideoType,
         url: String,
         size: Double? = null,
         extraNote: String? = null,
-    ) : this(quality, format, FileUrl(url), size, extraNote)
+    ) : this(title, quality, format, FileUrl(url), size, extraNote)
 
-    constructor(quality: Int? = null, videoType: VideoType, url: String, size: Double?)
-            : this(quality, videoType, FileUrl(url), size)
+    constructor(title:String, quality: Int? = null, videoType: VideoType, url: String, size: Double?)
+            : this(title,quality, videoType, FileUrl(url), size)
 
-    constructor(quality: Int? = null, videoType: VideoType, url: String)
-            : this(quality, videoType, FileUrl(url))
+    constructor(title:String, quality: Int? = null, videoType: VideoType, url: String)
+            : this(title, quality, videoType, FileUrl(url))
 }
 
 /**

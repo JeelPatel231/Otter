@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient
 import tel.jeelpa.otter.reference.BaseExtractor
 import tel.jeelpa.otter.reference.RegisterUseCase
 import tel.jeelpa.otter.reference.models.Video
+import tel.jeelpa.otter.reference.models.VideoServer
 import tel.jeelpa.otter.reference.models.VideoType
 
 class DummyExtractor(
@@ -12,17 +13,19 @@ class DummyExtractor(
 ) : BaseExtractor() {
 
     override fun canExtract(domain: String): Boolean {
-        return domains.contains(domain)
+        return domain in domains
     }
 
-    override fun extract(uri: String): List<Video> {
+    override suspend fun extract(server: VideoServer, extraData: Map<String, String>): List<Video> {
         return listOf(
             Video(
+                "Direct Url",
                 1080,
                 VideoType.CONTAINER,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
             ),
             Video(
+                "Proxy",
                 720,
                 VideoType.CONTAINER,
                 "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"

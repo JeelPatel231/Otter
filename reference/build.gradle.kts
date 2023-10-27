@@ -40,10 +40,12 @@ android {
 
 dependencies {
     // kotlinx serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
     // API
     api("com.squareup.okhttp3:okhttp:4.11.0")
+
+    api("org.jsoup:jsoup:1.16.2")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
