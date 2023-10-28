@@ -43,7 +43,6 @@ class ExoplayerFragment : Fragment() {
 
 
     @Inject lateinit var exoplayer: ExoPlayer
-//    private var sourceSelectionDialog: SourceSelectionDialog by autoCleared()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

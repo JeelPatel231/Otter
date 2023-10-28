@@ -34,16 +34,6 @@ import tel.jeelpa.otter.ui.fragments.mangadetails.MangaActivity
 import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
 
-
-//fun FragmentActivity.getOuterNavController() : NavController {
-//    val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_activity_container_view) as NavHostFragment
-//    return navHostFragment.navController
-//}
-
-// only works in single activity app, because the requireActivity() will point to the main activity
-//fun Fragment.getOuterNavController() : NavController = requireActivity().getOuterNavController()
-
-
 fun FragmentManager.getNavControllerFromHost(resId: Int) =
     (findFragmentById(resId) as NavHostFragment).navController
 
@@ -94,28 +84,6 @@ fun crossfadeViews(contentView: View, loadingView: View) {
 
 }
 
-// Parcelables Extension
-//inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
-//    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
-//    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
-//}
-//
-//inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-//    SDK_INT >= 33 -> getParcelable(key, T::class.java)
-//    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
-//}
-//
-//inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? = when {
-//    SDK_INT >= 33 -> getParcelableArrayList(key, T::class.java)
-//    else -> @Suppress("DEPRECATION") getParcelableArrayList(key)
-//}
-//
-//inline fun <reified T : Parcelable> Intent.parcelableArrayList(key: String): ArrayList<T>? = when {
-//    SDK_INT >= 33 -> getParcelableArrayListExtra(key, T::class.java)
-//    else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
-//}
-
-
 fun Context.navigateToMediaDetails(mediaCardData: MediaCardData){
     val activity = when(mediaCardData.type) {
         AppMediaType.ANIME -> AnimeActivity::class.java
@@ -143,10 +111,6 @@ fun Context.copyToClipboard(label: String,text:String){
     val clipboardManager = getSystemService(ClipboardManager::class.java)
     clipboardManager.setPrimaryClip(ClipData.newPlainText(label,text))
 }
-
-
-// https://stackoverflow.com/a/60356890
-//fun Fragment.getNavParentFragment() = requireParentFragment().requireParentFragment()
 
 fun Fragment.showToast(text: String, duration: Int = Toast.LENGTH_SHORT) =
     requireActivity().showToast(text, duration)
@@ -179,12 +143,3 @@ fun String.nullOnBlank(): String? {
     return this
 }
 
-//fun NavController.navigateWithDefaultAnimation(directions: NavDirections) =
-//    navigate(directions, navOptions {
-//        anim {
-//            enter = R.anim.first_anim
-//            exit = R.anim.first_anim
-//            popEnter = R.anim.first_anim
-//            popExit = R.anim.first_anim
-//        }
-//    })

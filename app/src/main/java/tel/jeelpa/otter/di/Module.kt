@@ -109,14 +109,6 @@ class DIModule {
         return PluginInitializer(application, httpClient, registerUseCase)
     }
 
-//    @Provides
-//    @Singleton
-//    fun providesExoplayer(
-//        application: Application
-//    ) : ExoPlayer {
-//        return ExoPlayer.Builder(application).build()
-//    }
-
 }
 
 
