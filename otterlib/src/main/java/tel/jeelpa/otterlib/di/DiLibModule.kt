@@ -4,6 +4,8 @@ import com.apollographql.apollo3.ApolloClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import tel.jeelpa.otterlib.data.AnimeClientImpl
 import tel.jeelpa.otterlib.data.MangaClientImpl
@@ -23,14 +25,21 @@ class DiLibModule {
             .build()
     }
 
+}
+
+// TODO : Scope this better
+@Module
+@InstallIn(ViewModelComponent::class)
+class DIViewModelModule {
+
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun providesAnilistAnimeClientImpl(apolloClient: ApolloClient) : AnimeClient {
         return AnimeClientImpl(apolloClient)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun providesAnilistMangaClientImpl(apolloClient: ApolloClient) : MangaClient {
         return MangaClientImpl(apolloClient)
     }

@@ -92,11 +92,16 @@ class AnimeClientImpl(
         )
     }
 
+    private lateinit var malScrapedCache: MalMediaScrapedDetails
     override suspend fun getOpenings(id: Int): List<String> {
-        return scrapeMalDetails(id, AppMediaType.ANIME).openings
+        if (::malScrapedCache.isInitialized) return malScrapedCache.openings
+        malScrapedCache = scrapeMalDetails(id, AppMediaType.ANIME)
+        return malScrapedCache.openings
     }
 
     override suspend fun getEndings(id: Int): List<String> {
-        return scrapeMalDetails(id, AppMediaType.ANIME).endings
+        if (::malScrapedCache.isInitialized) return malScrapedCache.endings
+        malScrapedCache = scrapeMalDetails(id, AppMediaType.ANIME)
+        return malScrapedCache.endings
     }
 }
