@@ -7,9 +7,13 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -144,8 +148,31 @@ fun Context.copyToClipboard(label: String,text:String){
 // https://stackoverflow.com/a/60356890
 //fun Fragment.getNavParentFragment() = requireParentFragment().requireParentFragment()
 
-fun Fragment.showToast(text:String, duration: Int = Toast.LENGTH_SHORT) =
+fun Fragment.showToast(text: String, duration: Int = Toast.LENGTH_SHORT) =
     requireActivity().showToast(text, duration)
+
+fun Context.showToast(text:String, duration: Int = Toast.LENGTH_SHORT) =
+   Toast.makeText(this, text, duration).show()
+
+
+fun Fragment.goFullScreen() {
+    val window = requireActivity().window
+    val windowInsetsController = WindowCompat.getInsetsController(window,window.decorView)
+
+    windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+
+    windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+}
+
+fun Fragment.hideFullScreen() {
+    val window = requireActivity().window
+    val windowInsetsController = WindowCompat.getInsetsController(window,window.decorView)
+
+    windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+    windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+}
 
 fun String.nullOnBlank(): String? {
     if (isBlank()) return null

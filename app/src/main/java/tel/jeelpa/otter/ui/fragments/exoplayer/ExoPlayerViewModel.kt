@@ -32,10 +32,11 @@ class ExoPlayerViewModel @Inject constructor(
 ) : ViewModel() {
     var videoServers = emptyList<VideoServer>()
 
-    suspend fun extract(videoServer: VideoServer) = channelFlow {
-        extractorManager.extract(videoServer).asyncForEach {
-            send(it)
+    fun extractVideos() = channelFlow {
+        videoServers.asyncForEach { vidServer ->
+            extractorManager.extract(vidServer).asyncForEach { video ->
+                send(video)
+            }
         }
-        close()
     }
 }

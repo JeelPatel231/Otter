@@ -5,34 +5,40 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import androidx.activity.ComponentDialog
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.otter.databinding.SourceSelectionBottomSheetBinding
+import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otter.ui.generic.autoCleared
+import tel.jeelpa.otter.ui.generic.observeFlow
 
-class BottomSheetSourceSelector(
-    private val sourcesAdapter: SourceSelectionAdapter
-) : BottomSheetDialogFragment() {
+class SourceSelectionDialog(
+    private val liveData: Flow<List<Video>>,
+    private val onItemClick: (Video) -> Unit,
+) : DialogFragment() {
     private var binding: SourceSelectionBottomSheetBinding by autoCleared()
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val createdDialog = super.onCreateDialog(savedInstanceState)
-        // Make it fully expand when shown
-        createdDialog.setOnShowListener {
-            val bottomSheet = createdDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-            BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
-        }
-
-        return createdDialog
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         binding = SourceSelectionBottomSheetBinding.inflate(inflater, container, false)
+
+        binding.dismissButton.setOnClickListener {
+            dismiss()
+        }
+
+        val sourcesAdapter = SourceSelectionAdapter {
+            onItemClick(it)
+            dismiss()
+        }
+
+        liveData.observeFlow(viewLifecycleOwner) {
+            sourcesAdapter.setData(it)
+        }
 
         binding.sourceSelectionRecyclerView.apply {
             adapter = sourcesAdapter
@@ -41,4 +47,9 @@ class BottomSheetSourceSelector(
 
         return binding.root
     }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return ComponentDialog(requireContext(), android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen)
+    }
+
 }

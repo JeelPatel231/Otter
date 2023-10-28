@@ -19,9 +19,17 @@
     <style name="Theme.Otter" parent="Base.Theme.Otter" >
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+
         <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
         <item name="android:windowSoftInputMode">adjustPan</item>
+    </style>
+    
+    <style name="Theme.Otter.TranslucentNavigation" parent="Base.Theme.Otter">
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
 </resources>

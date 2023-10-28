@@ -1,6 +1,7 @@
 package tel.jeelpa.otter.ui.generic
 
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MimeTypes
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.HttpDataSource
@@ -20,7 +21,10 @@ class CreateMediaSourceFromVideo(
      private val createMediaSourceFromUri: CreateMediaSourceFromUri
 ) {
     operator fun invoke(video: Video): MediaSource {
-        return createMediaSourceFromUri(video.url.url, video.format, video.url.headers)
+        val mediaMetadata = MediaMetadata.Builder()
+            .setTitle(video.title)
+            .build()
+        return createMediaSourceFromUri(video.url.url, video.format, video.url.headers, mediaMetadata)
     }
 }
 
@@ -29,7 +33,12 @@ class CreateMediaSourceFromUri(
     private val okHttpSourceFactory: OkHttpClient,
     private val simpleVideoCache: SimpleCache,
 ) {
-    operator fun invoke(url: String, format: VideoType, headers: Map<String, String> = emptyMap()): BaseMediaSource {
+    operator fun invoke(
+        url: String,
+        format: VideoType,
+        headers: Map<String, String> = emptyMap(),
+        mediaMetadata: MediaMetadata = MediaMetadata.Builder().build()
+    ): BaseMediaSource {
         val dataSourceFactory = DataSource.Factory {
             val dataSource: HttpDataSource =
                 OkHttpDataSource.Factory(okHttpSourceFactory).createDataSource()
@@ -45,22 +54,24 @@ class CreateMediaSourceFromUri(
         }
 
         val mediaItemBuilder = MediaItem.Builder().setUri(url)
+        val mimeType = when(format){
+            VideoType.M3U8 -> MimeTypes.APPLICATION_M3U8
+            VideoType.DASH -> MimeTypes.APPLICATION_MPD
+            else -> MimeTypes.APPLICATION_MP4
+        }
+
+        val mediaItem = mediaItemBuilder
+            .setMimeType(mimeType)
+            .setMediaMetadata(mediaMetadata)
+            .build()
 
         val mediaSource = when (format) {
-            VideoType.M3U8 -> {
-                val mediaItem = mediaItemBuilder.setMimeType(MimeTypes.APPLICATION_M3U8).build()
-                HlsMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
-            }
+            VideoType.M3U8 -> HlsMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
 
-            VideoType.DASH -> {
-                val mediaItem = mediaItemBuilder.setMimeType(MimeTypes.APPLICATION_MPD).build()
-                DashMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
-            }
+            VideoType.DASH -> DashMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
+
             // mp4 just works with progressive containers
-            else -> {
-                val mediaItem = mediaItemBuilder.setMimeType(MimeTypes.APPLICATION_MP4).build()
-                ProgressiveMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
-            }
+            else -> ProgressiveMediaSource.Factory(cacheFactory).createMediaSource(mediaItem)
         }
 
         return mediaSource
