@@ -7,14 +7,14 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import tel.jeelpa.otter.factories.TrackerClientFactory
 import tel.jeelpa.otter.ui.generic.showToast
-import tel.jeelpa.otterlib.repository.TrackerClient
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginHandlerActivity : AppCompatActivity() {
 
-    @Inject lateinit var userHandler: TrackerClient
+    @Inject lateinit var trackerFactory: TrackerClientFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +27,7 @@ class LoginHandlerActivity : AppCompatActivity() {
     }
 
     private suspend fun handleLogin(){
+        val userHandler = trackerFactory()
         val data = intent?.data ?: return showToast("Intent Data Null/Invalid!", Toast.LENGTH_SHORT)
 
         if(data.authority != "logintracker") {

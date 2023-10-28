@@ -7,11 +7,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import tel.jeelpa.otter.BuildConfig
+import tel.jeelpa.otter.factories.TrackerClientFactory
 import tel.jeelpa.otterlib.data.LoginImpl
-import tel.jeelpa.otterlib.data.TrackerClientImpl
 import tel.jeelpa.otterlib.models.AnilistData
 import tel.jeelpa.otterlib.repository.LoginProcedure
-import tel.jeelpa.otterlib.repository.TrackerClient
 import tel.jeelpa.otterlib.store.UserStore
 import javax.inject.Singleton
 
@@ -51,15 +50,15 @@ class DILibModule {
 
     @Provides
     @Singleton
-    fun providesTrackerClient(
+    fun providesTrackerFactory(
         httpClient: OkHttpClient,
         userStore: UserStore,
         anilistData: AnilistData,
-    ) : TrackerClient {
-        return TrackerClientImpl(
-            anilistData,
-            httpClient,
+    ) : TrackerClientFactory {
+        return TrackerClientFactory(
             userStore,
+            httpClient,
+            anilistData,
         )
     }
 }

@@ -8,7 +8,9 @@ import com.apollographql.apollo3.api.http.HttpResponse
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -20,7 +22,6 @@ import tel.jeelpa.otter.type.MediaListStatus
 import tel.jeelpa.otter.type.MediaType
 import tel.jeelpa.otterlib.models.AnilistData
 import tel.jeelpa.otterlib.models.AnilistRequestBody
-import tel.jeelpa.otterlib.models.AnilistResponseBody
 import tel.jeelpa.otterlib.models.AppMediaListStatus
 import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.User
@@ -37,7 +38,7 @@ class AuthorizationInterceptor(
         request: HttpRequest,
         chain: HttpInterceptorChain
     ): HttpResponse {
-        val token = userStore.getAccessToken.first()
+        val token = userStore.trackerData.first()?.access_token
             ?: throw IllegalStateException("User Not Logged In")
 
         val response =
@@ -69,8 +70,10 @@ class TrackerClientImpl(
         .addHttpInterceptor(AuthorizationInterceptor(userStore, ::refreshToken))
         .build()
 
-    override suspend fun isLoggedIn(): Boolean {
-        return userStore.getAccessToken.first() != null
+    override suspend fun isLoggedIn(): Flow<Boolean> = flow {
+        userStore.trackerData.collect {
+            emit(it != null)
+        }
     }
 
     override suspend fun login(callbackUri: Uri) = coroutineScope {
@@ -95,11 +98,7 @@ class TrackerClientImpl(
             ).build()
 
         val response = httpClient.newCall(request).execute()
-        val decoded = Json.decodeFromString<AnilistResponseBody>(response.body!!.string())
-
-        userStore.saveAccessToken(decoded.access_token)
-        userStore.saveRefreshToken(decoded.refresh_token)
-        userStore.saveExpiresIn(decoded.expires_in)
+        userStore.saveTrackerData(response.body!!.string())
     }
 
     override suspend fun logout() {
