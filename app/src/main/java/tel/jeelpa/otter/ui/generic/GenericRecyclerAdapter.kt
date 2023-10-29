@@ -80,3 +80,10 @@ fun <TFlowSource, TData, TBinding, TAdapter: GenericRecyclerAdapter<TData, TBind
     }
 }
 
+// when the list itself is the source of recycler view items
+fun <TData, TFlowSource: Collection<TData>, TBinding, TAdapter: GenericRecyclerAdapter<TData, TBinding>> Fragment.initRecycler(
+    adapter: TAdapter,
+    recyclerView: RecyclerView,
+    shimmerFrameLayout: ShimmerFrameLayout,
+    flowSource: Flow<TFlowSource?>,
+) = initRecycler(adapter, recyclerView, shimmerFrameLayout, flowSource) { it }

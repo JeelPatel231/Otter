@@ -53,21 +53,21 @@ class AnimeFragment: Fragment(){
             binding.firstRowRecyclerView,
             binding.firstRowShimmerView.root,
             animeHomeViewModel.trendingAnime
-        ){ it }
+        )
 
         initRecycler(
             MediaCardAdapter(::navigateToAnimeDetails),
             binding.secondRowRecyclerView,
             binding.secondRowShimmerView.root,
             animeHomeViewModel.recentlyUpdated
-        ){ it }
+        )
 
         initRecycler(
             MediaCardAdapter(::navigateToAnimeDetails),
             binding.thirdRowRecyclerView,
             binding.thirdRowShimmerView.root,
             animeHomeViewModel.popularAnime
-        ){ it }
+        )
 
         return binding.root
     }

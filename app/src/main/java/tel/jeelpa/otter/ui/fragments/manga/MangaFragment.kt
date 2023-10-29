@@ -39,21 +39,21 @@ class MangaFragment : Fragment(){
             binding.firstRowRecyclerView,
             binding.firstRowShimmerView.root,
             mangaFragmentViewModel.trendingManga
-        ) { it }
+        )
 
         initRecycler(
             MediaCardAdapter(::navigateToDetails),
             binding.secondRowRecyclerView,
             binding.secondRowShimmerView.root,
             mangaFragmentViewModel.popularManga
-        ){ it }
+        )
 
         initRecycler(
             MediaCardAdapter(::navigateToDetails),
             binding.thirdRowRecyclerView,
             binding.thirdRowShimmerView.root,
             mangaFragmentViewModel.trendingNovel
-        ){ it }
+        )
 
         return binding.root
     }
