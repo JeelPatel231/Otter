@@ -11,16 +11,14 @@ class ExtractorManager {
     val extractors
         get() = _extractorsLoaded.toList()
 
-    suspend fun extract(server: VideoServer): List<Video> = withContext(Dispatchers.IO){
-        return@withContext _extractorsLoaded
-            .also { println("DEBUG : LOADED EXTRACTORS : $it") }
-            .filter { it.canExtract(server) }
-            .also { println("DEBUG: FILTERED EXTRACTORS : $it") }
-            .flatMap { it.extract(server) }
-            .also { println("DEBUG: FINAL EXTRACTED : $it") }
+    suspend fun extract(server: VideoServer): List<Video> {
+        return withContext(Dispatchers.IO) {
+            _extractorsLoaded
+                .filter { it.canExtract(server) }
+                .flatMap { it.extract(server) }
+        }
     }
 
-    // TODO : any parsers shouldn't be able to access this and register anything
     fun registerExtractor(extractor: Extractor){
         _extractorsLoaded.add(extractor)
     }
