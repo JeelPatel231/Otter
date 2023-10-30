@@ -1,18 +1,15 @@
-package tel.jeelpa.plugin
+package tel.jeelpa.plugin.extractors
 
-import okhttp3.OkHttpClient
-import tel.jeelpa.otter.reference.BaseExtractor
-import tel.jeelpa.otter.reference.RegisterUseCase
+import android.net.Uri
+import tel.jeelpa.otter.reference.Extractor
 import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otter.reference.models.VideoServer
 import tel.jeelpa.otter.reference.models.VideoType
 
-class DummyExtractor(
-    private val okHttpClient: OkHttpClient,
-    override val registerUseCase: RegisterUseCase,
-) : BaseExtractor() {
+class DummyExtractor : Extractor {
 
-    override fun canExtract(domain: String): Boolean {
+    override fun canExtract(server: VideoServer): Boolean {
+        val domain = Uri.parse(server.embed.url).host
         return domain in domains
     }
 

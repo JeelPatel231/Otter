@@ -21,7 +21,6 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.TrackSelectionDialogBuilder
 import coil.load
@@ -75,7 +74,11 @@ class ExoplayerFragment : Fragment() {
     private fun showDialog() {
         val ssDialog = SourceSelectionDialog(videoSourcesLiveDataCache){
             val mediaSource = exoplayerViewModel.createMediaSourceFromVideo(it)
-            exoplayer.setMediaSource(mediaSource)
+            exoplayer.apply {
+                setMediaSource(mediaSource)
+                prepare()
+                play()
+            }
         }
 
         ssDialog.show(childFragmentManager, tag)
@@ -125,10 +128,6 @@ class ExoplayerFragment : Fragment() {
         }
 
         exoplayer.prepare()
-
-        exoplayer.trackSelectionParameters = DefaultTrackSelector.Parameters.Builder()
-            .setMaxVideoSize(1920, 1080)
-            .build()
 
         // use the player itself to dictate some UI components reactively on state change
         exoplayer.addListener(object : Player.Listener {

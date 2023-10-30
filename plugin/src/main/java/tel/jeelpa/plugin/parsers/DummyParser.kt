@@ -1,18 +1,12 @@
-package tel.jeelpa.plugin
+package tel.jeelpa.plugin.parsers
 
-import okhttp3.OkHttpClient
 import tel.jeelpa.otter.reference.BaseParser
-import tel.jeelpa.otter.reference.RegisterUseCase
 import tel.jeelpa.otter.reference.models.Episode
 import tel.jeelpa.otter.reference.models.FileUrl
 import tel.jeelpa.otter.reference.models.ShowResponse
 import tel.jeelpa.otter.reference.models.VideoServer
 
-class DummyParser(
-    private val okHttpClient: OkHttpClient,
-    override val registerUseCase: RegisterUseCase
-): BaseParser() {
-
+class DummyParser : BaseParser() {
     override val name: String = "DummyParser"
 
     override val isNSFW: Boolean = false

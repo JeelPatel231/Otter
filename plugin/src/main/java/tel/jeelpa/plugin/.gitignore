@@ -1,4 +1,4 @@
 *.kt
 
-!DummyExtractor.kt
-!DummyParser.kt
+!extractors/DummyExtractor.kt
+!parsers/DummyParser.kt

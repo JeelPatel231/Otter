@@ -3,7 +3,6 @@ package tel.jeelpa.otter.plugins
 import android.content.Context
 import dalvik.system.DexClassLoader
 import okhttp3.OkHttpClient
-import tel.jeelpa.otter.reference.PluginMetadata
 import tel.jeelpa.otter.reference.RegisterUseCase
 import kotlin.reflect.full.primaryConstructor
 
@@ -25,7 +24,5 @@ class PluginInitializer (
             .kotlin
             .primaryConstructor!!
             .call(httpClient, registerUseCase)
-            .let { it as PluginMetadata }
-            .plugins.forEach { it.register() }
     }
 }

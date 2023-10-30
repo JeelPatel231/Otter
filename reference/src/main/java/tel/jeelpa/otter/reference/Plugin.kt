@@ -1,9 +1,7 @@
 package tel.jeelpa.otter.reference
 
-interface Plugin {
-    fun register()
-}
+//interface Plugin;
 
-interface PluginMetadata {
-    val plugins: List<Plugin>
-}
+//interface PluginMetadata {
+//    val plugins: List<Plugin>
+//}
