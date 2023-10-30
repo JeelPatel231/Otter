@@ -21,7 +21,9 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.ui.PlayerView
+import androidx.media3.ui.TrackSelectionDialogBuilder
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -124,6 +126,10 @@ class ExoplayerFragment : Fragment() {
 
         exoplayer.prepare()
 
+        exoplayer.trackSelectionParameters = DefaultTrackSelector.Parameters.Builder()
+            .setMaxVideoSize(1920, 1080)
+            .build()
+
         // use the player itself to dictate some UI components reactively on state change
         exoplayer.addListener(object : Player.Listener {
             val playPause =
@@ -159,6 +165,10 @@ class ExoplayerFragment : Fragment() {
                 .navigateUp()
         }
 
+        binding.root.findViewById<ImageButton>(R.id.exo_quality).setOnClickListener {
+            binding.root.showTrackSelectionDialog()
+        }
+
         // Source Selection Dialog
         exoplayerViewModel.extractVideos().observeFlow(viewLifecycleOwner) {
             videoSourcesLiveDataCache.value += it
@@ -180,9 +190,7 @@ class ExoplayerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-//        requireActivity().setTheme(R.style.Theme_Otter)
         exoplayer.release()
-        // restore device orientation
         super.onDestroyView()
     }
 }
@@ -198,6 +206,17 @@ class ExoplayerGestureView(
     private enum class ViewSide {
         LEFT,
         RIGHT
+    }
+
+    fun showTrackSelectionDialog() {
+        val currentPlayer = player ?: return context.showToast("Player is null.")
+        val trackSelectionDialogBuilder =
+            // TODO : getString available qualities from strings.xml
+            TrackSelectionDialogBuilder(
+                context,"Available Qualities",currentPlayer,androidx.media3.common.C.TRACK_TYPE_VIDEO
+            )
+        trackSelectionDialogBuilder.setTheme(android.R.style.Theme_Material_Dialog_NoActionBar_MinWidth)
+        trackSelectionDialogBuilder.build().show()
     }
 
     fun toggleLock(){

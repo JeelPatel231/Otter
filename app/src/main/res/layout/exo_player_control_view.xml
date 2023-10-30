@@ -132,8 +132,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
                         android:backgroundTint="#00FFFFFF"
+                        app:tint="@color/white"
                         android:src="@drawable/round_high_quality_24"
-                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
