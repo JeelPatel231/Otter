@@ -50,6 +50,7 @@ class AnimeDetailsWatchFragment : Fragment() {
             setOnItemClickListener { adapterView, _, idx, _ ->
                 // cancel the old job
                 episodeScrapeJob?.cancel()
+                binding.selectedAnimeTitle.text = "Searching..."
                 // clear the episodes array
                 episodesAdapter.setData(emptyList())
                 // start scaping with the new parser
