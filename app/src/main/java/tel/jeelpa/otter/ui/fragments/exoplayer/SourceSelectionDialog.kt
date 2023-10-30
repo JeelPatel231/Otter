@@ -27,6 +27,9 @@ class SourceSelectionDialog(
         super.onCreateView(inflater, container, savedInstanceState)
         binding = SourceSelectionBottomSheetBinding.inflate(inflater, container, false)
 
+        // set animation to dialog
+        dialog?.window?.attributes?.windowAnimations = com.google.android.material.R.style.MaterialAlertDialog_Material3_Animation
+
         binding.dismissButton.setOnClickListener {
             dismiss()
         }
