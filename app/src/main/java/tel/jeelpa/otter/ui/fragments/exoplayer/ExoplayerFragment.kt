@@ -1,12 +1,16 @@
 package tel.jeelpa.otter.ui.fragments.exoplayer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
@@ -103,7 +107,7 @@ class ExoplayerFragment : Fragment() {
             // add gesture handler
             timeline.setForceDisabled(false)
         }
-
+        binding.root.toggleLock()
     }
 
     override fun onCreateView(
@@ -172,20 +176,6 @@ class ExoplayerFragment : Fragment() {
         binding.root.findViewById<ImageButton>(R.id.exo_unlock)
             .setOnClickListener { toggleLock() }
 
-
-//        val rightGestureDetector = exoplayerRightAreaGestureListener(requireContext())
-//        binding.root.findViewById<View>(R.id.exo_forward_area).setOnTouchListener { view, evt ->
-//            rightGestureDetector.onTouchEvent(evt)
-//            view.performClick()
-//        }
-
-
-//        val leftGestureDetector = exoplayerLeftAreaGestureListener(requireContext())
-//        binding.root.findViewById<View>(R.id.exo_rewind_area).setOnTouchListener { view, evt ->
-//            leftGestureDetector.onTouchEvent(evt)
-//            view.performClick()
-//        }
-
         return binding.root
     }
 
@@ -197,42 +187,74 @@ class ExoplayerFragment : Fragment() {
     }
 }
 
-
-private fun exoplayerRightAreaGestureListener(
-    context: Context
-): GestureDetector {
-    val gesturesListener = object : GesturesListener() {
-        override fun onDoubleClick(event: MotionEvent) {
-            context.showToast("Double Clicked")
-        }
-
-        override fun onScrollYClick(y: Float) {
-            context.showToast("Scrolled Y")
-        }
-
-        override fun onSingleClick(event: MotionEvent) {
-            context.showToast("Single Clicked")
-        }
-    }
-    return GestureDetector(context, gesturesListener)
-}
-
-
-private fun exoplayerLeftAreaGestureListener(
+@androidx.media3.common.util.UnstableApi
+class ExoplayerGestureView(
     context: Context,
-): GestureDetector {
-    val gesturesListener = object : GesturesListener() {
-        override fun onDoubleClick(event: MotionEvent) {
-            context.showToast("Double Clicked")
-        }
+    attrSet: AttributeSet? = null,
+    defStyleAttr: Int,
+) : PlayerView(context, attrSet, defStyleAttr){
+    constructor(context: Context, attrSet: AttributeSet?) : this(context, attrSet, 0)
+    private var locked = false
+    private enum class ViewSide {
+        LEFT,
+        RIGHT
+    }
 
-        override fun onScrollYClick(y: Float) {
-            context.showToast("Scrolled Y")
-        }
-
-        override fun onSingleClick(event: MotionEvent) {
-            context.showToast("Single Clicked")
+    fun toggleLock(){
+        locked = !locked
+        if(locked){
+            setOnTouchListener(null)
+        } else {
+            setOnTouchListener(touchListener)
         }
     }
-    return GestureDetector(context, gesturesListener)
+
+    private fun getViewSide(evt: MotionEvent) : ViewSide {
+        return when (rootView.width/2 > evt.x){
+            true -> ViewSide.LEFT
+            false -> ViewSide.RIGHT
+        }
+    }
+
+    private val gesturesDetector = GestureDetector(context, object : SimpleOnGestureListener(){
+
+        // TODO : play animations when triggered
+        override fun onDoubleTapEvent(e: MotionEvent): Boolean {
+            // if no media is playing, dont handle the event
+            if (player?.mediaItemCount == 0) return false
+
+            hideController()
+            when (getViewSide(e)){
+                ViewSide.LEFT -> player?.seekBack()
+                ViewSide.RIGHT -> player?.seekForward()
+            }
+            return true
+        }
+
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+            // since we only consider vertical scrolls,
+            // we don't care if the user scrolled horizontally in the first place
+            return false // TODO : HANDLE THE EVENT AND RETURN TRUE
+        }
+
+    })
+
+    @SuppressLint("ClickableViewAccessibility")
+    val touchListener = OnTouchListener { view, event ->
+        if (event != null && gesturesDetector.onTouchEvent(event)){
+            true
+        } else {
+            super.onTouchEvent(event)
+        }
+    }
+
+     init {
+         setOnTouchListener(touchListener)
+     }
+
 }
