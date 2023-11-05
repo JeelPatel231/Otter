@@ -15,6 +15,7 @@ import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.ui.fragments.exoplayer.ExoPlayerViewModel
+import tel.jeelpa.otter.ui.fragments.mediaCommon.WrongMediaSelectionBottomSheetDialog
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
@@ -32,12 +33,25 @@ class AnimeDetailsWatchFragment : Fragment() {
         binding.root.requestLayout()
     }
 
+    private fun showDialog(){
+        val dialog = WrongMediaSelectionBottomSheetDialog(
+            animeDetailsViewModel.searchedAnimes,
+            onItemClick = { animeDetailsViewModel.onSelectAnime(it) },
+            onSearchClick = { animeDetailsViewModel.searchAnime(it) }
+        )
+        dialog.show(childFragmentManager, "WrongTitle")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAnimeDetailsWatchBinding.inflate(inflater, container, false)
+
+        binding.wrongTitle.setOnClickListener {
+            showDialog()
+        }
 
         val episodesAdapter = EpisodeAdapter(lifecycleScope) {
             exoPlayerViewModel.videoServers = animeDetailsViewModel.getVideoServers(it.link)
@@ -63,13 +77,20 @@ class AnimeDetailsWatchFragment : Fragment() {
                 // start scaping with the new parser
                 episodeScrapeJob = lifecycleScope.launch(Dispatchers.IO) {
                     try {
-                        animeDetailsViewModel.startSearch(adapterView.getItemAtPosition(idx) as Parser)
+                        animeDetailsViewModel.onParserChange(adapterView.getItemAtPosition(idx) as Parser)
                     } catch (e: Throwable) {
                         requireActivity().runOnUiThread {
                             binding.selectedAnimeTitle.text = e.message
                         }
                     }
                 }
+            }
+        }
+
+        animeDetailsViewModel.selectedParser.observeFlow(viewLifecycleOwner){
+            binding.wrongTitle.visibility = when(it){
+                null -> View.GONE
+                else -> View.VISIBLE
             }
         }
 

@@ -33,6 +33,7 @@
         tools:text="Anime Title Gah Dam it overflow like anything dawg" />
 
     <RelativeLayout
+        android:id="@+id/metadata_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -51,10 +52,10 @@
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
             android:layout_centerInParent="true"
             android:layout_toEndOf="@+id/score"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             android:src="@drawable/round_star_24"
             app:tint="?attr/colorAccent" />
 

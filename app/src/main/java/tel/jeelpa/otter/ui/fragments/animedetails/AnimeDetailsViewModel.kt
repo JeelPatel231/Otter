@@ -55,24 +55,34 @@ class AnimeDetailsViewModel @Inject constructor(
     val episodesScraped
         get() = _episodesScraped.asStateFlow()
 
-    suspend fun startSearch(parser: Parser) = withContext(Dispatchers.IO) {
+    // TODO: Refactor these scraping functions to improve reactivity
+
+    // onParserChange -> clear everything
+    // onAnimeChange -> clear anime and episodes
+
+    suspend fun onParserChange(parser: Parser) = withContext(Dispatchers.IO) {
         _selectedParser.value = parser
-        _searchedAnimes.value = parser.search(navArgs.title)
+        searchAnime(navArgs.title)
         val firstAnime = searchedAnimes.value.firstOrNull()
             ?: throw Exception("No Anime Found")
-        _selectedAnime.value = firstAnime
-        loadEpisodes()
+        onSelectAnime(firstAnime)
     }
 
-    // TODO : show searchedAnimes in the bottom sheet
-    // TODO : loadEpisodes() on clicking an entry from the bottom sheet
-    // TODO : scrape links on clicking Episode Link in recycler view
+    suspend fun searchAnime(query: String) = withContext(Dispatchers.IO){
+        _searchedAnimes.value = emptyList()
+        _searchedAnimes.value = selectedParser.value!!.search(query)
+    }
+    suspend fun onSelectAnime(anime: ShowResponse){
+        _episodesScraped.value = emptyList()
+        _selectedAnime.value = anime
+        loadEpisodes()
+    }
 
     suspend fun getVideoServers(episodeLink: String): List<VideoServer> = withContext(Dispatchers.IO){
         return@withContext selectedParser.value!!.loadVideoServers(episodeLink)
     }
 
-    private suspend fun loadEpisodes() {
+    private suspend fun loadEpisodes() = withContext(Dispatchers.IO){
         _episodesScraped.value = selectedParser.value!!.loadEpisodes(selectedAnime.value!!.link)
     }
 
