@@ -35,9 +35,9 @@ class MainActivity : AppCompatActivity() {
         binding.fragmentPagerContainer.apply {
             adapter = viewPagerAdapter
             isUserInputEnabled = false
+            setupWithBottomNav(binding.mainBottomNav, 1)
         }
 
-        binding.fragmentPagerContainer.setupWithBottomNav(binding.mainBottomNav)
     }
 
     override fun onDestroy() {

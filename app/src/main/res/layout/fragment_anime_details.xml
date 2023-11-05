@@ -41,14 +41,21 @@
                 android:textStyle="bold"
                 tools:text="Anime Title" />
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/media_details_fragment_container"
-                android:name="androidx.navigation.fragment.NavHostFragment"
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/anime_pager_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/media_title"
-                app:defaultNavHost="true"
-                app:navGraph="@navigation/anime_details_nav_graph" />
+                android:layout_height="wrap_content" />
+
+<!--            <androidx.fragment.app.FragmentContainerView-->
+<!--                android:id="@+id/media_details_fragment_container"-->
+<!--                android:name="androidx.navigation.fragment.NavHostFragment"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@+id/media_title"-->
+<!--                app:defaultNavHost="true"-->
+<!--                app:navGraph="@navigation/anime_details_nav_graph" />-->
 
 
         </RelativeLayout>

@@ -6,19 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.size.Scale
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.databinding.FragmentMangaDetailsBinding
+import tel.jeelpa.otter.ui.generic.ViewPageNavigatorAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
 import tel.jeelpa.otter.ui.generic.observeFlow
+import tel.jeelpa.otter.ui.generic.setupWithBottomNav
 
 @AndroidEntryPoint
 class MangaDetailsFragment : Fragment() {
     private val mangaDetailsViewModel: MangaDetailsViewModel by activityViewModels()
     private var binding: FragmentMangaDetailsBinding by autoCleared()
+
+    private val mangaInfoFragment = MangaDetailsInfoFragment()
+    private val mangaReadFragment = MangaDetailsReadFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,8 +31,18 @@ class MangaDetailsFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentMangaDetailsBinding.inflate(inflater, container, false)
 
-        val navController = getNavControllerFromHost(binding.mediaDetailsFragmentContainer.id)
-        binding.bottomNavigationBar.setupWithNavController(navController)
+        val viewPageNavigatorAdapter = ViewPageNavigatorAdapter(
+            childFragmentManager,
+            lifecycle,
+            arrayOf(mangaInfoFragment, mangaReadFragment)
+        )
+
+        binding.mangaPagerContainer.apply {
+            adapter = viewPageNavigatorAdapter
+            isUserInputEnabled = false
+            setupWithBottomNav(binding.bottomNavigationBar)
+        }
+
         binding.mediaTitle.text = mangaDetailsViewModel.navArgs.title
 
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner){
