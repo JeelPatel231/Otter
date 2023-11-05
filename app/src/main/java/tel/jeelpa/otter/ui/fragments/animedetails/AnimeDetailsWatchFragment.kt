@@ -25,6 +25,13 @@ class AnimeDetailsWatchFragment : Fragment() {
     private val exoPlayerViewModel: ExoPlayerViewModel by activityViewModels()
     private var binding: FragmentAnimeDetailsWatchBinding by autoCleared()
     private var episodeScrapeJob: Job? = null
+
+    override fun onResume() {
+        super.onResume()
+        // Update Height after ViewPager makes fragment transaction
+        binding.root.requestLayout()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

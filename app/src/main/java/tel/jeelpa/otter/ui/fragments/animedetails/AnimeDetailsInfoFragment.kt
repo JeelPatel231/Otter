@@ -36,6 +36,12 @@ class AnimeDetailsInfoFragment: Fragment() {
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
 
+    override fun onResume() {
+        super.onResume()
+        // Update Height after ViewPager makes fragment transaction
+        binding.root.requestLayout()
+    }
+
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -13,6 +13,12 @@ class MangaDetailsReadFragment : Fragment() {
     private var binding: SampleTextScreenLayoutBinding by autoCleared()
     private val mangaDetailsViewModel: MangaDetailsViewModel by activityViewModels()
 
+    override fun onResume() {
+        super.onResume()
+        // Update Height after ViewPager makes fragment transaction
+        binding.root.requestLayout()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
