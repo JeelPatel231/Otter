@@ -58,7 +58,9 @@ class AnimeDetailsViewModel @Inject constructor(
     suspend fun startSearch(parser: Parser) = withContext(Dispatchers.IO) {
         _selectedParser.value = parser
         _searchedAnimes.value = parser.search(navArgs.title)
-        _selectedAnime.value = searchedAnimes.value.first()
+        val firstAnime = searchedAnimes.value.firstOrNull()
+            ?: throw Exception("No Anime Found")
+        _selectedAnime.value = firstAnime
         loadEpisodes()
     }
 

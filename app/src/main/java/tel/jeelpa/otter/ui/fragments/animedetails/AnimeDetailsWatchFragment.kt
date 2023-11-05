@@ -55,7 +55,13 @@ class AnimeDetailsWatchFragment : Fragment() {
                 episodesAdapter.setData(emptyList())
                 // start scaping with the new parser
                 episodeScrapeJob = lifecycleScope.launch(Dispatchers.IO) {
-                    animeDetailsViewModel.startSearch(adapterView.getItemAtPosition(idx) as Parser)
+                    try {
+                        animeDetailsViewModel.startSearch(adapterView.getItemAtPosition(idx) as Parser)
+                    } catch (e: Throwable) {
+                        requireActivity().runOnUiThread {
+                            binding.selectedAnimeTitle.text = e.message
+                        }
+                    }
                 }
             }
         }
