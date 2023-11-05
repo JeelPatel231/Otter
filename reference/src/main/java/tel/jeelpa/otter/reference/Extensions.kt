@@ -11,7 +11,7 @@ import okhttp3.RequestBody
 import okhttp3.Response
 
 
-suspend fun <T, U> Collection<T>.asyncMap( transform: (T) -> U ) = coroutineScope {
+suspend fun <T, U> Collection<T>.asyncMap( transform: suspend (T) -> U ) = coroutineScope {
     map { async { transform(it) } }.map { it.await() }
 }
 
