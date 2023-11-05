@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "tel.jeelpa.plugin"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24
