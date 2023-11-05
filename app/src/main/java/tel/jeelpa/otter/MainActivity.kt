@@ -2,10 +2,13 @@ package tel.jeelpa.otter
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.databinding.ActivityMainBinding
+import tel.jeelpa.otter.ui.fragments.anime.AnimeFragment
+import tel.jeelpa.otter.ui.fragments.home.HomeContainerFragment
+import tel.jeelpa.otter.ui.fragments.manga.MangaFragment
+import tel.jeelpa.otter.ui.generic.ViewPageNavigatorAdapter
+import tel.jeelpa.otter.ui.generic.setupWithBottomNav
 
 
 @AndroidEntryPoint
@@ -15,14 +18,26 @@ class MainActivity : AppCompatActivity() {
     val binding
         get() = _binding!!
 
+    private val fragmentsList = arrayOf(
+        AnimeFragment(),
+        HomeContainerFragment(),
+        MangaFragment()
+    )
+
+    private val viewPagerAdapter = ViewPageNavigatorAdapter(supportFragmentManager, lifecycle, fragmentsList)
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(binding.mainFragmentContainerView.id) as NavHostFragment
-        binding.mainBottomNav.setupWithNavController(navHostFragment.navController)
+        binding.fragmentPagerContainer.apply {
+            adapter = viewPagerAdapter
+            isUserInputEnabled = false
+        }
+
+        binding.fragmentPagerContainer.setupWithBottomNav(binding.mainBottomNav)
     }
 
     override fun onDestroy() {
