@@ -1,6 +1,8 @@
 package tel.jeelpa.otter.ui.generic
 
 import androidx.core.view.children
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -20,15 +22,34 @@ class ViewPageNavigatorAdapter(
 
 }
 
-fun ViewPager2.setupWithBottomNav(bottomNavigationView: BottomNavigationView){
+fun ViewPager2.setupWithBottomNav(bottomNavigationView: BottomNavigationView, default: Int = 0){
+    // adapter must be set before setting up with bottom navigation view
+    val adapterLocal = adapter
+        ?: throw NullPointerException("Adapter MUST be set before setting up BottomNavigationView")
+    // and the size MUST be same as the number of fragments and menu items
+    assert(bottomNavigationView.menu.size == adapterLocal.itemCount)
+
+    // use something else than a Map, something like reverse array lookup
     val itemMap = bottomNavigationView.menu.children.mapIndexed { idx, item ->
         item.itemId to idx
     }.toMap()
 
+
+    // binding from navBar to ViewPager
     bottomNavigationView.setOnItemSelectedListener {
         currentItem = itemMap[it.itemId]!!
         true
     }
+
+    // binding from viewPager to BottomNavBar
+    registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            bottomNavigationView.menu[position].isChecked = true
+        }
+    })
+
+    // has a delay, TODO: fix the delay
+    currentItem = default
 }
 
 //fun BottomNavigationView.setupWithViewPager(viewPager : ViewPager2){
