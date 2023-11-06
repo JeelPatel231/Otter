@@ -30,10 +30,7 @@ class ExoPlayerViewModel @Inject constructor(
     val createMediaSourceFromVideo: CreateMediaSourceFromVideo,
     private val extractorManager: ExtractorManager
 ) : ViewModel() {
-    // gets overwritten everytime ExoplayerFragment is called
-    var videoServers = emptyList<VideoServer>()
-
-    fun extractVideos() = channelFlow {
+    fun extractVideos(videoServers: Collection<VideoServer>) = channelFlow {
         videoServers.asyncForEach { vidServer ->
             extractorManager.extract(vidServer).asyncForEach { video ->
                 send(video)

@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.reference.Parser
-import tel.jeelpa.otter.ui.fragments.exoplayer.ExoPlayerViewModel
 import tel.jeelpa.otter.ui.fragments.mediaCommon.WrongMediaSelectionBottomSheetDialog
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
@@ -23,7 +22,6 @@ import tel.jeelpa.otter.ui.generic.observeFlow
 
 class AnimeDetailsWatchFragment : Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
-    private val exoPlayerViewModel: ExoPlayerViewModel by activityViewModels()
     private var binding: FragmentAnimeDetailsWatchBinding by autoCleared()
     private var episodeScrapeJob: Job? = null
 
@@ -54,9 +52,9 @@ class AnimeDetailsWatchFragment : Fragment() {
         }
 
         val episodesAdapter = EpisodeAdapter(lifecycleScope) {
-            exoPlayerViewModel.videoServers = animeDetailsViewModel.getVideoServers(it.link)
+            val videoServers = animeDetailsViewModel.getVideoServers(it.link)
             requireActivity().getNavControllerFromHost(R.id.anime_activity_container_view).navigate(
-                AnimeDetailsFragmentDirections.toExoplayerFragment()
+                AnimeDetailsFragmentDirections.toExoplayerFragment(videoServers.toTypedArray())
             )
         }
 

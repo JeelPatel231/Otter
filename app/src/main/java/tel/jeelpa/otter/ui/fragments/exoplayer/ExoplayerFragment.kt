@@ -23,6 +23,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.TrackSelectionDialogBuilder
+import androidx.navigation.fragment.navArgs
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +46,7 @@ class ExoplayerFragment : Fragment() {
     private val exoplayerViewModel: ExoPlayerViewModel by activityViewModels()
     private var binding: FragmentExoplayerBinding by autoCleared()
     private val videoSourcesLiveDataCache = MutableStateFlow(listOf<Video>())
-
+    private val exoNavArgs by navArgs<ExoplayerFragmentArgs>()
 
     @Inject lateinit var exoplayer: ExoPlayer
 
@@ -169,7 +170,8 @@ class ExoplayerFragment : Fragment() {
         }
 
         // Source Selection Dialog
-        exoplayerViewModel.extractVideos().observeFlow(viewLifecycleOwner) {
+        val videoServers = exoNavArgs.videoServers.toList()
+        exoplayerViewModel.extractVideos(videoServers).observeFlow(viewLifecycleOwner) {
             videoSourcesLiveDataCache.value += it
         }
 

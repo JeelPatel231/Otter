@@ -12,11 +12,12 @@ import kotlinx.serialization.Serializable
  *
  * **/
 @Serializable
+@Parcelize
 data class VideoServer(
     val name: String,
     val embed: FileUrl,
     val extraData: Map<String, String> = emptyMap(),
-) {
+) : Parcelable {
     constructor(name: String, embedUrl: String, extraData: Map<String, String> = emptyMap())
             : this(name, FileUrl(embedUrl), extraData)
 }
