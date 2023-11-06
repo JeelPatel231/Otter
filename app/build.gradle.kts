@@ -111,7 +111,7 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 
     // memory leaks
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.11")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
 
     // data layer
     implementation(project(mapOf("path" to ":otterlib")))
