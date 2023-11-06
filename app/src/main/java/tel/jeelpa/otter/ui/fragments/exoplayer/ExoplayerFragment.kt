@@ -82,7 +82,7 @@ class ExoplayerFragment : Fragment() {
             }
         }
 
-        ssDialog.show(childFragmentManager, tag)
+        ssDialog.show(parentFragmentManager, tag)
     }
 
     private fun toggleLock() {
