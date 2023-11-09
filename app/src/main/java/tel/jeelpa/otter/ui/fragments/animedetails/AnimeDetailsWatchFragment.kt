@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -96,16 +96,15 @@ class AnimeDetailsWatchFragment : Fragment() {
             binding.selectedAnimeTitle.text = it?.name ?: "Nothing Selected"
         }
 
-        binding.episodesRecycler.apply {
-            adapter = episodesAdapter
-            layoutManager = LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.VERTICAL,
-                false
+        binding.tabbedRecyclerView.apply {
+            setAdapter(episodesAdapter)
+            setLayoutManager(
+                GridLayoutManager(requireContext(),2)
             )
         }
+
         animeDetailsViewModel.episodesScraped.observeFlow(viewLifecycleOwner) {
-            episodesAdapter.setData(it)
+            binding.tabbedRecyclerView.setData(it)
         }
 
         return binding.root

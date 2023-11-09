@@ -43,8 +43,10 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/episodes_recycler"
+    <tel.jeelpa.otter.ui.customviews.TabbedRecyclerView
+        android:id="@+id/tabbed_recycler_view"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -23,4 +23,6 @@ data class Episode(
      * In case, you want to pass extra data
      * **/
     val extra: Map<String,String> = emptyMap(),
-)
+) {
+    override fun toString(): String = number
+}

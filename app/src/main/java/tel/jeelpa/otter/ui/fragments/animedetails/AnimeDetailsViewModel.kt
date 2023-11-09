@@ -62,6 +62,7 @@ class AnimeDetailsViewModel @Inject constructor(
 
     suspend fun onParserChange(parser: Parser) = withContext(Dispatchers.IO) {
         _selectedParser.value = parser
+        _episodesScraped.value = emptyList() // don't wait for searching, clear episodes asap
         searchAnime(navArgs.title)
         val firstAnime = searchedAnimes.value.firstOrNull()
             ?: throw Exception("No Anime Found")
