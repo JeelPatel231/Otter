@@ -17,6 +17,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import tel.jeelpa.otter.CurrentUserMediaQuery
+import tel.jeelpa.otter.GetUserRecommendationsQuery
 import tel.jeelpa.otter.GetViewerDataQuery
 import tel.jeelpa.otter.type.MediaListStatus
 import tel.jeelpa.otter.type.MediaType
@@ -183,5 +184,29 @@ class TrackerClientImpl(
                 chapters = it.chapters,
             )
         }
+    }
+
+
+    override suspend fun getRecommendations(): List<MediaCardData> {
+        return anilistApolloClient.query(GetUserRecommendationsQuery())
+            .execute()
+            .data
+            ?.Page
+            ?.recommendations
+            ?.mapNotNull { it?.mediaRecommendation }
+            ?.map {
+                MediaCardData(
+                    id = it.id,
+                    title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
+                    status = it.status!!.toApp(),
+                    type = it.type!!.toApp(),
+                    isAdult = it.isAdult ?: false,
+                    meanScore = (it.meanScore ?: 0)/10f,
+                    coverImage = it.coverImage?.large!!,
+                    nextAiringEpisode = it.nextAiringEpisode?.episode,
+                    episodes = it.episodes,
+                    chapters = it.chapters,
+                )
+            } ?: emptyList()
     }
 }

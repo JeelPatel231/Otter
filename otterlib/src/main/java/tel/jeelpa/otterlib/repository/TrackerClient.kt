@@ -20,6 +20,8 @@ interface TrackerClient {
     suspend fun getCurrentAnime(): List<MediaCardData>
 
     suspend fun getCurrentManga(): List<MediaCardData>
+
+    suspend fun getRecommendations(): List<MediaCardData>
 }
 
 interface LoginProcedure {

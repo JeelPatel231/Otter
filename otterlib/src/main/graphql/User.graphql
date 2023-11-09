@@ -67,3 +67,51 @@ query getViewerData {
         }
     }
 }
+
+
+query getUserRecommendations {
+    Page(page: 1, perPage:30) {
+        pageInfo {
+            total
+            currentPage
+            hasNextPage
+        }
+        recommendations(sort: RATING_DESC, onList: true) {
+            rating
+            userRating
+            mediaRecommendation {
+                id
+                idMal
+                isAdult
+                mediaListEntry {
+                    progress
+                    private
+                    score(format:POINT_100)
+                    status
+                }
+                chapters
+                isFavourite
+                format
+                episodes
+                nextAiringEpisode {
+                    episode
+                }
+                popularity
+                meanScore
+                isFavourite
+                format
+                title {
+                    english
+                    romaji
+                    userPreferred
+                }
+                type
+                status(version: 2)
+                bannerImage
+                coverImage {
+                    large
+                }
+            }
+        }
+    }
+}
