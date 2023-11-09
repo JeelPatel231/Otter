@@ -1,6 +1,5 @@
 package tel.jeelpa.otter.ui.fragments.anime
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
-import tel.jeelpa.otter.ui.fragments.animedetails.AnimeActivity
-import tel.jeelpa.otter.ui.fragments.mangadetails.MangaActivity
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initRecycler
-import tel.jeelpa.otterlib.models.AppMediaType
+import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otterlib.models.MediaCardData
 
 
@@ -25,16 +22,8 @@ class AnimeFragment: Fragment(){
 
     private val animeHomeViewModel : AnimeFragmentViewModel by viewModels()
 
-    private fun navigateToAnimeDetails(mediaCardData: MediaCardData){
-        val activity = when(mediaCardData.type) {
-            AppMediaType.ANIME -> AnimeActivity::class.java
-            AppMediaType.MANGA -> MangaActivity::class.java
-            else -> throw IllegalStateException("Unknown Media Type")
-        }
-        val newIntent = Intent(requireContext(), activity)
-            .putExtra("data", mediaCardData)
-        startActivity(newIntent)
-    }
+    private fun navigateToDetails(mediaCardData: MediaCardData) =
+        requireContext().navigateToMediaDetails(mediaCardData)
 
 
     override fun onCreateView(
@@ -49,21 +38,21 @@ class AnimeFragment: Fragment(){
         binding.thirdRowText.text = getString(R.string.popular_anime)
 
         initRecycler(
-            MediaCardAdapter(::navigateToAnimeDetails),
+            MediaCardAdapter(::navigateToDetails),
             binding.firstRowRecyclerView,
             binding.firstRowShimmerView.root,
             animeHomeViewModel.trendingAnime
         )
 
         initRecycler(
-            MediaCardAdapter(::navigateToAnimeDetails),
+            MediaCardAdapter(::navigateToDetails),
             binding.secondRowRecyclerView,
             binding.secondRowShimmerView.root,
             animeHomeViewModel.recentlyUpdated
         )
 
         initRecycler(
-            MediaCardAdapter(::navigateToAnimeDetails),
+            MediaCardAdapter(::navigateToDetails),
             binding.thirdRowRecyclerView,
             binding.thirdRowShimmerView.root,
             animeHomeViewModel.popularAnime
