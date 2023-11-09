@@ -26,6 +26,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -101,6 +102,14 @@ fun View.visibilityGone() {
 
 fun <X> Flow<X>.observeFlow(lifecycleOwner: LifecycleOwner,callback: (X) -> Unit) =
     lifecycleOwner.lifecycleScope.launch { flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(callback) }
+
+fun <X> Flow<X>.observeUntil(lifecycleOwner: LifecycleOwner, predicate : (X) -> Boolean, callback: (X) -> Unit) =
+    lifecycleOwner.lifecycleScope.launch {
+        flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect {
+            callback(it)
+            if (predicate(it)) cancel()
+        }
+    }
 
 
 fun Activity.showToast(text:String, duration: Int = Toast.LENGTH_SHORT){

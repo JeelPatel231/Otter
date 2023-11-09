@@ -17,6 +17,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -27,6 +28,8 @@ import androidx.navigation.fragment.navArgs
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentExoplayerBinding
 import tel.jeelpa.otter.reference.models.Video
@@ -35,6 +38,7 @@ import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
 import tel.jeelpa.otter.ui.generic.goFullScreen
 import tel.jeelpa.otter.ui.generic.hideFullScreen
 import tel.jeelpa.otter.ui.generic.observeFlow
+import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.visibilityGone
 import javax.inject.Inject
@@ -171,9 +175,31 @@ class ExoplayerFragment : Fragment() {
 
         // Source Selection Dialog
         val videoServers = exoNavArgs.videoServers.toList()
-        exoplayerViewModel.extractVideos(videoServers).observeFlow(viewLifecycleOwner) {
+
+        // collect the flow once, cache it
+        val extractedSharedFlow = exoplayerViewModel.extractVideos(videoServers).shareIn(lifecycleScope, SharingStarted.Eagerly)
+        extractedSharedFlow.observeFlow(viewLifecycleOwner) {
             videoSourcesLiveDataCache.value += it
         }
+        // also start playing in exoplayer when first video source arrives
+        // observe only the first event from shared flow
+        // apparently this works too
+        extractedSharedFlow.observeUntil(viewLifecycleOwner, predicate = { true }){
+            val mediaSource = exoplayerViewModel.createMediaSourceFromVideo(it)
+            exoplayer.setMediaSource(mediaSource)
+        }
+
+        // THIS WORKS, TESTED
+//        lifecycleScope.launch {
+//            extractedSharedFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collect {
+//                val mediaSource = exoplayerViewModel.createMediaSourceFromVideo(it)
+//                exoplayer.setMediaSource(mediaSource)
+//                cancel("Stop after playing first video")
+//            }
+//        }
+
+
+//        extractedSharedFlow.first()
 
         // Show Source Selector on Button click
         binding.root.findViewById<ImageButton>(R.id.exo_source).setOnClickListener {
