@@ -16,6 +16,9 @@
     <string name="trending_manga">Trending Manga</string>
     <string name="trending_novel">Trending Novel</string>
 
+    <string name="episodes_watched">Episodes Watched : %d</string>
+    <string name="chapters_read">Chapters Read : %d</string>
+
 
     <string name="total_media">Total %s</string>
 
