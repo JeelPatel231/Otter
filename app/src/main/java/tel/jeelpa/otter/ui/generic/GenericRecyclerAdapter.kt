@@ -74,7 +74,7 @@ fun <TFlowSource, TData, TBinding, TAdapter: GenericRecyclerAdapter<TData, TBind
 
     flowSource.observeFlow(viewLifecycleOwner){
         it?.let {
-            adapter.addAll(flowData(it))
+            adapter.setData(flowData(it))
             crossfadeViews(recyclerView, shimmerFrameLayout)
         }
     }

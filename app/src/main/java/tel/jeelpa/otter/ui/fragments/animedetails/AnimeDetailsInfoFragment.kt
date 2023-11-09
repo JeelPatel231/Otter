@@ -118,7 +118,7 @@ class AnimeDetailsInfoFragment: Fragment() {
                     tagsChipGroup.addView(Chip(ctx).apply { text = i })
                 }
 
-                characterAdapter.addAll(it.characters)
+                characterAdapter.setData(it.characters)
             }
         }
 
@@ -149,14 +149,14 @@ class AnimeDetailsInfoFragment: Fragment() {
             ops ?: return@observeFlow
 
             if (ops.isEmpty()) binding.openings.visibilityGone()
-            else openingsAdapter.addAll(ops)
+            else openingsAdapter.setData(ops)
         }
 
         animeDetailsViewModel.mediaEndings.observeFlow(viewLifecycleOwner) { eds ->
             eds ?: return@observeFlow
 
             if (eds.isEmpty()) binding.endings.visibilityGone()
-            else endingsAdapter.addAll(eds)
+            else endingsAdapter.setData(eds)
         }
 
         return binding.root
