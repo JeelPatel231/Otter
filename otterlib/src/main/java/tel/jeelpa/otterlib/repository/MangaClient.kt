@@ -4,6 +4,8 @@ import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.MediaDetailsFull
 
 interface MangaClient {
+    suspend fun search(query: String) : List<MediaCardData>
+
     suspend fun getTrendingManga(): List<MediaCardData>
 
     suspend fun getPopularManga(): List<MediaCardData>

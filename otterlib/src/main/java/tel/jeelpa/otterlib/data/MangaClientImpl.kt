@@ -4,6 +4,7 @@ import com.apollographql.apollo3.ApolloClient
 import tel.jeelpa.otter.type.MediaFormat
 import tel.jeelpa.otter.type.MediaSort
 import tel.jeelpa.otter.type.MediaType
+import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.MediaDetailsFull
 import tel.jeelpa.otterlib.repository.MangaClient
@@ -11,6 +12,9 @@ import tel.jeelpa.otterlib.repository.MangaClient
 class MangaClientImpl(
     private val anilistApolloClient: ApolloClient
 ) : BaseClient(anilistApolloClient),MangaClient {
+
+    override suspend fun search(query: String): List<MediaCardData> =
+        super.search(query, null, null, AppMediaType.MANGA)
 
     override suspend fun getTrendingManga(): List<MediaCardData> =
         executeBaselineMediaQuery(

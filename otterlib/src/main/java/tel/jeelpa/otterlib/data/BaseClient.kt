@@ -4,10 +4,12 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import tel.jeelpa.otter.GetMediaDetailsQuery
 import tel.jeelpa.otter.MediaBaselineQuery
+import tel.jeelpa.otter.MediaSearchQuery
 import tel.jeelpa.otter.type.MediaFormat
 import tel.jeelpa.otter.type.MediaSort
 import tel.jeelpa.otter.type.MediaType
 import tel.jeelpa.otterlib.models.AppDate
+import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.AppTrailer
 import tel.jeelpa.otterlib.models.CharacterCardData
 import tel.jeelpa.otterlib.models.MediaCardData
@@ -20,6 +22,33 @@ import tel.jeelpa.otterlib.models.toApp
 abstract class BaseClient (
     private val anilistClient: ApolloClient
 ) {
+    suspend fun search(query: String, page: Int?, perPage: Int?, mediaType: AppMediaType) : List<MediaCardData> {
+        val mMediaType = when(mediaType) {
+            AppMediaType.ANIME -> MediaType.ANIME
+            AppMediaType.MANGA -> MediaType.MANGA
+            else -> MediaType.UNKNOWN__
+        }
+        return anilistClient.query(MediaSearchQuery(
+            query,
+            Optional.presentIfNotNull(page),
+            Optional.presentIfNotNull(perPage),
+            mMediaType
+        )).execute().data?.Page?.media?.mapNotNull { it?.let {
+            MediaCardData(
+                id = it.id,
+                title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
+                status = it.status!!.toApp(),
+                type = it.type!!.toApp(),
+                isAdult = it.isAdult ?: false,
+                meanScore = (it.meanScore ?: 0) / 10f,
+                coverImage = it.coverImage?.large!!,
+                nextAiringEpisode = it.nextAiringEpisode?.episode,
+                episodes = it.episodes,
+                chapters = it.chapters,
+            )
+        } } ?: emptyList()
+    }
+
     suspend fun executeBaselineMediaQuery(
         page: Int = 1,
         perPage: Int = 30,

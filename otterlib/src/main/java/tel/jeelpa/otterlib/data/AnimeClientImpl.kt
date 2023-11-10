@@ -15,6 +15,8 @@ import tel.jeelpa.otterlib.repository.AnimeClient
 class AnimeClientImpl(
     private val anilistApolloClient: ApolloClient
 ) : BaseClient(anilistApolloClient), AnimeClient {
+    override suspend fun search(query: String): List<MediaCardData> =
+        super.search(query, null, null, AppMediaType.ANIME)
 
     override suspend fun getTrendingAnime(): List<MediaCardData> {
         return executeBaselineMediaQuery(
