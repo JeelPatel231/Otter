@@ -23,6 +23,12 @@ class AnimeFragmentViewModel @Inject constructor(
     private val _recentlyUpdated: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
     val recentlyUpdated = _recentlyUpdated.asStateFlow()
 
+    private val _searchResults: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
+    val searchResults = _searchResults.asStateFlow()
+
+    fun search(query: String) = viewModelScope.launch {
+        _searchResults.value = animeClient.search(query)
+    }
 
     init {
         with(viewModelScope) {

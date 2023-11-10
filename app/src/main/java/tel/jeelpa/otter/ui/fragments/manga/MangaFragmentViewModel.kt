@@ -23,6 +23,12 @@ class MangaFragmentViewModel @Inject constructor(
     private val _trendingNovel: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
     val trendingNovel = _trendingNovel.asStateFlow()
 
+    private val _searchResults: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
+    val searchResults = _searchResults.asStateFlow()
+
+    fun search(query: String) = viewModelScope.launch {
+        _searchResults.value = mangaClient.search(query)
+    }
     init {
         with(viewModelScope) {
             launch { _trendingManga.value = mangaClient.getTrendingManga() }
