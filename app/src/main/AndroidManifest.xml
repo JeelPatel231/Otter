@@ -46,6 +46,19 @@
             android:theme="@style/Theme.Otter">
         </activity>
 
+        <activity android:name=".activities.AnilistLinkHandler"
+            android:exported="true">
+            <intent-filter android:label="Character Details">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!--                https://anilist.co/character/137080/Makima-->
+                <data android:scheme="http"/>
+                <data android:scheme="https"/>
+                <data android:host="anilist.co"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.LoginHandlerActivity"
             android:exported="true">
             <intent-filter android:label="Anilist Login">

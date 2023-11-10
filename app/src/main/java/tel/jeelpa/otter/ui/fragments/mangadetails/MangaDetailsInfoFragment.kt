@@ -1,10 +1,10 @@
 package tel.jeelpa.otter.ui.fragments.mangadetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +16,11 @@ import tel.jeelpa.otter.databinding.MediaInfoLayoutBinding
 import tel.jeelpa.otter.ui.adapters.CharacterCardAdapter
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
+import tel.jeelpa.otter.ui.fragments.character.CharacterActivity
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
-import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.visibilityGone
 import tel.jeelpa.otterlib.models.MediaCardData
 import javax.inject.Inject
@@ -74,10 +74,9 @@ class MangaDetailsInfoFragment : Fragment() {
         )
 
         val characterAdapter = CharacterCardAdapter {
-            showToast(
-                "CLICKED CHARACTER $it",
-                Toast.LENGTH_SHORT
-            )
+            val intent = Intent(requireActivity(), CharacterActivity::class.java)
+                .putExtra("characterId", it.id)
+            startActivity(intent)
         }
         binding.charactersRecyclerView.apply {
             adapter = characterAdapter

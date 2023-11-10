@@ -2,6 +2,7 @@ package tel.jeelpa.otter.ui.fragments.animedetails
 
 import androidx.lifecycle.LifecycleCoroutineScope
 import coil.load
+import coil.size.Scale
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.databinding.ItemEpisodeLayoutBinding
@@ -23,6 +24,8 @@ class EpisodeAdapter(
         }
         binding.titleHolder.text = entry.title?.nullOnBlank() ?: ""
         binding.numberHolder.text = entry.number.nullOnBlank()
-        binding.coverHolder.load(entry.thumbnail)
+        binding.coverHolder.load(entry.thumbnail){
+            scale(Scale.FILL)
+        }
     }
 }

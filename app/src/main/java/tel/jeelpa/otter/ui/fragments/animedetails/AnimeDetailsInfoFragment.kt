@@ -72,7 +72,7 @@ class AnimeDetailsInfoFragment: Fragment() {
 
         val characterAdapter = CharacterCardAdapter {
             val intent = Intent(requireActivity(), CharacterActivity::class.java)
-                .putExtra("data", it)
+                .putExtra("characterId", it.id)
             startActivity(intent)
         }
         binding.charactersRecyclerView.apply {

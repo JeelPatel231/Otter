@@ -10,7 +10,6 @@ import io.noties.markwon.Markwon
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.ActivityCharacterBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
-import tel.jeelpa.otter.ui.generic.fadeInto
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import javax.inject.Inject
@@ -34,13 +33,11 @@ class CharacterActivity : AppCompatActivity() {
         binding.rolesRecycler.layoutManager = GridLayoutManager(this, 3)
 
         // load the low quality cached image
-        binding.coverImage.load(characterDataViewModel.navArgs.avatar)
-        binding.characterName.text = characterDataViewModel.navArgs.name
 
         characterDataViewModel.character.observeFlow(this){ it?.let {
             // load better quality image when fetched
-            binding.coverImage.fadeInto(it.avatar)
-
+            binding.coverImage.load(it.avatar)
+            binding.characterName.text = it.name
             binding.ageHolder.text = resources.getString(R.string.age, it.age)
             binding.birthdayHolder.text = resources.getString(R.string.birthday, it.dateOfBirth)
             binding.genderHolder.text = resources.getString(R.string.gender, it.gender)
