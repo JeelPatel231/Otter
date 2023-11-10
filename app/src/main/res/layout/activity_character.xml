@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:foreground="@drawable/gradient_overlay"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/character_name"
+            style="?attr/textAppearanceHeadlineMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="-30dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="3"
+            android:maxLines="3"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            tools:text="Character Name" />
+
+
+        <TextView
+            android:paddingHorizontal="18dp"
+            android:paddingBottom="8dp"
+            style="?attr/textAppearanceHeadlineSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            tools:text="Details" />
+
+        <TextView
+            android:id="@+id/age_holder"
+            android:paddingHorizontal="18dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            tools:text="@string/age"
+            />
+        <TextView
+            android:id="@+id/birthday_holder"
+            android:paddingHorizontal="18dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            tools:text="@string/birthday"
+            />
+        <TextView
+            android:id="@+id/gender_holder"
+            android:paddingHorizontal="18dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            tools:text="@string/gender"
+            />
+
+        <TextView
+            android:paddingHorizontal="18dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:id="@+id/character_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@tools:sample/lorem/random"/>
+
+        <TextView
+            android:textAppearance="?attr/textAppearanceHeadlineLarge"
+            android:padding="12dp"
+            android:text="Roles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/roles_recycler"
+            android:orientation="vertical"
+            app:spanCount="3"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/media_small_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+

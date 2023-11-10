@@ -8,8 +8,10 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import tel.jeelpa.otterlib.data.AnimeClientImpl
+import tel.jeelpa.otterlib.data.CharacterClientImpl
 import tel.jeelpa.otterlib.data.MangaClientImpl
 import tel.jeelpa.otterlib.repository.AnimeClient
+import tel.jeelpa.otterlib.repository.CharacterClient
 import tel.jeelpa.otterlib.repository.MangaClient
 import javax.inject.Singleton
 
@@ -43,4 +45,12 @@ class DIViewModelModule {
     fun providesAnilistMangaClientImpl(apolloClient: ApolloClient) : MangaClient {
         return MangaClientImpl(apolloClient)
     }
+
+
+    @Provides
+    @ViewModelScoped
+    fun providesAnilistCharacterClientImpl(apolloClient: ApolloClient) : CharacterClient {
+        return CharacterClientImpl(apolloClient)
+    }
+
 }

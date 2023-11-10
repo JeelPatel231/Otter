@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import tel.jeelpa.otter.CurrentUserMediaQuery
+import tel.jeelpa.otter.GetCharacterDataQuery
 import tel.jeelpa.otter.type.MediaListStatus
 import tel.jeelpa.otter.type.MediaStatus
 import tel.jeelpa.otter.type.MediaType
@@ -38,12 +39,32 @@ data class AppNextAiringEpisode(
     val episode: Int,
 )
 
+@Parcelize
 data class CharacterCardData(
     val id: Int,
     val name: String,
     val avatar: String,
     val role: String,
+): Parcelable
+
+
+data class CharacterDataFull(
+    val id: Int,
+    val name: String,
+    val avatar: String,
+    val age: String?,
+    val gender: String?,
+    val description: String?,
+    val dateOfBirth: String?,
+    val media: List<MediaCardData>
 )
+
+fun GetCharacterDataQuery.DateOfBirth.toApp(): String {
+    if((day ?: month ?: year) == null){
+        return "??"
+    }
+    return "$day/$month/$year"
+}
 
 data class AppDate(
     val day: Int?,

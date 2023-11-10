@@ -1,0 +1,59 @@
+query getCharacterData($characterId: Int!){
+    Character(id: $characterId) {
+        id
+        name {
+            full
+        }
+        image {
+            large
+        }
+        age
+        gender
+        description
+        dateOfBirth {
+            year
+            month
+            day
+        }
+        media(page: 0,sort:[POPULARITY_DESC,SCORE_DESC]) {
+            pageInfo {
+                total
+                perPage
+                currentPage
+                lastPage
+                hasNextPage
+            }
+            edges {
+                id
+                characterRole
+                node {
+                    id
+                    idMal
+                    isAdult
+                    status
+                    chapters
+                    episodes
+                    nextAiringEpisode { episode }
+                    type
+                    meanScore
+                    isFavourite
+                    format
+                    bannerImage
+                    countryOfOrigin
+                    coverImage { large }
+                    title {
+                        english
+                        romaji
+                        userPreferred
+                    }
+                    mediaListEntry {
+                        progress
+                        private
+                        score(format: POINT_100)
+                        status
+                    }
+                }
+            }
+        }
+    }
+}

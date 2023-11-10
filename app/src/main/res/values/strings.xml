@@ -19,6 +19,10 @@
     <string name="episodes_watched">Episodes Watched : %d</string>
     <string name="chapters_read">Chapters Read : %d</string>
 
+    <string name="age">Age : %s</string>
+    <string name="birthday">Birthday : %s</string>
+    <string name="gender">Gender : %s</string>
+    <string name="height">Height : %s</string>
 
     <string name="total_media">Total %s</string>
 

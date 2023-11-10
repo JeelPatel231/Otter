@@ -40,6 +40,12 @@
             android:theme="@style/Theme.Otter">
         </activity>
 
+        <activity
+            android:name=".ui.fragments.character.CharacterActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Otter">
+        </activity>
+
         <activity android:name=".activities.LoginHandlerActivity"
             android:exported="true">
             <intent-filter android:label="Anilist Login">

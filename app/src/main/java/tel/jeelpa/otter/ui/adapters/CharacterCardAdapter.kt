@@ -7,11 +7,11 @@ import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
 import tel.jeelpa.otterlib.models.CharacterCardData
 
 class CharacterCardAdapter(
-    private val onItemClick : (Int) -> Unit
+    private val onItemClick : (CharacterCardData) -> Unit
 ): GenericRecyclerAdapter<CharacterCardData, CharacterSmallLayoutBinding>(CharacterSmallLayoutBinding::inflate) {
     override fun onBind(binding: CharacterSmallLayoutBinding, entry: CharacterCardData, position: Int) {
         binding.root.setOnClickListener {
-            onItemClick(entry.id)
+            onItemClick(entry)
         }
         binding.avatar.load(entry.avatar){
             scale(Scale.FILL)
