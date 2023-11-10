@@ -8,7 +8,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.drawable.Drawable
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.core.view.WindowCompat
@@ -23,6 +25,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.transition.TransitionTarget
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -150,5 +155,22 @@ fun Fragment.hideFullScreen() {
 fun String.nullOnBlank(): String? {
     if (isBlank()) return null
     return this
+}
+
+fun ImageView.fadeInto(data: Any?, imageRequest: ImageRequest.Builder.() -> Unit = {}){
+    val imgRequest = ImageRequest.Builder(context)
+        .data(data)
+        .crossfade(0)
+        .target(object : TransitionTarget {
+            override val drawable get() =  this@fadeInto.drawable
+            override val view get() = this@fadeInto
+            override fun onSuccess(result: Drawable) {
+                this@fadeInto.setImageDrawable(result)
+            }
+        })
+        .apply(imageRequest)
+        .build()
+
+    ImageLoader(context).enqueue(imgRequest)
 }
 

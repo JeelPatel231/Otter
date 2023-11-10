@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsBinding
 import tel.jeelpa.otter.ui.generic.ViewPageNavigatorAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
+import tel.jeelpa.otter.ui.generic.fadeInto
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.setupWithBottomNav
 
@@ -45,11 +46,14 @@ class AnimeDetailsFragment : Fragment() {
 
         binding.mediaTitle.text = animeDetailsViewModel.navArgs.title
 
+        // eagerly load the low dimension cached imaged from
+        binding.coverImage.load(animeDetailsViewModel.navArgs.coverImage){
+            scale(Scale.FILL)
+        }
+        // then load the high quality image when the API request fulfills
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner){
             it?.let {
-                binding.coverImage.load(it.coverImage){
-                    scale(Scale.FILL)
-                }
+                binding.coverImage.fadeInto(it.coverImage)
             }
         }
 
