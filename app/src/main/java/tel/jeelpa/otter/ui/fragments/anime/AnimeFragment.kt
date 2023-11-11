@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -72,8 +71,6 @@ class AnimeFragment : Fragment() {
             adapter = searchResultsAdapter
             layoutManager = GridLayoutManager(requireContext(), 3)
         }
-
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.searchBar)
 
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
             when (actionId) {
