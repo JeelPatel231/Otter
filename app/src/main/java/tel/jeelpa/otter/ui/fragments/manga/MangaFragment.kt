@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,15 +21,34 @@ import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otterlib.models.MediaCardData
 
 @AndroidEntryPoint
-class MangaFragment : Fragment(){
-    private var binding : MediaHomePageLayoutBinding by autoCleared()
-    private val mangaFragmentViewModel : MangaFragmentViewModel by viewModels()
+class MangaFragment : Fragment() {
+    private var binding: MediaHomePageLayoutBinding by autoCleared()
+    private val mangaFragmentViewModel: MangaFragmentViewModel by viewModels()
 
 
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
 
     private val searchResultsAdapter = MediaCardAdapter(::navigateToDetails)
+
+    private val backPressedCallback by lazy { requireActivity().onBackPressedDispatcher.addCallback(this) {
+        if(binding.searchView.isShowing) {
+            binding.searchView.handleBackInvoked()
+        } else {
+            requireActivity().finish()
+        }
+    }}
+
+    override fun onPause() {
+        backPressedCallback.isEnabled = false
+        super.onPause()
+    }
+
+    override fun onResume() {
+        backPressedCallback.isEnabled = true
+        super.onResume()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,9 +59,11 @@ class MangaFragment : Fragment(){
         binding.secondRowText.text = getString(R.string.popular_manga)
         binding.thirdRowText.text = getString(R.string.trending_novel)
 
-        mangaFragmentViewModel.searchResults.observeFlow(viewLifecycleOwner){ it?.let {
-            searchResultsAdapter.setData(it)
-        } }
+        mangaFragmentViewModel.searchResults.observeFlow(viewLifecycleOwner) {
+            it?.let {
+                searchResultsAdapter.setData(it)
+            }
+        }
 
         binding.searchRecycler.apply {
             adapter = searchResultsAdapter
@@ -49,16 +71,17 @@ class MangaFragment : Fragment(){
         }
 
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            when(actionId){
+            when (actionId) {
                 EditorInfo.IME_ACTION_SEARCH -> {
                     val query = textView.text.toString().nullOnBlank()
-                    if(query != null){
+                    if (query != null) {
                         mangaFragmentViewModel.search(query)
                         false
                     } else {
                         true
                     }
                 }
+
                 else -> true
             }
         }
