@@ -11,6 +11,7 @@ import coil.size.Scale
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.databinding.FragmentMangaDetailsBinding
 import tel.jeelpa.otter.ui.generic.ViewPageNavigatorAdapter
+import tel.jeelpa.otter.ui.generic.ZoomOutPageTransformer
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.fadeInto
 import tel.jeelpa.otter.ui.generic.observeFlow
@@ -42,6 +43,7 @@ class MangaDetailsFragment : Fragment() {
             adapter = viewPageNavigatorAdapter
             isUserInputEnabled = false
             setupWithBottomNav(binding.bottomNavigationBar)
+            setPageTransformer(ZoomOutPageTransformer())
         }
 
         binding.mediaTitle.text = mangaDetailsViewModel.navArgs.title

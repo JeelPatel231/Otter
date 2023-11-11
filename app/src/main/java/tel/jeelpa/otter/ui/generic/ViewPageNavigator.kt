@@ -37,7 +37,7 @@ fun ViewPager2.setupWithBottomNav(bottomNavigationView: BottomNavigationView, de
 
     // binding from navBar to ViewPager
     bottomNavigationView.setOnItemSelectedListener {
-        currentItem = itemMap[it.itemId]!!
+        setCurrentItem(itemMap[it.itemId]!!, false)
         true
     }
 

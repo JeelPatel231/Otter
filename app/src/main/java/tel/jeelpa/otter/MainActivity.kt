@@ -8,6 +8,7 @@ import tel.jeelpa.otter.ui.fragments.anime.AnimeFragment
 import tel.jeelpa.otter.ui.fragments.home.HomeContainerFragment
 import tel.jeelpa.otter.ui.fragments.manga.MangaFragment
 import tel.jeelpa.otter.ui.generic.ViewPageNavigatorAdapter
+import tel.jeelpa.otter.ui.generic.ZoomOutPageTransformer
 import tel.jeelpa.otter.ui.generic.setupWithBottomNav
 
 
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             adapter = viewPagerAdapter
             isUserInputEnabled = false
             setupWithBottomNav(binding.mainBottomNav, 1)
+            setPageTransformer(ZoomOutPageTransformer())
         }
 
     }
