@@ -71,19 +71,13 @@ class MangaFragment : Fragment() {
         }
 
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_SEARCH -> {
-                    val query = textView.text.toString().nullOnBlank()
-                    if (query != null) {
-                        mangaFragmentViewModel.search(query)
-                        false
-                    } else {
-                        true
-                    }
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                textView.text.toString().nullOnBlank()?.let {
+                    mangaFragmentViewModel.search(it)
+                    return@setOnEditorActionListener false
                 }
-
-                else -> true
             }
+            true
         }
 
         initRecycler(

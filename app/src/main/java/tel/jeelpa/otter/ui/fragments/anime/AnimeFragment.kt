@@ -72,21 +72,18 @@ class AnimeFragment : Fragment() {
             layoutManager = GridLayoutManager(requireContext(), 3)
         }
 
-        binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_SEARCH -> {
-                    val query = textView.text.toString().nullOnBlank()
-                    if (query != null) {
-                        animeHomeViewModel.search(query)
-                        false
-                    } else {
-                        true
-                    }
-                }
+        binding.searchView.setupWithSearchBar(binding.searchBar)
 
-                else -> true
+        binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                textView.text.toString().nullOnBlank()?.let {
+                    animeHomeViewModel.search(it)
+                    return@setOnEditorActionListener false
+                }
             }
+            true
         }
+
 
         initRecycler(
             MediaCardAdapter(::navigateToDetails),
