@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding.fragmentPagerContainer.apply {
             adapter = viewPagerAdapter
             isUserInputEnabled = false
-            setupWithBottomNav(binding.mainBottomNav, 1)
+            setupWithBottomNav(binding.mainBottomNav)
             setPageTransformer(ZoomOutPageTransformer())
         }
 

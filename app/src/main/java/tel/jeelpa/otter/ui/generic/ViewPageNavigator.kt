@@ -22,7 +22,7 @@ class ViewPageNavigatorAdapter(
 
 }
 
-fun ViewPager2.setupWithBottomNav(bottomNavigationView: BottomNavigationView, default: Int = 0){
+fun ViewPager2.setupWithBottomNav(bottomNavigationView: BottomNavigationView){
     // adapter must be set before setting up with bottom navigation view
     val adapterLocal = adapter
         ?: throw NullPointerException("Adapter MUST be set before setting up BottomNavigationView")
@@ -49,7 +49,7 @@ fun ViewPager2.setupWithBottomNav(bottomNavigationView: BottomNavigationView, de
     })
 
     // has a delay, TODO: fix the delay
-    currentItem = default
+//    currentItem = default
 }
 
 //fun BottomNavigationView.setupWithViewPager(viewPager : ViewPager2){
