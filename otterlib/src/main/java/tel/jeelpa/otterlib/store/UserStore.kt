@@ -8,8 +8,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.json.Json
-import tel.jeelpa.otterlib.models.AnilistResponseBody
 
 
 enum class TrackerService {
@@ -24,8 +22,8 @@ class UserStore(private val context: Context) {
         private val SERVICE = stringPreferencesKey("service_name")
     }
 
-    val trackerData: Flow<AnilistResponseBody?> = context.dataStore.data.map { pref ->
-        pref[SERIALIZED_DATA_KEY]?.let { Json.decodeFromString(it) }
+    val trackerData: Flow<String?> = context.dataStore.data.map { pref ->
+        pref[SERIALIZED_DATA_KEY]
     }
 
     val getServiceName: Flow<TrackerService> = context.dataStore.data.map { pref ->

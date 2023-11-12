@@ -23,6 +23,7 @@ import tel.jeelpa.otter.type.MediaListStatus
 import tel.jeelpa.otter.type.MediaType
 import tel.jeelpa.otterlib.models.AnilistData
 import tel.jeelpa.otterlib.models.AnilistRequestBody
+import tel.jeelpa.otterlib.models.AnilistResponseBody
 import tel.jeelpa.otterlib.models.AppMediaListStatus
 import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.User
@@ -39,8 +40,9 @@ class AuthorizationInterceptor(
         request: HttpRequest,
         chain: HttpInterceptorChain
     ): HttpResponse {
-        val token = userStore.trackerData.first()?.access_token
+        val stringData = userStore.trackerData.first()
             ?: throw IllegalStateException("User Not Logged In")
+        val token = Json.decodeFromString<AnilistResponseBody>(stringData).access_token
 
         val response =
             chain.proceed(request.newBuilder().addHeader("Authorization", "Bearer $token").build())
