@@ -29,11 +29,16 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.transition.TransitionTarget
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.ui.fragments.animedetails.AnimeActivity
 import tel.jeelpa.otter.ui.fragments.mangadetails.MangaActivity
@@ -108,6 +113,11 @@ fun View.visibilityGone() {
 fun <X> Flow<X>.observeFlow(lifecycleOwner: LifecycleOwner,callback: (X) -> Unit) =
     lifecycleOwner.lifecycleScope.launch { flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(callback) }
 
+fun <X> suspendToFlow(callback: suspend() -> X): Flow<X> = flow { emit(callback()) }
+fun <X> suspendToChannelFlow(callback: suspend() -> X): Flow<X> = channelFlow { send(callback()) }
+
+fun <X> Flow<X>.cacheInScope(coroutineScope: CoroutineScope) =
+    shareIn(coroutineScope, SharingStarted.Eagerly, 1)
 
 fun <X> Flow<X>.observeFlowFlex(lifecycleOwner: LifecycleOwner, callback: suspend Flow<X>.() -> Unit) =
     lifecycleOwner.lifecycleScope.launch { flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).callback() }

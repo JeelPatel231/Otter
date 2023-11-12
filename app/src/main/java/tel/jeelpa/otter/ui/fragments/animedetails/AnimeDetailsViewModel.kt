@@ -7,15 +7,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.reference.ParserManager
 import tel.jeelpa.otter.reference.models.Episode
 import tel.jeelpa.otter.reference.models.ShowResponse
 import tel.jeelpa.otter.reference.models.VideoServer
+import tel.jeelpa.otter.ui.generic.cacheInScope
+import tel.jeelpa.otter.ui.generic.suspendToFlow
 import tel.jeelpa.otterlib.models.MediaCardData
-import tel.jeelpa.otterlib.models.MediaDetailsFull
 import tel.jeelpa.otterlib.repository.AnimeClient
 import javax.inject.Inject
 
@@ -28,14 +30,16 @@ class AnimeDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     val navArgs = savedStateHandle.get<MediaCardData>("data")!!
 
-    private val _animeDetails: MutableStateFlow<MediaDetailsFull?> = MutableStateFlow(null)
-    val animeDetails = _animeDetails.asStateFlow()
+    val animeDetails = suspendToFlow { animeClient.getAnimeDetails(navArgs.id) }
+        .cacheInScope(viewModelScope)
 
-    private val _mediaOpenings: MutableStateFlow<List<String>?> = MutableStateFlow(null)
-    val mediaOpenings = _mediaOpenings.asStateFlow()
+    val mediaOpenings = channelFlow { animeDetails.collectLatest {
+            it.idMal?.let { idMal -> send(animeClient.getOpenings(idMal)) }
+    } }.cacheInScope(viewModelScope)
 
-    private val _mediaEndings: MutableStateFlow<List<String>?> = MutableStateFlow(null)
-    val mediaEndings = _mediaEndings.asStateFlow()
+    val mediaEndings = channelFlow { animeDetails.collectLatest {
+        it.idMal?.let { idMal -> send(animeClient.getEndings(idMal)) }
+    } }.cacheInScope(viewModelScope)
 
     val parsers
         get() = parserManager.parsers
@@ -85,16 +89,6 @@ class AnimeDetailsViewModel @Inject constructor(
 
     private suspend fun loadEpisodes() = withContext(Dispatchers.IO){
         _episodesScraped.value = selectedParser.value!!.loadEpisodes(selectedAnime.value!!.link)
-    }
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            _animeDetails.value = animeClient.getAnimeDetails(navArgs.id)
-            val malId = animeDetails.value?.idMal ?: return@launch
-
-            _mediaOpenings.value = animeClient.getOpenings(malId)
-            _mediaEndings.value = animeClient.getEndings(malId)
-        }
     }
 
 }

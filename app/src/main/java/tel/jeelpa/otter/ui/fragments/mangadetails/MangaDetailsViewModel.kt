@@ -4,11 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import tel.jeelpa.otter.ui.generic.cacheInScope
+import tel.jeelpa.otter.ui.generic.suspendToFlow
 import tel.jeelpa.otterlib.models.MediaCardData
-import tel.jeelpa.otterlib.models.MediaDetailsFull
 import tel.jeelpa.otterlib.repository.MangaClient
 import javax.inject.Inject
 
@@ -19,12 +17,7 @@ class MangaDetailsViewModel @Inject constructor(
 ): ViewModel() {
     val navArgs = savedStateHandle.get<MediaCardData>("data")!!
 
-    private val _mangaDetails: MutableStateFlow<MediaDetailsFull?> = MutableStateFlow(null)
-    val mangaDetails = _mangaDetails.asStateFlow()
+    val mangaDetails = suspendToFlow { mangaClient.getMangaDetails(navArgs.id) }
+        .cacheInScope(viewModelScope)
 
-    init {
-        viewModelScope.launch {
-            _mangaDetails.value = mangaClient.getMangaDetails(navArgs.id)
-        }
-    }
 }

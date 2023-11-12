@@ -6,6 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import tel.jeelpa.otter.ui.generic.cacheInScope
+import tel.jeelpa.otter.ui.generic.suspendToFlow
 import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.repository.MangaClient
 import javax.inject.Inject
@@ -14,14 +16,15 @@ import javax.inject.Inject
 class MangaFragmentViewModel @Inject constructor(
     private val mangaClient: MangaClient
 ): ViewModel() {
-    private val _trendingManga: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
-    val trendingManga = _trendingManga.asStateFlow()
 
-    private val _popularManga: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
-    val popularManga = _popularManga.asStateFlow()
+    val trendingManga = suspendToFlow { mangaClient.getTrendingManga() }
+        .cacheInScope(viewModelScope)
 
-    private val _trendingNovel: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
-    val trendingNovel = _trendingNovel.asStateFlow()
+    val popularManga = suspendToFlow { mangaClient.getPopularManga() }
+        .cacheInScope(viewModelScope)
+
+    val trendingNovel = suspendToFlow { mangaClient.getTrendingNovel() }
+        .cacheInScope(viewModelScope)
 
     private val _searchResults: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
     val searchResults = _searchResults.asStateFlow()
@@ -29,11 +32,5 @@ class MangaFragmentViewModel @Inject constructor(
     fun search(query: String) = viewModelScope.launch {
         _searchResults.value = mangaClient.search(query)
     }
-    init {
-        with(viewModelScope) {
-            launch { _trendingManga.value = mangaClient.getTrendingManga() }
-            launch { _popularManga.value = mangaClient.getPopularManga() }
-            launch { _trendingNovel.value = mangaClient.getTrendingNovel() }
-        }
-    }
+
 }
