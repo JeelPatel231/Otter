@@ -1,7 +1,9 @@
 package tel.jeelpa.otter.reference
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
@@ -19,7 +21,7 @@ suspend fun <T, U> Collection<T>.asyncMapNotNull( transform: suspend (T) -> U? )
     map { async { transform(it) } }.mapNotNull { it.await() }
 }
 
-fun OkHttpClient.get(url: String, referrer: String? = null, headers: Map<String, String> = emptyMap()): Response {
+suspend fun OkHttpClient.get(url: String, referrer: String? = null, headers: Map<String, String> = emptyMap()): Response {
     val request = Request.Builder()
         .url(url)
         .get()
@@ -33,7 +35,7 @@ fun OkHttpClient.get(url: String, referrer: String? = null, headers: Map<String,
         }
         .build()
 
-    return newCall(request).execute()
+    return withContext(Dispatchers.IO){ newCall(request).execute() }
 }
 
 
