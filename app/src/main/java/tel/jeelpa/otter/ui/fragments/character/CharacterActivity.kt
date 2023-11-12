@@ -37,7 +37,7 @@ class CharacterActivity : AppCompatActivity() {
         binding.rolesRecycler.adapter = rolesAdapter
         binding.rolesRecycler.layoutManager = GridLayoutManager(this, 3)
 
-        characterDataViewModel.character(characterId).observeFlow(this){ it?.let {
+        characterDataViewModel.character(characterId).observeFlow(this){
             // load better quality image when fetched
             binding.coverImage.load(it.avatar)
             binding.characterName.text = it.name
@@ -46,6 +46,6 @@ class CharacterActivity : AppCompatActivity() {
             binding.genderHolder.text = resources.getString(R.string.gender, it.gender)
             markwon.setMarkdown(binding.characterDescription,it.description ?: "")
             rolesAdapter.setData(it.media)
-        } }
+        }
     }
 }

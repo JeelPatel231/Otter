@@ -54,9 +54,7 @@ class AnimeDetailsFragment : Fragment() {
         }
         // then load the high quality image when the API request fulfills
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner){
-            it?.let {
-                binding.coverImage.fadeInto(it.coverImage)
-            }
+            binding.coverImage.fadeInto(it.coverImage)
         }
 
         return binding.root

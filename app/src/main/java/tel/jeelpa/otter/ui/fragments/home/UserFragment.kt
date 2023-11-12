@@ -48,14 +48,14 @@ class UserFragment: Fragment() {
 //            }
 //        }
 
-        userViewModel.userData.observeFlow(viewLifecycleOwner){ it?.let {
+        userViewModel.userData.observeFlow(viewLifecycleOwner){
             binding.username.text = it.username
             binding.episodesCountHolder.text = requireContext().getString(R.string.episodes_watched, it.episodeCount)
             binding.chaptersCountHolder.text = requireContext().getString(R.string.chapters_read, it.chapterCount)
             binding.avatarHolder.load(it.profileImage) {
                 scale(Scale.FIT)
             }
-        }}
+        }
 
         initRecycler(
             MediaCardAdapter(::navigateToDetails),
