@@ -108,6 +108,10 @@ fun View.visibilityGone() {
 fun <X> Flow<X>.observeFlow(lifecycleOwner: LifecycleOwner,callback: (X) -> Unit) =
     lifecycleOwner.lifecycleScope.launch { flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect(callback) }
 
+
+fun <X> Flow<X>.observeFlowFlex(lifecycleOwner: LifecycleOwner, callback: suspend Flow<X>.() -> Unit) =
+    lifecycleOwner.lifecycleScope.launch { flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).callback() }
+
 fun <X> Flow<X>.observeUntil(lifecycleOwner: LifecycleOwner, predicate : (X) -> Boolean, callback: (X) -> Unit) =
     lifecycleOwner.lifecycleScope.launch {
         flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED).collect {
