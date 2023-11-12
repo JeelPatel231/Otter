@@ -5,19 +5,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.databinding.FragmentHomeBinding
 import tel.jeelpa.otter.factories.TrackerClientFactory
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.observeFlow
+import tel.jeelpa.otter.ui.generic.observeFlowFlex
 import javax.inject.Inject
+
+@HiltViewModel
+class HomeContainerViewModel @Inject constructor(
+    private val trackerClientFactory: TrackerClientFactory
+) : ViewModel() {
+    val loggedIn = channelFlow {
+        trackerClientFactory().isLoggedIn().collectLatest {
+            send(it)
+        }
+    }.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+}
 
 @AndroidEntryPoint
 class HomeContainerFragment : Fragment() {
     private var binding: FragmentHomeBinding by autoCleared()
-    @Inject lateinit var trackerClientFactory: TrackerClientFactory
+    private val viewModel: HomeContainerViewModel by viewModels()
 
     private fun navigateTo(fragmentInstance: Fragment) {
         childFragmentManager.beginTransaction()
@@ -31,14 +49,12 @@ class HomeContainerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val noLoginFragment = NoLoginFragment()
-        val userFragment = UserFragment()
 
-        lifecycleScope.launch {
-            trackerClientFactory().isLoggedIn().observeFlow(viewLifecycleOwner){
-                when(it) {
-                    true -> navigateTo(userFragment)
-                    false -> navigateTo(noLoginFragment)
+        viewModel.loggedIn.distinctUntilChanged().observeFlowFlex(viewLifecycleOwner) {
+            collectLatest {
+                when (it) {
+                    true -> navigateTo(UserFragment())
+                    false -> navigateTo(NoLoginFragment())
                 }
             }
         }

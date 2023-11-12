@@ -73,7 +73,7 @@ class TrackerClientImpl(
         .addHttpInterceptor(AuthorizationInterceptor(userStore, ::refreshToken))
         .build()
 
-    override suspend fun isLoggedIn(): Flow<Boolean> = flow {
+    override fun isLoggedIn(): Flow<Boolean> = flow {
         userStore.trackerData.collect {
             emit(it != null)
         }

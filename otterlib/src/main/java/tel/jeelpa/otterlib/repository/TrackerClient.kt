@@ -7,7 +7,7 @@ import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.User
 
 interface TrackerClient {
-    suspend fun isLoggedIn() : Flow<Boolean>
+    fun isLoggedIn() : Flow<Boolean>
 
     suspend fun login(callbackUri: Uri)
 
