@@ -1,6 +1,8 @@
 package tel.jeelpa.otterlib.data
 
 import com.apollographql.apollo3.ApolloClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import tel.jeelpa.otter.AnimeRecentlyUpdatedQuery
 import tel.jeelpa.otter.type.MediaSort
@@ -97,13 +99,13 @@ class AnimeClientImpl(
     private lateinit var malScrapedCache: MalMediaScrapedDetails
     override suspend fun getOpenings(id: Int): List<String> {
         if (::malScrapedCache.isInitialized) return malScrapedCache.openings
-        malScrapedCache = scrapeMalDetails(id, AppMediaType.ANIME)
+        malScrapedCache = withContext(Dispatchers.IO){ scrapeMalDetails(id, AppMediaType.ANIME) }
         return malScrapedCache.openings
     }
 
     override suspend fun getEndings(id: Int): List<String> {
         if (::malScrapedCache.isInitialized) return malScrapedCache.endings
-        malScrapedCache = scrapeMalDetails(id, AppMediaType.ANIME)
+        malScrapedCache = withContext(Dispatchers.IO){ scrapeMalDetails(id, AppMediaType.ANIME) }
         return malScrapedCache.endings
     }
 }
