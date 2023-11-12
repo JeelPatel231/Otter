@@ -22,9 +22,14 @@ class CharacterActivity : AppCompatActivity() {
     private val characterDataViewModel: CharacterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val characterId = intent.getIntExtra("characterId", -1)
+        if (characterId == -1) {
+            throw NullPointerException("CharacterID was null")
+        }
         _binding = ActivityCharacterBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
 
         val rolesAdapter = MediaCardAdapter {
             navigateToMediaDetails(it)
@@ -32,9 +37,7 @@ class CharacterActivity : AppCompatActivity() {
         binding.rolesRecycler.adapter = rolesAdapter
         binding.rolesRecycler.layoutManager = GridLayoutManager(this, 3)
 
-        // load the low quality cached image
-
-        characterDataViewModel.character.observeFlow(this){ it?.let {
+        characterDataViewModel.character(characterId).observeFlow(this){ it?.let {
             // load better quality image when fetched
             binding.coverImage.load(it.avatar)
             binding.characterName.text = it.name

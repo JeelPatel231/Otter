@@ -1,6 +1,5 @@
 package tel.jeelpa.otter.ui.fragments.character
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,12 +10,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    characterClient: CharacterClient
+    private val characterClient: CharacterClient
 ): ViewModel() {
-    val navArgs = savedStateHandle.get<Int>("characterId")!!
-
-    val character = suspendToFlow { characterClient.getCharacterDetails(navArgs) }
+    fun character(characterId: Int) = suspendToFlow { characterClient.getCharacterDetails(characterId) }
         .cacheInScope(viewModelScope)
 
 }
