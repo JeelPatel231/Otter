@@ -31,13 +31,15 @@ class MangaFragment : Fragment() {
 
     private val searchResultsAdapter = MediaCardAdapter(::navigateToDetails)
 
-    private val backPressedCallback by lazy { requireActivity().onBackPressedDispatcher.addCallback(this) {
-        if(binding.searchView.isShowing) {
-            binding.searchView.handleBackInvoked()
-        } else {
-            requireActivity().finish()
+    private val backPressedCallback by lazy {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (binding.searchView.isShowing) {
+                binding.searchView.handleBackInvoked()
+            } else {
+                requireActivity().finish()
+            }
         }
-    }}
+    }
 
     override fun onPause() {
         backPressedCallback.isEnabled = false
