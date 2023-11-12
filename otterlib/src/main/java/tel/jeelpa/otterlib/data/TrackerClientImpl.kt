@@ -122,7 +122,7 @@ class TrackerClientImpl(
             bannerImage = viewer.bannerImage,
             chapterCount = viewer.statistics?.manga?.chaptersRead ?: 0,
             episodeCount = viewer.statistics?.anime?.episodesWatched ?: 0,
-            profileImage = viewer.avatar?.medium!!
+            profileImage = viewer.avatar?.medium
         )
 
         return loggedInUserCache!!

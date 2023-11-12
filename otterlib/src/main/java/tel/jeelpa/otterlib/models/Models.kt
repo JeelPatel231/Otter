@@ -179,7 +179,7 @@ data class AppTrailer(
 data class User(
     val userId: Int,
     val username: String,
-    val profileImage: String,
+    val profileImage: String?,
     val bannerImage: String?,
     val episodeCount: Int,
     val chapterCount: Int,
