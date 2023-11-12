@@ -65,7 +65,7 @@ class AnimeFragment : Fragment() {
 
         animeHomeViewModel.searchResults.observeFlow(viewLifecycleOwner) {
             it?.let {
-                searchResultsAdapter.setData(it)
+                searchResultsAdapter.submitList(it)
             }
         }
 

@@ -63,7 +63,7 @@ class MangaFragment : Fragment() {
 
         mangaFragmentViewModel.searchResults.observeFlow(viewLifecycleOwner) {
             it?.let {
-                searchResultsAdapter.setData(it)
+                searchResultsAdapter.submitList(it)
             }
         }
 

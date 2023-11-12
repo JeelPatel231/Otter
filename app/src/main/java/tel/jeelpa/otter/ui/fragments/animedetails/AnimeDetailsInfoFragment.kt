@@ -82,8 +82,6 @@ class AnimeDetailsInfoFragment: Fragment() {
         }
 
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner) {
-            it ?: return@observeFlow
-
             val ctx = requireContext()
             with(binding) {
                 meanScoreHolder.text = it.meanScore.toString()
@@ -119,7 +117,7 @@ class AnimeDetailsInfoFragment: Fragment() {
                     tagsChipGroup.addView(Chip(ctx).apply { text = i })
                 }
 
-                characterAdapter.setData(it.characters)
+                characterAdapter.submitList(it.characters)
             }
         }
 
@@ -147,15 +145,11 @@ class AnimeDetailsInfoFragment: Fragment() {
         }
 
         animeDetailsViewModel.mediaOpenings.observeFlow(viewLifecycleOwner) { ops ->
-            ops ?: return@observeFlow
-
             if (ops.isEmpty()) binding.openings.visibilityGone()
             else openingsAdapter.setData(ops)
         }
 
         animeDetailsViewModel.mediaEndings.observeFlow(viewLifecycleOwner) { eds ->
-            eds ?: return@observeFlow
-
             if (eds.isEmpty()) binding.endings.visibilityGone()
             else endingsAdapter.setData(eds)
         }

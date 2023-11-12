@@ -10,6 +10,10 @@ import tel.jeelpa.otter.type.MediaStatus
 import tel.jeelpa.otter.type.MediaType
 
 
+interface Equitable {
+    override fun equals(other: Any?): Boolean
+}
+
 enum class AppMediaListStatus(value: String) {
     CURRENT("CURRENT"),
     PLANNING("PLANNING"),
@@ -45,7 +49,7 @@ data class CharacterCardData(
     val name: String,
     val avatar: String,
     val role: String,
-): Parcelable
+): Parcelable, Equitable
 
 
 data class CharacterDataFull(
@@ -77,7 +81,7 @@ data class AppDate(
 }
 
 @Parcelize
-open class MediaCardData(
+data class MediaCardData(
     val id: Int,
     val type: AppMediaType,
     val isAdult: Boolean,
@@ -88,7 +92,7 @@ open class MediaCardData(
     val episodes: Int?,
     val nextAiringEpisode: Int?,
     val chapters: Int?,
-) : Parcelable
+) : Parcelable, Equitable
 
 
 data class MediaRelationCardData(
@@ -103,7 +107,7 @@ data class MediaRelationCardData(
     val nextAiringEpisode: Int?,
     val chapters: Int?,
     val relation: MediaRelationType,
-){
+): Equitable {
     fun toMediaCardData() : MediaCardData {
         return MediaCardData(
             id, type, isAdult,

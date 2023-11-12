@@ -45,7 +45,7 @@ class CharacterActivity : AppCompatActivity() {
             binding.birthdayHolder.text = resources.getString(R.string.birthday, it.dateOfBirth)
             binding.genderHolder.text = resources.getString(R.string.gender, it.gender)
             markwon.setMarkdown(binding.characterDescription,it.description ?: "")
-            rolesAdapter.setData(it.media)
+            rolesAdapter.submitList(it.media)
         }
     }
 }

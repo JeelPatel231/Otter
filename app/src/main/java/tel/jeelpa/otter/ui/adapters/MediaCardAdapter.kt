@@ -4,13 +4,16 @@ import coil.load
 import coil.size.Scale
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaSmallLayoutBinding
-import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
+import tel.jeelpa.otter.ui.generic.GenericListAdapter
 import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
 
 class MediaCardAdapter(
     private val onItemClick : (MediaCardData) -> Unit
-): GenericRecyclerAdapter<MediaCardData, MediaSmallLayoutBinding>(MediaSmallLayoutBinding::inflate) {
+): GenericListAdapter<Int, MediaCardData, MediaSmallLayoutBinding>(
+    MediaSmallLayoutBinding::inflate,
+    { id }
+) {
     override fun onBind(binding: MediaSmallLayoutBinding, entry: MediaCardData, position: Int) {
         binding.root.setOnClickListener {
             onItemClick(entry)

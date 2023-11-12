@@ -4,7 +4,7 @@ import coil.load
 import coil.size.Scale
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaRelationSmallLayoutBinding
-import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
+import tel.jeelpa.otter.ui.generic.GenericListAdapter
 import tel.jeelpa.otterlib.models.AppMediaType
 import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.MediaRelationCardData
@@ -12,7 +12,10 @@ import tel.jeelpa.otterlib.models.MediaRelationType
 
 class RelationsAdapter(
     private val onItemClick : (MediaCardData) -> Unit
-): GenericRecyclerAdapter<MediaRelationCardData, MediaRelationSmallLayoutBinding>(MediaRelationSmallLayoutBinding::inflate) {
+): GenericListAdapter<Int, MediaRelationCardData, MediaRelationSmallLayoutBinding>(
+    MediaRelationSmallLayoutBinding::inflate,
+    { id }
+) {
 
     private fun getRelationDrawable(relation: MediaRelationType): Int {
         return when(relation){

@@ -85,8 +85,6 @@ class MangaDetailsInfoFragment : Fragment() {
 
 
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner) {
-            it ?: return@observeFlow
-
             val ctx = requireContext()
             with(binding) {
                 meanScoreHolder.text = it.meanScore.toString()
@@ -124,7 +122,7 @@ class MangaDetailsInfoFragment : Fragment() {
 
                 it.characters.let { characters ->
                     if (characters.isEmpty()) charactersText.visibilityGone()
-                    else characterAdapter.setData(characters)
+                    else characterAdapter.submitList(characters)
                 }
             }
         }
