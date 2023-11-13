@@ -188,3 +188,7 @@ fun ImageView.fadeInto(data: Any?, imageRequest: ImageRequest.Builder.() -> Unit
     ImageLoader(context).enqueue(imgRequest)
 }
 
+fun Any?.toNullString(): String {
+    return this?.toString() ?: "??"
+}
+

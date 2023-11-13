@@ -76,7 +76,7 @@ data class AppDate(
     val year: Int?,
 ) {
     override fun toString(): String {
-        return "$day/$month/$year"
+        return "${day ?: "??"}/${month ?: "??"}/${year ?: "??"}"
     }
 }
 

@@ -25,6 +25,7 @@ import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.showToast
+import tel.jeelpa.otter.ui.generic.toNullString
 import tel.jeelpa.otter.ui.generic.visibilityGone
 import tel.jeelpa.otterlib.models.MediaCardData
 import javax.inject.Inject
@@ -86,14 +87,14 @@ class AnimeDetailsInfoFragment: Fragment() {
             with(binding) {
                 meanScoreHolder.text = it.meanScore.toString()
                 statusHolder.text = it.status.name
-                totalMediaItemHolder.text = it.episodes.toString()
-                averageDurationHolder.text = it.duration.toString()
+                totalMediaItemHolder.text = it.episodes.toNullString()
+                averageDurationHolder.text = it.duration.toNullString()
                 formatHolder.text = it.format
                 sourceHolder.text = it.source
                 studioHolder.text = it.studios.joinToString(" | ")
                 seasonHolder.text = it.season
-                startDateHolder.text = it.startDate.toString()
-                endDateHolder.text = it.endDate.toString()
+                startDateHolder.text = it.startDate.toNullString()
+                endDateHolder.text = it.endDate.toNullString()
 
                 markwon.setMarkdown(synopsisTextHolder, it.description)
 
