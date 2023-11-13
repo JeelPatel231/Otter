@@ -22,21 +22,12 @@
 
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:layout_marginBottom="8dp"
-        android:id="@+id/title"
-        style="?attr/textAppearanceLabelLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        tools:text="Anime Title Gah Dam it overflow like anything dawg" />
-
     <RelativeLayout
         android:id="@+id/metadata_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
         <TextView
@@ -68,5 +59,14 @@
             tools:text="~ | 8 | 12" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/title"
+        style="?attr/textAppearanceLabelLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        tools:text="Anime Title Gah Dam it overflow like anything dawg" />
 
 </LinearLayout>
