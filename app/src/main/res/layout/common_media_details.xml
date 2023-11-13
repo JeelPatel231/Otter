@@ -10,9 +10,9 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:collapsedTitleTextAppearance="@style/ToolBarTextAppearance"
             app:contentScrim="?attr/colorSurfaceContainer"
-            app:expandedTitleTextAppearance="@style/ToolBarTextAppearance"
+            app:collapsedTitleTextAppearance="@style/ToolBarTextAppearanceCollapsed"
+            app:expandedTitleTextAppearance="@style/ToolBarTextAppearanceExpanded"
             app:layout_collapseMode="pin"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
