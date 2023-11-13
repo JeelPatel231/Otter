@@ -1,7 +1,10 @@
 package tel.jeelpa.otter.ui.adapters
 
+import android.graphics.Color
+import androidx.core.content.res.ResourcesCompat
 import coil.load
 import coil.size.Scale
+import com.google.android.material.color.MaterialColors
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaRelationSmallLayoutBinding
 import tel.jeelpa.otter.ui.generic.GenericListAdapter
@@ -10,6 +13,7 @@ import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.MediaRelationCardData
 import tel.jeelpa.otterlib.models.MediaRelationType
 
+
 class RelationsAdapter(
     private val onItemClick : (MediaCardData) -> Unit
 ): GenericListAdapter<Int, MediaRelationCardData, MediaRelationSmallLayoutBinding>(
@@ -17,7 +21,7 @@ class RelationsAdapter(
     { id }
 ) {
 
-    private fun getRelationDrawable(relation: MediaRelationType): Int {
+    private fun getRelationDrawable(relation: MediaRelationType, tintColor: Int): Int {
         return when(relation){
             // TODO: switch to enum and add more cases
             MediaRelationType.SOURCE -> R.drawable.round_menu_book_24
@@ -33,7 +37,13 @@ class RelationsAdapter(
             scale(Scale.FILL)
         }
 
-        binding.relationIcon.load(getRelationDrawable(entry.relation))
+        val context = binding.root.context
+        val color = MaterialColors.getColor(binding.root, com.google.android.material.R.attr.colorOnSurface, Color.GRAY)
+        val drawableId = getRelationDrawable(entry.relation, color)
+        val tintedDrawable = ResourcesCompat.getDrawable(context.resources, drawableId, context.theme)?.apply {
+            setTint(color)
+        }
+        binding.relationIcon.load(tintedDrawable)
         binding.relationHolder.text = entry.relation.value.replace('_', ' ')
 
         binding.score.text = entry.meanScore.toString()
