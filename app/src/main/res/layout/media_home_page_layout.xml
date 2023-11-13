@@ -31,15 +31,19 @@
                 android:layout_height="220dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:nestedScrollingEnabled="false"
                     android:id="@+id/first_row_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:clipToPadding="false"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/media_small_layout" />
 
                 <include
+                    android:layout_marginStart="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/first_row_shimmer_view"
                     layout="@layout/media_card_shimmer_list" />
 
@@ -64,11 +68,16 @@
                     android:id="@+id/second_row_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:clipToPadding="false"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/media_small_layout" />
 
                 <include
+                    android:layout_marginStart="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/second_row_shimmer_view"
                     layout="@layout/media_card_shimmer_list" />
 
@@ -93,11 +102,16 @@
                     android:id="@+id/third_row_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:clipToPadding="false"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/media_small_layout" />
 
                 <include
+                    android:layout_marginStart="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/third_row_shimmer_view"
                     layout="@layout/media_card_shimmer_list" />
 
