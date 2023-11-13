@@ -57,9 +57,9 @@ class AnimeClientImpl(
         } ?: emptyList()
     }
 
-    override suspend fun getAnimeDetails(id: Int): MediaDetailsFull  = getMediaDetails(id)
+    override suspend fun getAnimeDetails(id: Int): MediaDetailsFull = getMediaDetails(id)
 
-    private fun scrapeMalDetails(malId:Int, mediaType: AppMediaType): MalMediaScrapedDetails {
+    private fun scrapeMalDetails(malId: Int, mediaType: AppMediaType): MalMediaScrapedDetails {
         val headers = mapOf(
             "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
         )
@@ -69,9 +69,20 @@ class AnimeClientImpl(
             else -> throw IllegalStateException("Unknown Media Type")
         }
 
-        val res = Jsoup.connect("https://myanimelist.net/$path/$malId")
-            .headers(headers)
-            .get()
+        val res = try {
+            Jsoup.connect("https://myanimelist.net/$path/$malId")
+                .headers(headers)
+                .get()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            return MalMediaScrapedDetails(
+                name = "???",
+                malId = malId,
+                openings = listOf("Failed to get Openings"),
+                endings = listOf("Failed to get Endings"),
+                type = mediaType.name
+            )
+        }
 
         val baseNameHolder = res.select(".h1-title > [itemprop=\"name\"]")
         val nameText = baseNameHolder.textNodes().firstOrNull()?.text()
@@ -80,17 +91,19 @@ class AnimeClientImpl(
         val mediaFormat = res.select("div.spaceit_pad > a").first()!!.text()
 
         val openings = res.select(".opnening > table > tbody > tr > td").mapNotNull {
-            it.text().takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
+            it.text()
+                .takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
         }
 
         val endings = res.select(".ending > table > tbody > tr > td").mapNotNull {
-            it.text().takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
+            it.text()
+                .takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
         }
 
         return MalMediaScrapedDetails(
             name = nameText,
             malId = malId,
-            openings =  openings,
+            openings = openings,
             endings = endings,
             type = mediaFormat
         )
@@ -99,13 +112,13 @@ class AnimeClientImpl(
     private lateinit var malScrapedCache: MalMediaScrapedDetails
     override suspend fun getOpenings(id: Int): List<String> {
         if (::malScrapedCache.isInitialized) return malScrapedCache.openings
-        malScrapedCache = withContext(Dispatchers.IO){ scrapeMalDetails(id, AppMediaType.ANIME) }
+        malScrapedCache = withContext(Dispatchers.IO) { scrapeMalDetails(id, AppMediaType.ANIME) }
         return malScrapedCache.openings
     }
 
     override suspend fun getEndings(id: Int): List<String> {
         if (::malScrapedCache.isInitialized) return malScrapedCache.endings
-        malScrapedCache = withContext(Dispatchers.IO){ scrapeMalDetails(id, AppMediaType.ANIME) }
+        malScrapedCache = withContext(Dispatchers.IO) { scrapeMalDetails(id, AppMediaType.ANIME) }
         return malScrapedCache.endings
     }
 }
