@@ -34,7 +34,7 @@ class RelationsAdapter(
         }
 
         binding.relationIcon.load(getRelationDrawable(entry.relation))
-        binding.relationHolder.text = entry.relation.value
+        binding.relationHolder.text = entry.relation.value.replace('_', ' ')
 
         binding.score.text = entry.meanScore.toString()
         binding.title.text = entry.title
