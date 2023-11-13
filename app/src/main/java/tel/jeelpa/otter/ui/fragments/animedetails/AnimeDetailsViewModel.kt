@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.reference.ParserManager
@@ -64,27 +65,31 @@ class AnimeDetailsViewModel @Inject constructor(
     // onParserChange -> clear everything
     // onAnimeChange -> clear anime and episodes
 
-    suspend fun onParserChange(parser: Parser) = withContext(Dispatchers.IO) {
+    fun onParserChange(parser: Parser) = viewModelScope.launch {
         _selectedParser.value = parser
         _episodesScraped.value = emptyList() // don't wait for searching, clear episodes asap
-        searchAnime(navArgs.title)
+        searchAnime(navArgs.title).join()
         val firstAnime = searchedAnimes.value.firstOrNull()
             ?: throw Exception("No Anime Found")
-        onSelectAnime(firstAnime)
+        onSelectAnime(firstAnime).join()
     }
 
-    suspend fun searchAnime(query: String) = withContext(Dispatchers.IO){
+    fun searchAnime(query: String) = viewModelScope.launch {
         _searchedAnimes.value = emptyList()
-        _searchedAnimes.value = selectedParser.value!!.search(query)
+        _searchedAnimes.value = withContext(Dispatchers.IO){
+            selectedParser.value!!.search(query)
+        }
     }
-    suspend fun onSelectAnime(anime: ShowResponse){
+    fun onSelectAnime(anime: ShowResponse) = viewModelScope.launch {
         _episodesScraped.value = emptyList()
         _selectedAnime.value = anime
         loadEpisodes()
     }
 
-    suspend fun getVideoServers(episodeLink: String): List<VideoServer> = withContext(Dispatchers.IO){
-        return@withContext selectedParser.value!!.loadVideoServers(episodeLink)
+    suspend fun getVideoServers(episodeLink: String): List<VideoServer> {
+        return withContext(Dispatchers.IO){
+            selectedParser.value!!.loadVideoServers(episodeLink)
+        }
     }
 
     private suspend fun loadEpisodes() = withContext(Dispatchers.IO){

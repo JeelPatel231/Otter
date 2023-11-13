@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.reference.Parser
@@ -32,7 +29,7 @@ class AnimeDetailsWatchFragment : Fragment() {
         binding.root.requestLayout()
     }
 
-    private fun showDialog(){
+    private fun showDialog() {
         val dialog = WrongMediaSelectionBottomSheetDialog(
             animeDetailsViewModel.searchedAnimes,
             onItemClick = { animeDetailsViewModel.onSelectAnime(it) },
@@ -69,25 +66,20 @@ class AnimeDetailsWatchFragment : Fragment() {
             )
             setOnItemClickListener { adapterView, _, idx, _ ->
                 // cancel the old job
-                episodeScrapeJob?.cancel()
                 binding.selectedAnimeTitle.text = "Searching..."
                 // clear the episodes array
                 episodesAdapter.setData(emptyList())
                 // start scaping with the new parser
-                episodeScrapeJob = lifecycleScope.launch(Dispatchers.IO) {
-                    try {
-                        animeDetailsViewModel.onParserChange(adapterView.getItemAtPosition(idx) as Parser)
-                    } catch (e: Throwable) {
-                        requireActivity().runOnUiThread {
-                            binding.selectedAnimeTitle.text = e.message
-                        }
-                    }
+                try {
+                    animeDetailsViewModel.onParserChange(adapterView.getItemAtPosition(idx) as Parser)
+                } catch (e: Throwable) {
+                    binding.selectedAnimeTitle.text = e.message
                 }
             }
         }
 
-        animeDetailsViewModel.selectedParser.observeFlow(viewLifecycleOwner){
-            binding.wrongTitle.visibility = when(it){
+        animeDetailsViewModel.selectedParser.observeFlow(viewLifecycleOwner) {
+            binding.wrongTitle.visibility = when (it) {
                 null -> View.GONE
                 else -> View.VISIBLE
             }
