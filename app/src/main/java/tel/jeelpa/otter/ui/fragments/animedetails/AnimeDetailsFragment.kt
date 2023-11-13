@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import coil.load
 import coil.size.Scale
 import dagger.hilt.android.AndroidEntryPoint
+import tel.jeelpa.otter.databinding.CommonMediaDetailsBinding
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsBinding
 import tel.jeelpa.otter.ui.generic.ViewPageNavigatorAdapter
 import tel.jeelpa.otter.ui.generic.ZoomOutPageTransformer
@@ -21,6 +22,7 @@ import tel.jeelpa.otter.ui.generic.setupWithBottomNav
 class AnimeDetailsFragment : Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
     private var binding: FragmentAnimeDetailsBinding by autoCleared()
+    private var commonBinding: CommonMediaDetailsBinding by autoCleared()
 
     private val animeInfoFragment  = AnimeDetailsInfoFragment()
     private val animeWatchFragment  = AnimeDetailsWatchFragment()
@@ -32,6 +34,7 @@ class AnimeDetailsFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentAnimeDetailsBinding.inflate(inflater, container, false)
+        commonBinding = CommonMediaDetailsBinding.bind(binding.root)
 
         val viewPageNavigatorAdapter = ViewPageNavigatorAdapter(
             childFragmentManager,
@@ -39,22 +42,22 @@ class AnimeDetailsFragment : Fragment() {
             arrayOf(animeInfoFragment, animeWatchFragment)
         )
 
-        binding.animePagerContainer.apply {
+        commonBinding.pagerContainer.apply {
             adapter = viewPageNavigatorAdapter
             isUserInputEnabled = false
             setupWithBottomNav(binding.bottomNavigationBar)
             setPageTransformer(ZoomOutPageTransformer())
         }
 
-        binding.toolbar.title = animeDetailsViewModel.navArgs.title
+        commonBinding.toolbar.title = animeDetailsViewModel.navArgs.title
 
         // eagerly load the low dimension cached imaged from
-        binding.coverImage.load(animeDetailsViewModel.navArgs.coverImage){
+        commonBinding.coverImage.load(animeDetailsViewModel.navArgs.coverImage){
             scale(Scale.FILL)
         }
         // then load the high quality image when the API request fulfills
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner){
-            binding.coverImage.fadeInto(it.coverImage)
+            commonBinding.coverImage.fadeInto(it.coverImage)
         }
 
         return binding.root

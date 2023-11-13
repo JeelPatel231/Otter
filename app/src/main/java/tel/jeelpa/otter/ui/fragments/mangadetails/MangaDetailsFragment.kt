@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import coil.load
 import coil.size.Scale
 import dagger.hilt.android.AndroidEntryPoint
+import tel.jeelpa.otter.databinding.CommonMediaDetailsBinding
 import tel.jeelpa.otter.databinding.FragmentMangaDetailsBinding
 import tel.jeelpa.otter.ui.generic.ViewPageNavigatorAdapter
 import tel.jeelpa.otter.ui.generic.ZoomOutPageTransformer
@@ -21,6 +22,7 @@ import tel.jeelpa.otter.ui.generic.setupWithBottomNav
 class MangaDetailsFragment : Fragment() {
     private val mangaDetailsViewModel: MangaDetailsViewModel by activityViewModels()
     private var binding: FragmentMangaDetailsBinding by autoCleared()
+    private var commonBinding: CommonMediaDetailsBinding by autoCleared()
 
     private val mangaInfoFragment = MangaDetailsInfoFragment()
     private val mangaReadFragment = MangaDetailsReadFragment()
@@ -32,6 +34,7 @@ class MangaDetailsFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentMangaDetailsBinding.inflate(inflater, container, false)
+        commonBinding = CommonMediaDetailsBinding.bind(binding.root)
 
         val viewPageNavigatorAdapter = ViewPageNavigatorAdapter(
             childFragmentManager,
@@ -39,22 +42,21 @@ class MangaDetailsFragment : Fragment() {
             arrayOf(mangaInfoFragment, mangaReadFragment)
         )
 
-        binding.mangaPagerContainer.apply {
+        commonBinding.pagerContainer.apply {
             adapter = viewPageNavigatorAdapter
             isUserInputEnabled = false
             setupWithBottomNav(binding.bottomNavigationBar)
             setPageTransformer(ZoomOutPageTransformer())
         }
 
-        binding.mediaTitle.text = mangaDetailsViewModel.navArgs.title
-
+        commonBinding.toolbar.title = mangaDetailsViewModel.navArgs.title
         // eagerly load the low dimension cached imaged from
-        binding.coverImage.load(mangaDetailsViewModel.navArgs.coverImage){
+        commonBinding.coverImage.load(mangaDetailsViewModel.navArgs.coverImage){
             scale(Scale.FILL)
         }
         // then load the high quality image when the API request fulfills
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner){
-            binding.coverImage.fadeInto(it.coverImage)
+            commonBinding.coverImage.fadeInto(it.coverImage)
         }
 
         return binding.root
