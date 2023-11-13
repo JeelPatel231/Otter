@@ -99,6 +99,8 @@
         android:layout_height="220dp">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:paddingHorizontal="18dp"
+            android:clipToPadding="false"
             android:id="@+id/anime_continue_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,7 +108,11 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/media_small_layout" />
 
-        <include android:id="@+id/anime_continue_shimmer" layout="@layout/media_card_shimmer_list" />
+        <include
+            android:layout_marginStart="18dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/anime_continue_shimmer" layout="@layout/media_card_shimmer_list" />
     </RelativeLayout>
 
 
@@ -125,13 +131,19 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/manga_continue_recycler"
+            android:paddingHorizontal="18dp"
+            android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/media_small_layout" />
 
-        <include android:id="@+id/manga_continue_shimmer" layout="@layout/media_card_shimmer_list" />
+        <include
+            android:layout_marginStart="18dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/manga_continue_shimmer" layout="@layout/media_card_shimmer_list" />
 
     </RelativeLayout>
 
@@ -151,13 +163,19 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommendations_recycler"
+            android:paddingHorizontal="18dp"
+            android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/media_small_layout" />
 
-        <include android:id="@+id/recommendations_shimmer" layout="@layout/media_card_shimmer_list" />
+        <include
+            android:layout_marginStart="18dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/recommendations_shimmer" layout="@layout/media_card_shimmer_list" />
 
     </RelativeLayout>
 
