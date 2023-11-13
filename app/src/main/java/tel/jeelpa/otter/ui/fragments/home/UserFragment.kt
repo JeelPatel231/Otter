@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import coil.load
-import coil.size.Scale
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentUserBinding
@@ -52,8 +52,9 @@ class UserFragment: Fragment() {
             binding.username.text = it.username
             binding.episodesCountHolder.text = requireContext().getString(R.string.episodes_watched, it.episodeCount)
             binding.chaptersCountHolder.text = requireContext().getString(R.string.chapters_read, it.chapterCount)
-            binding.avatarHolder.load(it.profileImage) {
-                scale(Scale.FIT)
+            binding.avatarHolder.apply {
+                binding.avatarHolder.scaleType = ImageView.ScaleType.CENTER_CROP
+                load(it.profileImage)
             }
         }
 
