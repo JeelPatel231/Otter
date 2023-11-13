@@ -15,6 +15,7 @@ import tel.jeelpa.otter.databinding.MediaSmallLayoutBinding
 import tel.jeelpa.otter.databinding.WrongTitleSelectionBottomSheetBinding
 import tel.jeelpa.otter.reference.models.ShowResponse
 import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
+import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.visibilityGone
@@ -70,7 +71,7 @@ class WrongMediaSelectionBottomSheetDialog(
 
         binding.sourceSelectionRecyclerView.apply {
             adapter = sourcesAdapter
-            layoutManager = GridLayoutManager(requireContext(), 3)
+            layoutManager = GridAutoFitLayoutManager(requireContext(), 110)
         }
 
         return binding.root

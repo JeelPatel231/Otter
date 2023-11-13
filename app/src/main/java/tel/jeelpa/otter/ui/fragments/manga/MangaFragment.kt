@@ -8,11 +8,11 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
+import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
@@ -69,7 +69,7 @@ class MangaFragment : Fragment() {
 
         binding.searchRecycler.apply {
             adapter = searchResultsAdapter
-            layoutManager = GridLayoutManager(requireContext(), 3)
+            layoutManager = GridAutoFitLayoutManager(requireContext(),110)
         }
 
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->

@@ -15,6 +15,7 @@ import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.ui.fragments.mediaCommon.WrongMediaSelectionBottomSheetDialog
+import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
@@ -99,7 +100,7 @@ class AnimeDetailsWatchFragment : Fragment() {
         binding.tabbedRecyclerView.apply {
             setAdapter(episodesAdapter)
             setLayoutManager(
-                GridLayoutManager(requireContext(),2)
+                GridAutoFitLayoutManager(requireContext(), 150)
             )
         }
 

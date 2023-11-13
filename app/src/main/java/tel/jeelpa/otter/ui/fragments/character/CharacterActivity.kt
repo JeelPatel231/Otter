@@ -3,13 +3,13 @@ package tel.jeelpa.otter.ui.fragments.character
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.ActivityCharacterBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
+import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class CharacterActivity : AppCompatActivity() {
             navigateToMediaDetails(it)
         }
         binding.rolesRecycler.adapter = rolesAdapter
-        binding.rolesRecycler.layoutManager = GridLayoutManager(this, 3)
+        binding.rolesRecycler.layoutManager = GridAutoFitLayoutManager(this,110)
 
         characterDataViewModel.character(characterId).observeFlow(this){
             // load better quality image when fetched
