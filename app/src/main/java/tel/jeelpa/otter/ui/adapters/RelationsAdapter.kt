@@ -1,6 +1,8 @@
 package tel.jeelpa.otter.ui.adapters
 
 import android.graphics.Color
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import coil.load
 import coil.size.Scale
@@ -17,8 +19,7 @@ import tel.jeelpa.otterlib.models.MediaRelationType
 class RelationsAdapter(
     private val onItemClick : (MediaCardData) -> Unit
 ): GenericListAdapter<Int, MediaRelationCardData, MediaRelationSmallLayoutBinding>(
-    MediaRelationSmallLayoutBinding::inflate,
-    { id }
+    primaryKey = { id }
 ) {
 
     private fun getRelationDrawable(relation: MediaRelationType, tintColor: Int): Int {
@@ -67,5 +68,13 @@ class RelationsAdapter(
 
                 else -> "??"
             }
+    }
+
+    override fun inflateCallback(
+        layoutInflator: LayoutInflater,
+        viewGroup: ViewGroup?,
+        attachToParent: Boolean
+    ): MediaRelationSmallLayoutBinding {
+        return MediaRelationSmallLayoutBinding.inflate(layoutInflator, viewGroup, attachToParent)
     }
 }

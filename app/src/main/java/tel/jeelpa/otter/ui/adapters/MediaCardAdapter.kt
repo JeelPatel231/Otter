@@ -1,5 +1,7 @@
 package tel.jeelpa.otter.ui.adapters
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import coil.load
 import coil.size.Scale
 import tel.jeelpa.otter.R
@@ -11,8 +13,7 @@ import tel.jeelpa.otterlib.models.MediaCardData
 class MediaCardAdapter(
     private val onItemClick : (MediaCardData) -> Unit
 ): GenericListAdapter<Int, MediaCardData, MediaSmallLayoutBinding>(
-    MediaSmallLayoutBinding::inflate,
-    { id }
+    primaryKey = { id }
 ) {
     override fun onBind(binding: MediaSmallLayoutBinding, entry: MediaCardData, position: Int) {
         binding.root.setOnClickListener {
@@ -42,5 +43,13 @@ class MediaCardAdapter(
 
                 else -> "??"
             }
+    }
+
+    override fun inflateCallback(
+        layoutInflator: LayoutInflater,
+        viewGroup: ViewGroup?,
+        attachToParent: Boolean
+    ): MediaSmallLayoutBinding {
+        return MediaSmallLayoutBinding.inflate(layoutInflator, viewGroup, attachToParent)
     }
 }

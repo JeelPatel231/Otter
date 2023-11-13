@@ -78,10 +78,9 @@ class DataClassDiffCallback<TComparable, TData: Equitable>(
 }
 
 abstract class GenericListAdapter<TComparable, TData: Equitable, TBindingType: ViewBinding>(
-    private val inflateCallback: (LayoutInflater, ViewGroup?, Boolean) -> TBindingType,
-    getPk: TData.() -> TComparable
+    primaryKey: TData.() -> TComparable
 ): ListAdapter<TData, GenericListAdapter.ViewHolder<TData, TBindingType>>(
-    DataClassDiffCallback<TComparable, TData>(getPk)
+    DataClassDiffCallback<TComparable, TData>(primaryKey)
 ) {
     class ViewHolder<TData, TBindingType : ViewBinding>(
         private val binding: TBindingType,
@@ -91,6 +90,8 @@ abstract class GenericListAdapter<TComparable, TData: Equitable, TBindingType: V
             callback(binding, entry, position)
         }
     }
+
+    abstract fun inflateCallback(layoutInflator: LayoutInflater, viewGroup: ViewGroup?, attachToParent: Boolean): TBindingType
 
     abstract fun onBind(binding: TBindingType, entry: TData, position: Int)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<TData, TBindingType> {
