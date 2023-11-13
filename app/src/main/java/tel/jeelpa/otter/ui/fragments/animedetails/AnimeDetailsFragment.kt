@@ -46,7 +46,7 @@ class AnimeDetailsFragment : Fragment() {
             setPageTransformer(ZoomOutPageTransformer())
         }
 
-        binding.mediaTitle.text = animeDetailsViewModel.navArgs.title
+        binding.toolbar.title = animeDetailsViewModel.navArgs.title
 
         // eagerly load the low dimension cached imaged from
         binding.coverImage.load(animeDetailsViewModel.navArgs.coverImage){

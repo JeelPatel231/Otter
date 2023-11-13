@@ -37,4 +37,10 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="ToolBarTextAppearance" parent="android:TextAppearance">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:singleLine">true</item>
+    </style>
 </resources>
