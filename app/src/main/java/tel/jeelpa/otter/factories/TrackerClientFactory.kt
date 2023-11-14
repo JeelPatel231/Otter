@@ -1,28 +1,28 @@
 package tel.jeelpa.otter.factories
 
-import kotlinx.coroutines.flow.first
-import okhttp3.OkHttpClient
-import tel.jeelpa.otterlib.data.TrackerClientImpl
-import tel.jeelpa.otterlib.models.AnilistData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import tel.jeelpa.otterlib.repository.TrackerClient
-import tel.jeelpa.otterlib.store.TrackerService
-import tel.jeelpa.otterlib.store.UserStore
+import tel.jeelpa.otterlib.store.TrackerStore
 
-class TrackerClientFactory(
-    private val userStore: UserStore,
-    httpClient: OkHttpClient,
-    anilistData: AnilistData,
-){
-    private val anilistClient = TrackerClientImpl(
-        anilistData,
-        httpClient,
-        userStore,
-    )
+class TrackerManager(
+    private val trackerStore: TrackerStore
+) {
+    private val _registeredTrackers = mutableListOf<TrackerClient>()
 
-    suspend operator fun invoke() : TrackerClient {
-        return when(userStore.getServiceName.first()) {
-            TrackerService.ANILIST -> anilistClient
-            else -> throw IllegalStateException()
+    val trackers get() = _registeredTrackers.toList()
+
+    fun getCurrentTracker(): Flow<TrackerClient?> = flow {
+        trackerStore.getTracker().collect { trackerId ->
+            emit(trackers.find { it.uniqueId == trackerId })
         }
+    }
+
+    suspend fun setCurrentTracker(trackerClient: TrackerClient) {
+        trackerStore.saveTracker(trackerClient.uniqueId)
+    }
+
+    fun registerTracker(trackerClient: TrackerClient){
+        _registeredTrackers.add(trackerClient)
     }
 }

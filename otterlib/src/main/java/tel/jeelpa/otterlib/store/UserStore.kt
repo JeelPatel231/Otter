@@ -9,42 +9,32 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+interface UserStorage {
+    suspend fun saveData(data: String)
 
-enum class TrackerService {
-    ANILIST,
-//    MAL
+    suspend fun loadData(): Flow<String?>
+
+    suspend fun clearData()
 }
 
-class UserStore(private val context: Context) {
+
+class UserStore(private val context: Context) : UserStorage {
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("userData")
         private val SERIALIZED_DATA_KEY = stringPreferencesKey("tracker_tokens")
-        private val SERVICE = stringPreferencesKey("service_name")
     }
 
-    val trackerData: Flow<String?> = context.dataStore.data.map { pref ->
+    override suspend fun loadData(): Flow<String?> = context.dataStore.data.map { pref ->
         pref[SERIALIZED_DATA_KEY]
     }
 
-    val getServiceName: Flow<TrackerService> = context.dataStore.data.map { pref ->
-        val serviceName = pref[SERVICE] ?: TrackerService.ANILIST.name
-        TrackerService.valueOf(serviceName)
-    }
-
-    suspend fun changeService(service: TrackerService) {
-        logout()
-        context.dataStore.edit { pref ->
-            pref[SERVICE] = service.name
-        }
-    }
-
-    suspend fun saveTrackerData(serialized: String) {
+    override suspend fun saveData(data: String) {
         context.dataStore.edit { preferences ->
-            preferences[SERIALIZED_DATA_KEY] = serialized
+            preferences[SERIALIZED_DATA_KEY] = data
         }
     }
 
-    suspend fun logout() {
+    override suspend fun clearData() {
         context.dataStore.edit { pref ->
             pref.remove(SERIALIZED_DATA_KEY)
         }

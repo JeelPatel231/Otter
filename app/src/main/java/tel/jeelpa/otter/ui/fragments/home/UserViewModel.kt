@@ -3,24 +3,30 @@ package tel.jeelpa.otter.ui.fragments.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import tel.jeelpa.otter.factories.TrackerClientFactory
+import kotlinx.coroutines.flow.first
+import tel.jeelpa.otter.factories.TrackerManager
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    trackerClientFactory: TrackerClientFactory
+    trackerManager: TrackerManager
 ): ViewModel() {
-    val userData = suspendToFlow { trackerClientFactory().getUser() }
+    val trackerClient = suspend {
+        trackerManager.getCurrentTracker().first()
+            ?: throw IllegalStateException("No Tracker Selected/Registered")
+    }
+
+    val userData = suspendToFlow { trackerClient().getUser() }
         .cacheInScope(viewModelScope)
 
-    val currentAnime = suspendToFlow { trackerClientFactory().getCurrentAnime() }
+    val currentAnime = suspendToFlow { trackerClient().getCurrentAnime() }
         .cacheInScope(viewModelScope)
 
-    val currentManga = suspendToFlow { trackerClientFactory().getCurrentManga() }
+    val currentManga = suspendToFlow { trackerClient().getCurrentManga() }
         .cacheInScope(viewModelScope)
 
-    val recommendations = suspendToFlow { trackerClientFactory().getRecommendations() }
+    val recommendations = suspendToFlow { trackerClient().getRecommendations() }
         .cacheInScope(viewModelScope)
 }

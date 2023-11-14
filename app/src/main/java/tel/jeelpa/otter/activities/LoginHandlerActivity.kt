@@ -6,15 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import tel.jeelpa.otter.factories.TrackerClientFactory
+import tel.jeelpa.otter.factories.TrackerManager
 import tel.jeelpa.otter.ui.generic.showToast
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginHandlerActivity : AppCompatActivity() {
 
-    @Inject lateinit var trackerFactory: TrackerClientFactory
+    @Inject lateinit var trackerFactory: TrackerManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +28,11 @@ class LoginHandlerActivity : AppCompatActivity() {
     }
 
     private suspend fun handleLogin(){
-        val userHandler = trackerFactory()
-        val data = intent?.data ?: return showToast("Intent Data Null/Invalid!", Toast.LENGTH_SHORT)
+        val userHandler = trackerFactory.getCurrentTracker().first()
+            ?: return showToast("You have no tracker selected/registered")
+
+        val data = intent?.data
+            ?: return showToast("Intent Data Null/Invalid!", Toast.LENGTH_SHORT)
 
         if(data.authority != "logintracker") {
             return showToast("Invalid Link Authority!", Toast.LENGTH_SHORT)

@@ -29,18 +29,18 @@ import tel.jeelpa.otterlib.models.MediaCardData
 import tel.jeelpa.otterlib.models.User
 import tel.jeelpa.otterlib.models.toApp
 import tel.jeelpa.otterlib.repository.TrackerClient
-import tel.jeelpa.otterlib.store.UserStore
+import tel.jeelpa.otterlib.store.UserStorage
 
 
 class AuthorizationInterceptor(
-    private val userStore: UserStore,
+    private val userStore: UserStorage,
     val refreshCallback: () -> Unit,
 ) : HttpInterceptor {
     override suspend fun intercept(
         request: HttpRequest,
         chain: HttpInterceptorChain
     ): HttpResponse {
-        val stringData = userStore.trackerData.first()
+        val stringData = userStore.loadData().first()
             ?: throw IllegalStateException("User Not Logged In")
         val token = Json.decodeFromString<AnilistResponseBody>(stringData).access_token
 
@@ -59,8 +59,9 @@ class AuthorizationInterceptor(
 class TrackerClientImpl(
     private val anilistData: AnilistData,
     private val httpClient: OkHttpClient,
-    private val userStore: UserStore,
+    private val userStore: UserStorage,
 ): TrackerClient {
+    override val uniqueId = "ANILIST"
 
     private var loggedInUserCache: User? = null
 
@@ -74,7 +75,7 @@ class TrackerClientImpl(
         .build()
 
     override fun isLoggedIn(): Flow<Boolean> = flow {
-        userStore.trackerData.collect {
+        userStore.loadData().collect {
             emit(it != null)
         }
     }
@@ -101,11 +102,11 @@ class TrackerClientImpl(
             ).build()
 
         val response = httpClient.newCall(request).execute()
-        userStore.saveTrackerData(response.body!!.string())
+        userStore.saveData(response.body!!.string())
     }
 
     override suspend fun logout() {
-        userStore.logout()
+        userStore.clearData()
         loggedInUserCache = null
     }
 

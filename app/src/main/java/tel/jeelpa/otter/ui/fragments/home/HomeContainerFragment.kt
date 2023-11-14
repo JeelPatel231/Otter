@@ -11,24 +11,27 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.databinding.FragmentHomeBinding
-import tel.jeelpa.otter.factories.TrackerClientFactory
+import tel.jeelpa.otter.factories.TrackerManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlowFlex
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeContainerViewModel @Inject constructor(
-    private val trackerClientFactory: TrackerClientFactory
+    private val trackerManager: TrackerManager
 ) : ViewModel() {
-    val loggedIn = channelFlow {
-        trackerClientFactory().isLoggedIn().collectLatest {
-            send(it)
-        }
+
+    val loggedIn = flow {
+        trackerManager.getCurrentTracker()
+            .mapNotNull { it?.isLoggedIn() }
+            .collect { emitAll(it) }
     }.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }
 

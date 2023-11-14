@@ -11,7 +11,6 @@ import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentUserBinding
-import tel.jeelpa.otter.factories.TrackerClientFactory
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initRecycler
@@ -19,14 +18,12 @@ import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otterlib.models.MediaCardData
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class UserFragment: Fragment() {
 
     private var binding: FragmentUserBinding by autoCleared()
     private val userViewModel: UserViewModel by viewModels()
-    @Inject lateinit var trackerFactory: TrackerClientFactory
 
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
