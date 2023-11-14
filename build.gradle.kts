@@ -19,8 +19,3 @@ plugins {
     // serialization
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20" apply false
 }
-
-//ext {
-//    val core_ktx_version = "1.12.0"
-//    val material_version = "1.10.0"
-//}

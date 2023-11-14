@@ -36,7 +36,6 @@ android {
 }
 
 dependencies {
-
     implementation(project(mapOf("path" to ":reference")))
 
     implementation("androidx.core:core-ktx:1.9.0")

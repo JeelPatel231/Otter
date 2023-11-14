@@ -20,5 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class kotlin.collections.** { *; }
--keep class kotlin.text.Regex
+-keep class kotlin.** { *; }
+-keep class kotlinx.serialization.** { *; }
+-keep class okhttp3.** { *; }
+-keep class org.jsoup.** { *; }
