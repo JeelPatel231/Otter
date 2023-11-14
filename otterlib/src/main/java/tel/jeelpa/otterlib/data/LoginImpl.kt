@@ -12,7 +12,7 @@ class LoginImpl (
     private val redirectUri: String,
 ) : LoginProcedure {
     override operator fun invoke() {
-        val intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER).apply {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse("https://anilist.co/api/v2/oauth/authorize?client_id=${id}&redirect_uri=${redirectUri}&response_type=code")
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
