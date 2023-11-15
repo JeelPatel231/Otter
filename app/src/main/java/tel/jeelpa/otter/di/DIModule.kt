@@ -4,18 +4,18 @@ import android.app.Application
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import tel.jeelpa.otter.BuildConfig
-import tel.jeelpa.otter.factories.TrackerManager
-import tel.jeelpa.otterlib.data.LoginImpl
-import tel.jeelpa.otterlib.data.TrackerClientImpl
-import tel.jeelpa.otterlib.models.AnilistData
-import tel.jeelpa.otterlib.repository.LoginProcedure
-import tel.jeelpa.otterlib.repository.TrackerClient
-import tel.jeelpa.otterlib.store.TrackerStoreImpl
-import tel.jeelpa.otterlib.store.UserStorage
-import tel.jeelpa.otterlib.store.UserStore
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import tel.jeelpa.otter.models.TrackerStoreImpl
+import tel.jeelpa.otter.models.UserStore
+import tel.jeelpa.otter.trackerinterface.TrackerManager
+import tel.jeelpa.otter.trackerinterface.repository.AnimeClient
+import tel.jeelpa.otter.trackerinterface.repository.CharacterClient
+import tel.jeelpa.otter.trackerinterface.repository.MangaClient
+import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 import javax.inject.Singleton
 
 
@@ -23,28 +23,28 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DILibModule {
 
-    @Provides
-    @Singleton
-    fun providesAnilistData(): AnilistData {
-        return AnilistData(
-            BuildConfig.ANILIST_ID,
-            BuildConfig.ANILIST_SECRET,
-            BuildConfig.ANILIST_REDIRECT_URI
-        )
-    }
+//    @Provides
+//    @Singleton
+//    fun providesAnilistData(): AnilistData {
+//        return AnilistData(
+//            BuildConfig.ANILIST_ID,
+//            BuildConfig.ANILIST_SECRET,
+//            BuildConfig.ANILIST_REDIRECT_URI
+//        )
+//    }
 
-    @Provides
-    @Singleton
-    fun providesLoginProcedureUseCase(
-        application: Application,
-        anilistData: AnilistData,
-    ): LoginProcedure {
-        return LoginImpl(
-            application,
-            anilistData.id,
-            anilistData.redirectUri
-        )
-    }
+//    @Provides
+//    @Singleton
+//    fun providesLoginProcedureUseCase(
+//        application: Application,
+//        anilistData: AnilistData,
+//    ): tel.jeelpa.otter.trackerinterface.repository.LoginProcedure {
+//        return tel.jeelpa.anilisttrackerplugin.data.LoginImpl(
+//            application,
+//            anilistData.id,
+//            anilistData.redirectUri
+//        )
+//    }
 
     @Provides
     @Singleton
@@ -58,5 +58,44 @@ class DILibModule {
         application: Application
     ): TrackerManager {
         return TrackerManager(TrackerStoreImpl(application))
+    }
+
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class ViewModelScopeClients {
+    @Provides
+    @ViewModelScoped
+    fun providesAnimeClient(
+        trackerManager: TrackerManager
+    ): AnimeClient {
+//        return trackerManager.trackers.first().animeClient
+        return runBlocking {
+            trackerManager.getCurrentTracker().first()!!.animeClient
+        }
+    }
+
+
+    @Provides
+    @ViewModelScoped
+    fun providesMangaClient(
+        trackerManager: TrackerManager
+    ): MangaClient {
+//        return trackerManager.trackers.first().mangaClient
+        return runBlocking {
+            trackerManager.getCurrentTracker().first()!!.mangaClient
+        }
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesCharacterClient(
+        trackerManager: TrackerManager
+    ): CharacterClient {
+//        return trackerManager.trackers.first().characterClient
+        return runBlocking {
+            trackerManager.getCurrentTracker().first()!!.characterClient
+        }
     }
 }

@@ -9,11 +9,11 @@ import coil.size.Scale
 import com.google.android.material.color.MaterialColors
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaRelationSmallLayoutBinding
+import tel.jeelpa.otter.trackerinterface.models.AppMediaType
+import tel.jeelpa.otter.trackerinterface.models.MediaCardData
+import tel.jeelpa.otter.trackerinterface.models.MediaRelationCardData
+import tel.jeelpa.otter.trackerinterface.models.MediaRelationType
 import tel.jeelpa.otter.ui.generic.GenericListAdapter
-import tel.jeelpa.otterlib.models.AppMediaType
-import tel.jeelpa.otterlib.models.MediaCardData
-import tel.jeelpa.otterlib.models.MediaRelationCardData
-import tel.jeelpa.otterlib.models.MediaRelationType
 
 
 class RelationsAdapter(

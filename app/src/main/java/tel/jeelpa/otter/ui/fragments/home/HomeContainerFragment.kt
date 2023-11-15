@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.databinding.FragmentHomeBinding
-import tel.jeelpa.otter.factories.TrackerManager
+import tel.jeelpa.otter.trackerinterface.TrackerManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlowFlex
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class HomeContainerViewModel @Inject constructor(
 
     val loggedIn = flow {
         trackerManager.getCurrentTracker()
-            .mapNotNull { it?.isLoggedIn() }
+            .mapNotNull { it?.userClient?.isLoggedIn() }
             .collect { emitAll(it) }
     }.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }

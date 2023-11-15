@@ -20,7 +20,9 @@ import tel.jeelpa.otter.reference.ExtractorManager
 import tel.jeelpa.otter.reference.ParserManager
 import tel.jeelpa.otter.reference.RegisterExtractorUseCase
 import tel.jeelpa.otter.reference.RegisterParserUseCase
-import tel.jeelpa.otter.reference.RegisterUseCase
+import tel.jeelpa.otter.trackerinterface.RegisterTrackerUseCase
+import tel.jeelpa.otter.trackerinterface.TrackerManager
+import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromUri
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
@@ -39,7 +41,7 @@ class DIModule {
 
     @Provides
     @Singleton
-    fun providesMarkwon(application: Application) : Markwon {
+    fun providesMarkwon(application: Application): Markwon {
         return Markwon.builder(application)
             .usePlugin(SoftBreakAddsNewLinePlugin.create())
             .usePlugin(SpoilerPlugin())
@@ -63,7 +65,10 @@ class DIModule {
     fun provideSimpleVideoCache(application: Application): SimpleCache {
         val databaseProvider = StandaloneDatabaseProvider(application)
         return SimpleCache(
-            File(application.cacheDir, "exoplayer").also { it.deleteOnExit() }, // Ensures always fresh file
+            File(
+                application.cacheDir,
+                "exoplayer"
+            ).also { it.deleteOnExit() }, // Ensures always fresh file
             LeastRecentlyUsedCacheEvictor(300L * 1024L * 1024L),
             databaseProvider
         )
@@ -75,7 +80,7 @@ class DIModule {
     fun providesCreateMediaSourceFromUri(
         okHttpClient: OkHttpClient,
         simpleVideoCache: SimpleCache
-    ) : CreateMediaSourceFromVideo {
+    ): CreateMediaSourceFromVideo {
         val uriSource = CreateMediaSourceFromUri(okHttpClient, simpleVideoCache)
         return CreateMediaSourceFromVideo(uriSource)
     }
@@ -100,13 +105,17 @@ class DIModule {
         application: Application,
         httpClient: OkHttpClient,
         extractorManager: ExtractorManager,
-        parserManager: ParserManager
+        parserManager: ParserManager,
+        trackerManager: TrackerManager,
+        userStorage: UserStorage
     ): PluginInitializer {
-        val registerUseCase = RegisterUseCase(
+        return PluginInitializer(
+            application,
+            httpClient,
             RegisterExtractorUseCase(extractorManager),
             RegisterParserUseCase(parserManager),
+            RegisterTrackerUseCase(trackerManager, userStorage)
         )
-        return PluginInitializer(application, httpClient, registerUseCase)
     }
 
 }
@@ -118,7 +127,7 @@ class DIFragmentModule {
 
     @Provides
     @FragmentScoped
-    fun providesExoplayer(application: Application) : ExoPlayer {
+    fun providesExoplayer(application: Application): ExoPlayer {
         return ExoPlayer.Builder(application).build()
     }
 }

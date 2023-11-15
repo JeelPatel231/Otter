@@ -16,10 +16,10 @@ import tel.jeelpa.otter.reference.ParserManager
 import tel.jeelpa.otter.reference.models.Episode
 import tel.jeelpa.otter.reference.models.ShowResponse
 import tel.jeelpa.otter.reference.models.VideoServer
+import tel.jeelpa.otter.trackerinterface.models.MediaCardData
+import tel.jeelpa.otter.trackerinterface.repository.AnimeClient
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
-import tel.jeelpa.otterlib.models.MediaCardData
-import tel.jeelpa.otterlib.repository.AnimeClient
 import javax.inject.Inject
 
 

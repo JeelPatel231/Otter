@@ -6,10 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import tel.jeelpa.otter.trackerinterface.models.MediaCardData
+import tel.jeelpa.otter.trackerinterface.repository.MangaClient
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
-import tel.jeelpa.otterlib.models.MediaCardData
-import tel.jeelpa.otterlib.repository.MangaClient
 import javax.inject.Inject
 
 @HiltViewModel

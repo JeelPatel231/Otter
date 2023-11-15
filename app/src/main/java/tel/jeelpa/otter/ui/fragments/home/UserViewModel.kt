@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
-import tel.jeelpa.otter.factories.TrackerManager
+import tel.jeelpa.otter.trackerinterface.TrackerManager
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
 import javax.inject.Inject
@@ -14,7 +14,7 @@ class UserViewModel @Inject constructor(
     trackerManager: TrackerManager
 ): ViewModel() {
     val trackerClient = suspend {
-        trackerManager.getCurrentTracker().first()
+        trackerManager.getCurrentTracker().first()?.userClient
             ?: throw IllegalStateException("No Tracker Selected/Registered")
     }
 

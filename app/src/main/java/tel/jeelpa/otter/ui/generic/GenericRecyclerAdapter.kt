@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.flow.Flow
-import tel.jeelpa.otterlib.models.Equitable
+import tel.jeelpa.otter.trackerinterface.models.Equitable
 
 abstract class GenericRecyclerAdapter<TData, TBindingType : ViewBinding>(
     private val inflateCallback: (LayoutInflater, ViewGroup?, Boolean) -> TBindingType,

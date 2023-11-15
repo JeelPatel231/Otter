@@ -8,7 +8,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import tel.jeelpa.otter.factories.TrackerManager
+import tel.jeelpa.otter.trackerinterface.TrackerManager
 import tel.jeelpa.otter.ui.generic.showToast
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class LoginHandlerActivity : AppCompatActivity() {
     }
 
     private suspend fun handleLogin(){
-        val userHandler = trackerFactory.getCurrentTracker().first()
+        val userHandler = trackerFactory.getCurrentTracker().first()?.userClient
             ?: return showToast("You have no tracker selected/registered")
 
         val data = intent?.data

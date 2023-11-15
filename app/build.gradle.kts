@@ -68,6 +68,8 @@ dependencies {
 
     // dagger-hilt
     implementation("com.google.dagger:hilt-android:2.48.1")
+
+
     kapt("com.google.dagger:hilt-compiler:2.48.1")
     // shimmer effect
     implementation("com.facebook.shimmer:shimmer:0.5.0")
@@ -113,10 +115,16 @@ dependencies {
     // memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
 
-    // data layer
-    implementation(project(mapOf("path" to ":otterlib")))
+    // shared prefs replacement
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+
+    // TODO: This should be bundled with the plugin itself, currently its in the app
+    implementation("com.apollographql.apollo3:apollo-runtime:3.8.2") // ????
+
     // common plugin middleware reference
     implementation(project(mapOf("path" to ":reference")))
+    implementation(project(mapOf("path" to ":trackerinterface")))
 
     // reflection
     implementation(kotlin("reflect"))

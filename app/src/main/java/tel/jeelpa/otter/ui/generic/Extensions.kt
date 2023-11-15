@@ -40,10 +40,10 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import tel.jeelpa.otter.trackerinterface.models.AppMediaType
+import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.ui.fragments.animedetails.AnimeActivity
 import tel.jeelpa.otter.ui.fragments.mangadetails.MangaActivity
-import tel.jeelpa.otterlib.models.AppMediaType
-import tel.jeelpa.otterlib.models.MediaCardData
 
 fun FragmentManager.getNavControllerFromHost(resId: Int) =
     (findFragmentById(resId) as NavHostFragment).navController

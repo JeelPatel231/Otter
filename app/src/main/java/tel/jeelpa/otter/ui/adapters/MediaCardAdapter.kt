@@ -6,9 +6,9 @@ import coil.load
 import coil.size.Scale
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaSmallLayoutBinding
+import tel.jeelpa.otter.trackerinterface.models.AppMediaType
+import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.ui.generic.GenericListAdapter
-import tel.jeelpa.otterlib.models.AppMediaType
-import tel.jeelpa.otterlib.models.MediaCardData
 
 class MediaCardAdapter(
     private val onItemClick : (MediaCardData) -> Unit
