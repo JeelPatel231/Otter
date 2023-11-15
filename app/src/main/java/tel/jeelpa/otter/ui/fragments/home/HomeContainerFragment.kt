@@ -53,8 +53,8 @@ class HomeContainerFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        viewModel.loggedIn.distinctUntilChanged().observeFlowFlex(viewLifecycleOwner) {
-            collectLatest {
+        viewModel.loggedIn.observeFlowFlex(viewLifecycleOwner) {
+            distinctUntilChanged().collectLatest {
                 when (it) {
                     true -> navigateTo(UserFragment())
                     false -> navigateTo(NoLoginFragment())
