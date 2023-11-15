@@ -2,6 +2,7 @@ package tel.jeelpa.otter.trackerinterface
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.trackerinterface.repository.ClientHolder
 
 
@@ -29,6 +30,8 @@ class TrackerManager(
     }
 
     fun registerTracker(trackerClient: ClientHolder){
+        // TODO : remove this when app has a setup screen
+        if (trackers.isEmpty()) runBlocking { setCurrentTracker(trackerClient) }
         _registeredTrackers.add(trackerClient)
     }
 }
