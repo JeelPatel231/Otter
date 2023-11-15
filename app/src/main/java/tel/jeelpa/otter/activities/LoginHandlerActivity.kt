@@ -40,7 +40,7 @@ class LoginHandlerActivity : AppCompatActivity() {
 
         //"otter://logintracker/anilist/?access_token=...&token_type=...")
         when(data.path){
-            "/anilist" -> userHandler.login(data)
+            "/anilist" -> userHandler.login(data.toString())
 
             else -> return showToast("Unknown Link, Cannot Handle!", Toast.LENGTH_SHORT)
         }

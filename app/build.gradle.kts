@@ -118,10 +118,6 @@ dependencies {
     // shared prefs replacement
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-
-    // TODO: This should be bundled with the plugin itself, currently its in the app
-    implementation("com.apollographql.apollo3:apollo-runtime:3.8.2") // ????
-
     // common plugin middleware reference
     implementation(project(mapOf("path" to ":reference")))
     implementation(project(mapOf("path" to ":trackerinterface")))

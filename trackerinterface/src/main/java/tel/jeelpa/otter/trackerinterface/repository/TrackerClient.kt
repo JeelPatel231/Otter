@@ -1,6 +1,5 @@
 package tel.jeelpa.otter.trackerinterface.repository
 
-import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.otter.trackerinterface.models.AppMediaListStatus
 import tel.jeelpa.otter.trackerinterface.models.MediaCardData
@@ -11,7 +10,7 @@ interface TrackerClient {
 
     fun isLoggedIn() : Flow<Boolean>
 
-    suspend fun login(callbackUri: Uri)
+    suspend fun login(callbackUri: String)
 
     suspend fun logout()
 

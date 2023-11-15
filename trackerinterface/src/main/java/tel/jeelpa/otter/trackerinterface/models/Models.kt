@@ -1,7 +1,7 @@
 package tel.jeelpa.otter.trackerinterface.models
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
 
 interface Equitable {
     override fun equals(other: Any?): Boolean
@@ -66,7 +66,7 @@ data class AppDate(
     }
 }
 
-@Parcelize
+@Serializable
 data class MediaCardData(
     val id: Int,
     val type: AppMediaType,
@@ -78,7 +78,7 @@ data class MediaCardData(
     val episodes: Int?,
     val nextAiringEpisode: Int?,
     val chapters: Int?,
-) : Equitable, Parcelable
+) : Equitable, java.io.Serializable
 
 
 data class MediaRelationCardData(

@@ -1,6 +1,5 @@
 package tel.jeelpa.anilisttrackerplugin.data
 
-import android.net.Uri
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.api.http.HttpRequest
@@ -30,6 +29,7 @@ import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.trackerinterface.models.User
 import tel.jeelpa.otter.trackerinterface.repository.TrackerClient
 import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import java.net.URI
 
 
 class AuthorizationInterceptor(
@@ -79,8 +79,9 @@ class TrackerClientImpl(
         }
     }
 
-    override suspend fun login(callbackUri: Uri) = coroutineScope {
-        val code = callbackUri.getQueryParameter("code")
+    override suspend fun login(callbackUri: String) = coroutineScope {
+        val code = URI.create(callbackUri).query.split("&").find { it.startsWith("code=") }
+            ?.removePrefix("code=")
             ?: throw IllegalStateException("Code not found!")
 
 

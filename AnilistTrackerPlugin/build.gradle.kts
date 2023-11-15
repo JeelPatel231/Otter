@@ -1,41 +1,24 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    id("java-library")
+    id("org.jetbrains.kotlin.jvm")
 
-    // apollo graphql
     id("com.apollographql.apollo3") version "3.8.2"
+    kotlin("plugin.serialization")
 
-    // serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
+    id("com.github.johnrengelman.shadow")
 }
 
-android {
-    namespace = "tel.jeelpa.anilisttrackerplugin"
-    compileSdk = 33
 
-    defaultConfig {
-        minSdk = 24
+dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+}
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
@@ -45,18 +28,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
     // apollo client for anilist
-    api("com.apollographql.apollo3:apollo-runtime:3.8.2")
+    implementation("com.apollographql.apollo3:apollo-runtime:3.8.2")
 
     // Jsoup
     implementation("org.jsoup:jsoup:1.16.1")
-
-
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
 
@@ -66,20 +41,6 @@ apollo {
     }
 }
 
-
-tasks.register<Exec>("dexJar") {
-    val currentProjectName = project.name
-    val referenceBuildDir = project(":trackerinterface").buildDir
-    val classPathJar = file("$referenceBuildDir/intermediates/full_jar/debug/full.jar")
-    dependsOn(":${currentProjectName}:build")
-    val dexExec =
-        file(android.sdkDirectory.absolutePath + "/build-tools/" + android.buildToolsVersion + "/d8")
-    commandLine(
-        dexExec,
-        "$buildDir/outputs/aar/${currentProjectName}-debug.aar",
-        "--classpath",
-        classPathJar,
-        "--output",
-        "AnilistClientPlugin.jar"
-    )
+tasks.withType<ShadowJar> {
+    minimize()
 }
