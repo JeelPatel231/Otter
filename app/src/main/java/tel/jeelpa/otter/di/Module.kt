@@ -114,7 +114,8 @@ class DIModule {
             httpClient,
             RegisterExtractorUseCase(extractorManager),
             RegisterParserUseCase(parserManager),
-            RegisterTrackerUseCase(trackerManager, userStorage)
+            RegisterTrackerUseCase(trackerManager),
+            userStorage
         )
     }
 

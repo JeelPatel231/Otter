@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import tel.jeelpa.otter.reference.RegisterExtractorUseCase
 import tel.jeelpa.otter.reference.RegisterParserUseCase
 import tel.jeelpa.otter.trackerinterface.RegisterTrackerUseCase
+import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.primaryConstructor
 
@@ -14,7 +15,8 @@ class PluginInitializer (
     private val httpClient: OkHttpClient,
     private val extractorUseCase: RegisterExtractorUseCase,
     private val parserUseCase: RegisterParserUseCase,
-    private val trackerUseCase: RegisterTrackerUseCase
+    private val trackerUseCase: RegisterTrackerUseCase,
+    private val userStorage: UserStorage
 ) {
 
     enum class MetadataClassNames {
@@ -48,6 +50,6 @@ class PluginInitializer (
             ?.call(httpClient, extractorUseCase)
 
         getNamedClassConstructor(MetadataClassNames.TrackerMetadata, classLoader)
-            ?.call(trackerUseCase)
+            ?.call(userStorage, trackerUseCase)
     }
 }
