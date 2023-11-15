@@ -56,6 +56,7 @@
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
                 <data android:host="anilist.co"/>
+                <data android:pathPrefix="/character"/>
             </intent-filter>
         </activity>
 
