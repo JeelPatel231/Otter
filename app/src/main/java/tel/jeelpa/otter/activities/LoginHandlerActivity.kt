@@ -6,16 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import tel.jeelpa.otter.trackerinterface.TrackerManager
+import tel.jeelpa.otter.trackerinterface.repository.UserClient
 import tel.jeelpa.otter.ui.generic.showToast
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginHandlerActivity : AppCompatActivity() {
 
-    @Inject lateinit var trackerFactory: TrackerManager
+    @Inject lateinit var userClient: UserClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +27,6 @@ class LoginHandlerActivity : AppCompatActivity() {
     }
 
     private suspend fun handleLogin(){
-        val userHandler = trackerFactory.getCurrentTracker().first()?.userClient
-            ?: return showToast("You have no tracker selected/registered")
-
         val data = intent?.data
             ?: return showToast("Intent Data Null/Invalid!", Toast.LENGTH_SHORT)
 
@@ -39,10 +35,10 @@ class LoginHandlerActivity : AppCompatActivity() {
         }
 
         //"otter://logintracker/anilist/?access_token=...&token_type=...")
-        when(data.path){
-            "/anilist" -> userHandler.login(data.toString())
-
-            else -> return showToast("Unknown Link, Cannot Handle!", Toast.LENGTH_SHORT)
+        try {
+            userClient.login(data.toString())
+        } catch (e: Throwable){
+            return showToast(e.message ?: "Failed to Handle Link, Unknown Cause.", Toast.LENGTH_SHORT)
         }
 
         showToast("Logged In Successfully!", Toast.LENGTH_SHORT)

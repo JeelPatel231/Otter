@@ -5,7 +5,7 @@ import tel.jeelpa.otter.trackerinterface.models.AppMediaListStatus
 import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.trackerinterface.models.User
 
-interface TrackerClient {
+interface UserClient {
     val loginUri: String
 
     fun isLoggedIn() : Flow<Boolean>
@@ -27,7 +27,7 @@ interface TrackerClient {
 
 interface ClientHolder {
     val uniqueId: String
-    val userClient: TrackerClient
+    val userClient: UserClient
     val animeClient: AnimeClient
     val mangaClient: MangaClient
     val characterClient: CharacterClient

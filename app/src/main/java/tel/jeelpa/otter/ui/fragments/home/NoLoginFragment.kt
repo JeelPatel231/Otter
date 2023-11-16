@@ -9,10 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.databinding.NoLoginLayoutBinding
-import tel.jeelpa.otter.trackerinterface.TrackerManager
+import tel.jeelpa.otter.trackerinterface.repository.UserClient
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.showToast
 import javax.inject.Inject
@@ -22,7 +21,7 @@ import javax.inject.Inject
 class NoLoginFragment: Fragment() {
 
     private var binding: NoLoginLayoutBinding by autoCleared()
-    @Inject lateinit var trackerManager: TrackerManager
+    @Inject lateinit var userClient: UserClient
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,11 +31,9 @@ class NoLoginFragment: Fragment() {
         binding = NoLoginLayoutBinding.inflate(inflater, container, false)
         binding.loginButton.setOnClickListener {
             lifecycleScope.launch {
-                val currentTracker = trackerManager.getCurrentTracker().first()
-                    ?: throw Exception("No Tracker Selected as Default")
 
                 val intent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(currentTracker.userClient.loginUri)
+                    data = Uri.parse(userClient.loginUri)
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
 

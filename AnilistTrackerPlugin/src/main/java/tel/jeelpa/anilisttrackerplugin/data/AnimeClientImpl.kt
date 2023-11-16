@@ -8,10 +8,11 @@ import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
 import tel.jeelpa.otter.trackerinterface.models.AppMediaType
 import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.trackerinterface.models.MediaDetailsFull
+import tel.jeelpa.otter.trackerinterface.repository.AnimeClient
 
 class AnimeClientImpl(
     private val anilistApolloClient: ApolloClient
-) : BaseClient(anilistApolloClient), tel.jeelpa.otter.trackerinterface.repository.AnimeClient {
+) : BaseClient(anilistApolloClient), AnimeClient {
     override suspend fun search(query: String): List<MediaCardData> =
         super.search(query, null, null, AppMediaType.ANIME)
 

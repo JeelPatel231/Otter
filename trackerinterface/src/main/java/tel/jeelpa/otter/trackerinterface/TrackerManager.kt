@@ -1,7 +1,7 @@
 package tel.jeelpa.otter.trackerinterface
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.trackerinterface.repository.ClientHolder
 
@@ -19,11 +19,12 @@ class TrackerManager(
 
     val trackers get() = _registeredTrackers.toList()
 
-    fun getCurrentTracker(): Flow<ClientHolder?> = flow {
-        trackerStore.getTracker().collect { trackerId ->
-            emit(trackers.find { it.uniqueId == trackerId })
+    // SHOULD ONLY BE CALLED IN HILT MODULE, ONCE
+    suspend fun getCurrentTracker(): ClientHolder {
+        val trackerId = trackerStore.getTracker().first()
+        return trackers.find { it.uniqueId == trackerId }
+                ?: throw IllegalStateException("The Preferred client is not Registered.")
         }
-    }
 
     suspend fun setCurrentTracker(trackerClient: ClientHolder) {
         trackerStore.saveTracker(trackerClient.uniqueId)

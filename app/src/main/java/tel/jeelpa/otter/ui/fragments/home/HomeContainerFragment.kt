@@ -15,23 +15,20 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.databinding.FragmentHomeBinding
-import tel.jeelpa.otter.trackerinterface.TrackerManager
+import tel.jeelpa.otter.trackerinterface.repository.UserClient
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlowFlex
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeContainerViewModel @Inject constructor(
-    private val trackerManager: TrackerManager
+    private val userClient: UserClient
 ) : ViewModel() {
 
     val loggedIn = flow {
-        trackerManager.getCurrentTracker()
-            .mapNotNull { it?.userClient?.isLoggedIn() }
-            .collect { emitAll(it) }
+        emitAll(userClient.isLoggedIn())
     }.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 }
 

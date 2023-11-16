@@ -8,8 +8,10 @@ import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -27,7 +29,7 @@ import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
 import tel.jeelpa.otter.trackerinterface.models.AppMediaListStatus
 import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.trackerinterface.models.User
-import tel.jeelpa.otter.trackerinterface.repository.TrackerClient
+import tel.jeelpa.otter.trackerinterface.repository.UserClient
 import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 import java.net.URI
 
@@ -60,7 +62,7 @@ class TrackerClientImpl(
     private val anilistData: AnilistData,
     private val httpClient: OkHttpClient,
     private val userStore: UserStorage,
-): TrackerClient {
+): UserClient {
     override val loginUri = "https://anilist.co/api/v2/oauth/authorize?client_id=${anilistData.id}&redirect_uri=${anilistData.redirectUri}&response_type=code"
     private var loggedInUserCache: User? = null
 
@@ -74,9 +76,7 @@ class TrackerClientImpl(
         .build()
 
     override fun isLoggedIn(): Flow<Boolean> = flow {
-        userStore.loadData().collect {
-            emit(it != null)
-        }
+        emitAll(userStore.loadData().map { it != null })
     }
 
     override suspend fun login(callbackUri: String) = coroutineScope {
