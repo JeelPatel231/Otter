@@ -2,19 +2,19 @@ package tel.jeelpa.otter.activities
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import tel.jeelpa.otter.trackerinterface.repository.UserClient
+import tel.jeelpa.otter.models.UserClientHolderModel
 import tel.jeelpa.otter.ui.generic.showToast
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginHandlerActivity : AppCompatActivity() {
 
-    @Inject lateinit var userClient: UserClient
+    private val viewModel: UserClientHolderModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class LoginHandlerActivity : AppCompatActivity() {
 
         //"otter://logintracker/anilist/?access_token=...&token_type=...")
         try {
-            userClient.login(data.toString())
+            viewModel.userClient.login(data.toString())
         } catch (e: Throwable){
             return showToast(e.message ?: "Failed to Handle Link, Unknown Cause.", Toast.LENGTH_SHORT)
         }

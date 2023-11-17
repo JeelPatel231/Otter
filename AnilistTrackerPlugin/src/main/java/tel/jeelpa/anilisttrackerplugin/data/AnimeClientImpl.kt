@@ -1,6 +1,11 @@
 package tel.jeelpa.anilisttrackerplugin.data
 
 import com.apollographql.apollo3.ApolloClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
 import tel.jeelpa.anilisttrackerplugin.models.toApp
 import tel.jeelpa.otter.anilisttrackerplugin.models.AnimeRecentlyUpdatedQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaSort
@@ -9,6 +14,14 @@ import tel.jeelpa.otter.trackerinterface.models.AppMediaType
 import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.trackerinterface.models.MediaDetailsFull
 import tel.jeelpa.otter.trackerinterface.repository.AnimeClient
+
+data class MalMediaScrapedDetails(
+    val name: String,
+    val malId: Int,
+    val type: String,
+    val openings: List<String>,
+    val endings: List<String>,
+)
 
 class AnimeClientImpl(
     private val anilistApolloClient: ApolloClient
@@ -55,68 +68,77 @@ class AnimeClientImpl(
 
     override suspend fun getAnimeDetails(id: Int): MediaDetailsFull = getMediaDetails(id)
 
-//    private fun scrapeMalDetails(malId: Int, mediaType: AppMediaType): MalMediaScrapedDetails {
-//        val headers = mapOf(
-//            "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
-//        )
-//        val path = when (mediaType) {
-//            AppMediaType.ANIME -> "anime"
-//            AppMediaType.MANGA -> "manga"
-//            else -> throw IllegalStateException("Unknown Media Type")
-//        }
-//
-//        val res = try {
-//            Jsoup.connect("https://myanimelist.net/$path/$malId")
-//                .headers(headers)
-//                .get()
-//        } catch (e: Throwable) {
-//            e.printStackTrace()
-//            return MalMediaScrapedDetails(
-//                name = "???",
-//                malId = malId,
-//                openings = listOf("Failed to get Openings"),
-//                endings = listOf("Failed to get Endings"),
-//                type = mediaType.name
-//            )
-//        }
-//
-//        val baseNameHolder = res.select(".h1-title > [itemprop=\"name\"]")
-//        val nameText = baseNameHolder.textNodes().firstOrNull()?.text()
-//            ?: baseNameHolder.select(".title-name").text()
-//
-//        val mediaFormat = res.select("div.spaceit_pad > a").first()!!.text()
-//
-//        val openings = res.select(".opnening > table > tbody > tr > td").mapNotNull {
-//            it.text()
-//                .takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
-//        }
-//
-//        val endings = res.select(".ending > table > tbody > tr > td").mapNotNull {
-//            it.text()
-//                .takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
-//        }
-//
-//        return MalMediaScrapedDetails(
-//            name = nameText,
-//            malId = malId,
-//            openings = openings,
-//            endings = endings,
-//            type = mediaFormat
-//        )
-//    }
+    private suspend fun scrapeMalDetails(
+        malId: Int,
+        mediaType: AppMediaType
+    ): MalMediaScrapedDetails = withContext(Dispatchers.IO) {
+        val headers = mapOf(
+            "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+        )
+        val path = when (mediaType) {
+            AppMediaType.ANIME -> "anime"
+            AppMediaType.MANGA -> "manga"
+            else -> throw IllegalStateException("Unknown Media Type")
+        }
 
-//    private lateinit var malScrapedCache: MalMediaScrapedDetails
+        val res = try {
+            Jsoup.connect("https://myanimelist.net/$path/$malId")
+                .headers(headers)
+                .get()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            return@withContext MalMediaScrapedDetails(
+                name = "???",
+                malId = malId,
+                openings = listOf("Failed to get Openings"),
+                endings = listOf("Failed to get Endings"),
+                type = mediaType.name
+            )
+        }
+
+        val baseNameHolder = res.select(".h1-title > [itemprop=\"name\"]")
+        val nameText = baseNameHolder.textNodes().firstOrNull()?.text()
+            ?: baseNameHolder.select(".title-name").text()
+
+        val mediaFormat = res.select("div.spaceit_pad > a").first()!!.text()
+
+        val openings = res.select(".opnening > table > tbody > tr > td").mapNotNull {
+            it.text()
+                .takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
+        }
+
+        val endings = res.select(".ending > table > tbody > tr > td").mapNotNull {
+            it.text()
+                .takeUnless { str -> str.contains("Help improve our database") || str.isBlank() }
+        }
+
+        return@withContext MalMediaScrapedDetails(
+            name = nameText,
+            malId = malId,
+            openings = openings,
+            endings = endings,
+            type = mediaFormat
+        )
+    }
+
+    private val malCacheLock = Mutex(false)
+    private lateinit var malScrapedCache: MalMediaScrapedDetails
+
     override suspend fun getOpenings(id: Int): List<String> {
-        return emptyList()
-//        if (::malScrapedCache.isInitialized) return malScrapedCache.openings
-//        malScrapedCache = withContext(Dispatchers.IO) { scrapeMalDetails(id, AppMediaType.ANIME) }
-//        return malScrapedCache.openings
+        malCacheLock.withLock {
+            if (!::malScrapedCache.isInitialized) {
+                malScrapedCache = scrapeMalDetails(id, AppMediaType.ANIME)
+            }
+        }
+        return malScrapedCache.openings
     }
 
     override suspend fun getEndings(id: Int): List<String> {
-        return emptyList()
-//        if (::malScrapedCache.isInitialized) return malScrapedCache.endings
-//        malScrapedCache = withContext(Dispatchers.IO) { scrapeMalDetails(id, AppMediaType.ANIME) }
-//        return malScrapedCache.endings
+        malCacheLock.withLock {
+            if (!::malScrapedCache.isInitialized) {
+                malScrapedCache = scrapeMalDetails(id, AppMediaType.ANIME)
+            }
+        }
+        return malScrapedCache.endings
     }
 }

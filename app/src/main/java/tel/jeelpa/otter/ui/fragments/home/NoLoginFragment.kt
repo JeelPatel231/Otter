@@ -7,21 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.databinding.NoLoginLayoutBinding
-import tel.jeelpa.otter.trackerinterface.repository.UserClient
+import tel.jeelpa.otter.models.UserClientHolderModel
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.showToast
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class NoLoginFragment: Fragment() {
 
     private var binding: NoLoginLayoutBinding by autoCleared()
-    @Inject lateinit var userClient: UserClient
+    private val userClientHolderModel: UserClientHolderModel by viewModels()
+    private val userClient
+        get() = userClientHolderModel.userClient
 
     override fun onCreateView(
         inflater: LayoutInflater,

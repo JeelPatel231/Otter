@@ -8,13 +8,13 @@ import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 
 class ClientHolderImpl(
     userStorage: UserStorage,
-    anilistClient: ApolloClient = buildAnilistApolloClient(),
+    private val anilistClient: ApolloClient = buildAnilistApolloClient(),
     okHttpClient: OkHttpClient = buildOkHttpClient(),
 ) : ClientHolder {
     override val uniqueId = "ANILIST"
 
     companion object {
-        private fun buildAnilistApolloClient()  = ApolloClient.Builder()
+        private fun buildAnilistApolloClient() = ApolloClient.Builder()
             .serverUrl("https://graphql.anilist.co")
             .build()
 
@@ -28,8 +28,12 @@ class ClientHolderImpl(
         )
     }
 
+    // can be static, it doesn't hold any cache
     override val userClient = TrackerClientImpl(anilistData, okHttpClient, userStorage)
-    override val animeClient = AnimeClientImpl(anilistClient)
     override val mangaClient = MangaClientImpl(anilistClient)
     override val characterClient = CharacterClientImpl(anilistClient)
+
+    // these clients hold cache and need to get Re-Instantiated on every use to delete cache
+    override val animeClient
+        get() = AnimeClientImpl(anilistClient)
 }
