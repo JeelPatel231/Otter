@@ -8,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import tel.jeelpa.otter.activities.SettingsActivity
 import tel.jeelpa.otter.databinding.NoLoginLayoutBinding
 import tel.jeelpa.otter.models.UserClientHolderModel
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.showToast
 
 
 @AndroidEntryPoint
@@ -31,20 +29,19 @@ class NoLoginFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = NoLoginLayoutBinding.inflate(inflater, container, false)
-        binding.loginButton.setOnClickListener {
-            lifecycleScope.launch {
 
-                val intent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(userClient.loginUri)
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                }
-
-                startActivity(intent)
-            }
+        binding.avatarHolder.setOnClickListener {
+            val intent = Intent(requireContext(), SettingsActivity::class.java)
+            startActivity(intent)
         }
 
-        binding.pluginsButton.setOnClickListener {
-            showToast("Not Implemented")
+        binding.loginButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(userClient.loginUri)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+
+            startActivity(intent)
         }
 
         return binding.root

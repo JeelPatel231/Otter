@@ -1,5 +1,6 @@
 package tel.jeelpa.otter.ui.fragments.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.viewModels
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
+import tel.jeelpa.otter.activities.SettingsActivity
 import tel.jeelpa.otter.databinding.FragmentUserBinding
 import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
@@ -17,10 +19,9 @@ import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
-import tel.jeelpa.otter.ui.generic.showToast
 
 @AndroidEntryPoint
-class UserFragment: Fragment() {
+class UserFragment : Fragment() {
 
     private var binding: FragmentUserBinding by autoCleared()
     private val userViewModel: UserViewModel by viewModels()
@@ -37,18 +38,16 @@ class UserFragment: Fragment() {
         binding.avatarHolder.imageTintMode = null
 
         binding.avatarHolder.setOnClickListener {
-            showToast("Not Implemented")
+            val intent = Intent(requireContext(), SettingsActivity::class.java)
+            startActivity(intent)
         }
-//        binding.logoutButton.setOnClickListener {
-//            lifecycleScope.launch(Dispatchers.IO) {
-//                trackerFactory().logout()
-//            }
-//        }
 
-        userViewModel.userData.observeFlow(viewLifecycleOwner){
+        userViewModel.userData.observeFlow(viewLifecycleOwner) {
             binding.username.text = it.username
-            binding.episodesCountHolder.text = requireContext().getString(R.string.episodes_watched, it.episodeCount)
-            binding.chaptersCountHolder.text = requireContext().getString(R.string.chapters_read, it.chapterCount)
+            binding.episodesCountHolder.text =
+                requireContext().getString(R.string.episodes_watched, it.episodeCount)
+            binding.chaptersCountHolder.text =
+                requireContext().getString(R.string.chapters_read, it.chapterCount)
             binding.avatarHolder.apply {
                 binding.avatarHolder.scaleType = ImageView.ScaleType.CENTER_CROP
                 load(it.profileImage)

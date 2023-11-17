@@ -8,16 +8,20 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import tel.jeelpa.otter.databinding.ActivityLoginBinding
 import tel.jeelpa.otter.models.UserClientHolderModel
 import tel.jeelpa.otter.ui.generic.showToast
 
 @AndroidEntryPoint
 class LoginHandlerActivity : AppCompatActivity() {
-
+    private var _binding: ActivityLoginBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: UserClientHolderModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        _binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // handle login
         lifecycleScope.launch(Dispatchers.IO) {

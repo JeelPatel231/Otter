@@ -1,28 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?attr/textAppearanceHeadline4"
-        android:text="Not Logged in yet!"/>
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?attr/floatingActionButtonLargePrimaryStyle"
-        android:text="Login with Anilist!"/>
+        <TextView
+            style="?attr/textAppearanceHeadline4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="" />
 
-    <Button
-        android:id="@+id/plugins_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?attr/floatingActionButtonLargePrimaryStyle"
-        android:text="Plugins"/>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatar_holder"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="end"
+            android:adjustViewBounds="true"
+            android:background="@drawable/rounded_corner_shape"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/round_settings_24"
+            app:shapeAppearanceOverlay="@style/circleImageView"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="1dp"
+            app:tint="?attr/colorOnSurface" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Otter"
+                android:layout_marginBottom="18dp"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceDisplayLarge" />
+
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>
+
