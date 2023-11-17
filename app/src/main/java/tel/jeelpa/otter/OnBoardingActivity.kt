@@ -2,6 +2,7 @@ package tel.jeelpa.otter
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup.LayoutParams
 import android.widget.RadioButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -49,10 +50,13 @@ class OnBoardingActivity : AppCompatActivity() {
         binding.trackerSelector.setOnCheckedChangeListener { _, _ ->
             binding.proceedBtn.isEnabled = true
         }
-
+        val btnLayoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         onBoardingVM.trackerManager.trackers
             .map { it.uniqueId }
-            .map { RadioButton(this).apply { text = it } }
+            .map { RadioButton(this).apply {
+                text = it
+                layoutParams = btnLayoutParams
+            } }
             .forEach { binding.trackerSelector.addView(it) }
 
         binding.proceedBtn.setOnClickListener {
