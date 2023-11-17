@@ -18,7 +18,7 @@ class TrackerManager {
     // SHOULD ONLY BE CALLED IN HILT MODULE, ONCE
     fun getTracker(id: String): ClientHolder {
 //        val trackerId = trackerStore.getTracker().first()
-        return trackers.find { it.uniqueId == id }
+        return trackers.find { it.uniqueId.equals(id, true) }
                 ?: throw IllegalStateException("The Preferred client is not Registered.")
         }
 
