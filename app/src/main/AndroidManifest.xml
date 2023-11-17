@@ -75,7 +75,7 @@
 
         <activity android:name=".activities.LoginHandlerActivity"
             android:exported="true">
-            <intent-filter android:label="Anilist Login">
+            <intent-filter android:label="Tracker Login">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
