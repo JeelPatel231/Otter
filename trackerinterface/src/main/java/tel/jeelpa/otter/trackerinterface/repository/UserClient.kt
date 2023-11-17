@@ -25,10 +25,14 @@ interface UserClient {
     suspend fun getRecommendations(): List<MediaCardData>
 }
 
-interface ClientHolder {
-    val uniqueId: String
-    val userClient: UserClient
-    val animeClient: AnimeClient
-    val mangaClient: MangaClient
-    val characterClient: CharacterClient
+abstract class ClientHolder {
+    abstract val uniqueId: String
+    abstract val userClient: UserClient
+    abstract val animeClient: AnimeClient
+    abstract val mangaClient: MangaClient
+    abstract val characterClient: CharacterClient
+
+    override fun toString() : String {
+        return this.uniqueId
+    }
 }

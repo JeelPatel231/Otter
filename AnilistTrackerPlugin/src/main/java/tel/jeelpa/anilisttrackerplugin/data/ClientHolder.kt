@@ -10,7 +10,7 @@ class ClientHolderImpl(
     userStorage: UserStorage,
     private val anilistClient: ApolloClient = buildAnilistApolloClient(),
     okHttpClient: OkHttpClient = buildOkHttpClient(),
-) : ClientHolder {
+) : ClientHolder() {
     override val uniqueId = "ANILIST"
 
     companion object {
