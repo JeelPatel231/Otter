@@ -32,6 +32,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/first_row_recycler_view"
+                    android:nestedScrollingEnabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="18dp"
