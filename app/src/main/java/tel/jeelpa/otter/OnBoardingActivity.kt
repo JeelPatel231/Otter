@@ -3,17 +3,19 @@ package tel.jeelpa.otter
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup.LayoutParams
+import android.view.ViewGroup.VISIBLE
 import android.widget.RadioButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.databinding.ActivityOnboardingBinding
 import tel.jeelpa.otter.trackerinterface.TrackerManager
 import tel.jeelpa.otter.trackerinterface.TrackerStore
+import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 import javax.inject.Inject
 
 
@@ -21,6 +23,7 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor(
     val trackerStore: TrackerStore,
     val trackerManager: TrackerManager,
+    val userStorage: UserStorage,
 ) : ViewModel()
 
 @AndroidEntryPoint
@@ -36,15 +39,40 @@ class OnBoardingActivity : AppCompatActivity() {
         finish()
     }
 
+    private suspend fun checkTrackerHealth(): Boolean {
+        // Tracker Store has ID, but the class wasnt loaded
+        val registeredId = onBoardingVM.trackerStore.getTracker().firstOrNull()
+            ?: return false
+        return try {
+            // throws exception when not found
+            onBoardingVM.trackerManager.getTracker(registeredId)
+            true
+        } catch (e: Throwable) {
+            // clear the set tracker and user data to mitigate any inconsistencies on changing clients
+            onBoardingVM.trackerStore.clearTracker()
+            onBoardingVM.userStorage.clearData()
+            binding.trackerHealthError.apply {
+                text = "ERROR: Could not load your registered tracker. User Data was Cleared, reconfigure the app to proceed."
+                visibility = VISIBLE
+            }
+            false
+        }
+    }
+
+    private val healthChecks: Array<suspend  () -> Boolean> =
+        arrayOf(::checkTrackerHealth)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        _binding = ActivityOnboardingBinding.inflate(layoutInflater)
+
         // don't do the view rendering if everything is already set up
         runBlocking {
-            if (onBoardingVM.trackerStore.getTracker().first() != null)
+            if(healthChecks.all { it() }){
                 proceedToMain()
+            }
         }
 
-        _binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.trackerSelector.setOnCheckedChangeListener { _, _ ->

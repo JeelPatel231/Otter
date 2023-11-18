@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,6 +29,17 @@
             android:text="*Otter simply CANNOT function without a client"
             android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorError"/>
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:id="@+id/tracker_health_error"
+            tools:text="You messed with the jar files, didn't you"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorError"
+            android:visibility="gone"
+            android:textAppearance="?attr/textAppearanceCaption" />
 
         <RadioGroup
             android:paddingVertical="18dp"
