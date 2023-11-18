@@ -34,10 +34,6 @@ class LoginHandlerActivity : AppCompatActivity() {
         val data = intent?.data
             ?: return showToast("Intent Data Null/Invalid!", Toast.LENGTH_SHORT)
 
-        if(data.authority != "logintracker") {
-            return showToast("Invalid Link Authority!", Toast.LENGTH_SHORT)
-        }
-
         //"otter://logintracker/anilist/?access_token=...&token_type=...")
         try {
             viewModel.userClient.login(data.toString())
