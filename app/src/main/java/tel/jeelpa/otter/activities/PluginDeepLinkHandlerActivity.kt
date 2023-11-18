@@ -104,6 +104,8 @@ class PluginDeepLinkHandlerActivity : AppCompatActivity() {
 
         if (!jarName.endsWith(".jar")) {
             dialog.show()
+        } else {
+            lifecycleScope.launch(Dispatchers.IO) { downloadJob() }
         }
 
     }
