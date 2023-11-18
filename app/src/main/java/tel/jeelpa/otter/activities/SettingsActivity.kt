@@ -1,9 +1,9 @@
 package tel.jeelpa.otter.activities
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -15,11 +15,11 @@ import tel.jeelpa.otter.OnBoardingActivity
 import tel.jeelpa.otter.databinding.ActivitySettingsBinding
 import tel.jeelpa.otter.trackerinterface.TrackerManager
 import tel.jeelpa.otter.trackerinterface.TrackerStore
-import tel.jeelpa.otter.trackerinterface.repository.ClientHolder
 import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.restartApp
+import tel.jeelpa.otter.ui.generic.showToast
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,14 +30,6 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
     val trackers
         get() = trackerManager.trackers
-
-    suspend fun changeTracker(uniqueId: String): Boolean {
-        val currentTrackerId = trackerStore.getTracker().first()
-        if (currentTrackerId == uniqueId) return false
-        trackerStore.saveTracker(uniqueId)
-        userStorage.clearData()
-        return true
-    }
 }
 
 
@@ -55,6 +47,19 @@ class SettingsActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
+
+    private suspend fun checkTrackerService(): Boolean {
+        val newValue = binding.trackerServiceSelector.text.toString()
+        val oldValue = settingsViewModel.trackerStore.getTracker().first()
+        if (newValue != oldValue){
+            settingsViewModel.trackerStore.saveTracker(newValue)
+            return true
+        }
+        return false
+    }
+
+    private val listOfChecks: Array<suspend () -> Boolean> =
+        arrayOf(::checkTrackerService)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,18 +79,21 @@ class SettingsActivity : AppCompatActivity() {
                     settingsViewModel.trackers
                 )
             )
+        }
 
-            setOnItemClickListener { adapterView, _, idx, _ ->
-                val client = adapterView.getItemAtPosition(idx) as ClientHolder
-                lifecycleScope.launch {
-                    if(settingsViewModel.changeTracker(client.uniqueId)) {
-                        showConfirmDialogWithText("Restart App for changes to take effect?") { _, _ ->
-                            finishAffinity()
-                            restartApp(OnBoardingActivity::class.java)
-                        }
+        binding.applyBtn.setOnClickListener {
+            lifecycleScope.launch {
+                // if ATLEAST ONE value has been changed, ask to restart the app
+                if(listOfChecks.any { it() }){
+                    showConfirmDialogWithText("Restart App for changes to take effect.") { _, _ ->
+                        finishAffinity()
+                        restartApp(OnBoardingActivity::class.java)
                     }
+                } else {
+                    showToast("No Changes were made.")
                 }
             }
         }
+
     }
 }
