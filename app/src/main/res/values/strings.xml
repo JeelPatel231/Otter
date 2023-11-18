@@ -25,6 +25,7 @@
     <string name="height">Height : %s</string>
 
     <string name="total_media">Total %s</string>
+    <string name="bytes_downloaded">%s KB Downloaded</string>
     <string name="preffered_tracker_selection_help">
         If you dont see anything to pick from, you might want to place the tracker client .jar file in the required place.
     </string>

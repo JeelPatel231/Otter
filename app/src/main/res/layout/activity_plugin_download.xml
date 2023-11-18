@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:src="@drawable/round_downloading_24"
+        android:layout_width="120dp"
+        android:adjustViewBounds="true"
+        android:layout_marginBottom="24dp"
+        android:layout_height="wrap_content"
+        app:tint="?attr/colorPrimary" />
+
+    <TextView
+        android:text="Downloading Plugin..."
+        android:layout_marginBottom="24dp"
+        android:textAppearance="?attr/textAppearanceHeadlineLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:indeterminate="true"
+        android:id="@+id/download_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        tools:progress="40"
+        android:progressTint="?attr/colorPrimary"
+        android:paddingHorizontal="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:textStyle="bold"
+        android:paddingHorizontal="24dp"
+        android:gravity="end"
+        android:id="@+id/bytes_holder"
+        tools:text="Downloaded : 68KB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

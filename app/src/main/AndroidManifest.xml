@@ -85,6 +85,19 @@
             </intent-filter>
         </activity>
 
+
+        <activity android:name=".activities.PluginDeepLinkHandlerActivity"
+            android:exported="true">
+            <intent-filter android:label="Otter Plugin Handler">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "otter://addplugin" -->
+                <data android:scheme="otter" android:host="addplugin" />
+
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
