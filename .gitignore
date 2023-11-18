@@ -13,6 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-
-# compile time constants
-config.properties
