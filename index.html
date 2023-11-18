@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Otter | Plugins</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    const DEEPLINK_PREFIX = `otter://addplugin/`
+    window.onload = () => {
+      const pluginLinkNodes = document.querySelectorAll("[plugin-link]")
+      for (const node of pluginLinkNodes) {
+        node.href = DEEPLINK_PREFIX + node.href
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <a plugin-link href="/AnilistTracker.jar">Anilist Tracker</a>
+
+</body>
+
+</html>
