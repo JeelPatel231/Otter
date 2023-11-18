@@ -26,4 +26,8 @@ class TrackerStoreImpl(private val context: Context) : TrackerStore {
         }
     }
 
+    override suspend fun clearTracker() {
+        context.dataStore.edit { it.clear() }
+    }
+
 }

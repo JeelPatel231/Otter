@@ -5,6 +5,8 @@ import tel.jeelpa.otter.trackerinterface.repository.ClientHolder
 
 
 interface TrackerStore {
+    suspend fun clearTracker()
+
     suspend fun saveTracker(trackerId: String)
 
     fun getTracker(): Flow<String?>
