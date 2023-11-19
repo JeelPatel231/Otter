@@ -3,10 +3,10 @@ package tel.jeelpa.otter.ui.fragments.exoplayer
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.channelFlow
-import tel.jeelpa.otter.reference.ExtractorManager
-import tel.jeelpa.otter.reference.models.VideoServer
+import tel.jeelpa.otter.plugins.ExtractorManager
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.generic.asyncForEach
+import tel.jeelpa.plugininterface.models.VideoServer
 import javax.inject.Inject
 
 

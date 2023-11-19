@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.plugininterface.storage.UserStorage
 
 class UserStore(private val context: Context) : UserStorage {
     companion object {

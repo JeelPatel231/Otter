@@ -17,9 +17,9 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.databinding.FragmentHomeBinding
-import tel.jeelpa.otter.trackerinterface.repository.UserClient
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlowFlex
+import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import javax.inject.Inject
 
 @HiltViewModel

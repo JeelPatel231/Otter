@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
-import tel.jeelpa.otter.trackerinterface.repository.MangaClient
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.repository.MangaClient
 import javax.inject.Inject
 
 @HiltViewModel

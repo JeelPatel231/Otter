@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_exoplayer" >
         <argument
             android:name="videoServers"
-            app:argType="tel.jeelpa.otter.reference.models.VideoServer[]" />
+            app:argType="tel.jeelpa.otter.ui.fragments.animedetails.VideoServerWrapper" />
     </fragment>
 
 </navigation>

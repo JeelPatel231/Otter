@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.flow.Flow
-import tel.jeelpa.otter.trackerinterface.models.Equitable
 
 abstract class GenericRecyclerAdapter<TData, TBindingType : ViewBinding>(
     private val inflateCallback: (LayoutInflater, ViewGroup?, Boolean) -> TBindingType,
@@ -65,7 +64,7 @@ abstract class GenericRecyclerAdapter<TData, TBindingType : ViewBinding>(
     }
 }
 
-class DataClassDiffCallback<TComparable, TData: Equitable>(
+class DataClassDiffCallback<TComparable, TData: tel.jeelpa.plugininterface.tracker.models.Equitable>(
     private val getPk: TData.() -> TComparable
 ): DiffUtil.ItemCallback<TData>() {
     override fun areItemsTheSame(oldItem: TData, newItem: TData): Boolean {
@@ -77,7 +76,7 @@ class DataClassDiffCallback<TComparable, TData: Equitable>(
     }
 }
 
-abstract class GenericListAdapter<TComparable, TData: Equitable, TBindingType: ViewBinding>(
+abstract class GenericListAdapter<TComparable, TData: tel.jeelpa.plugininterface.tracker.models.Equitable, TBindingType: ViewBinding>(
     primaryKey: TData.() -> TComparable
 ): ListAdapter<TData, GenericListAdapter.ViewHolder<TData, TBindingType>>(
     DataClassDiffCallback<TComparable, TData>(primaryKey)

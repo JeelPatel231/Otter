@@ -9,14 +9,14 @@ import tel.jeelpa.otter.anilisttrackerplugin.models.MediaSearchQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaFormat
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaSort
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
-import tel.jeelpa.otter.trackerinterface.models.AppDate
-import tel.jeelpa.otter.trackerinterface.models.AppMediaType
-import tel.jeelpa.otter.trackerinterface.models.AppTrailer
-import tel.jeelpa.otter.trackerinterface.models.CharacterCardData
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
-import tel.jeelpa.otter.trackerinterface.models.MediaDetailsFull
-import tel.jeelpa.otter.trackerinterface.models.MediaRelationCardData
-import tel.jeelpa.otter.trackerinterface.models.MediaRelationType
+import tel.jeelpa.plugininterface.tracker.models.AppDate
+import tel.jeelpa.plugininterface.tracker.models.AppMediaType
+import tel.jeelpa.plugininterface.tracker.models.AppTrailer
+import tel.jeelpa.plugininterface.tracker.models.CharacterCardData
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.models.MediaDetailsFull
+import tel.jeelpa.plugininterface.tracker.models.MediaRelationCardData
+import tel.jeelpa.plugininterface.tracker.models.MediaRelationType
 
 abstract class BaseClient (
     private val anilistClient: ApolloClient

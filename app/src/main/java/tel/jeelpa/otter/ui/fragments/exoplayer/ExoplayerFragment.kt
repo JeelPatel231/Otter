@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentExoplayerBinding
-import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
 import tel.jeelpa.otter.ui.generic.goFullScreen
@@ -41,6 +40,7 @@ import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.visibilityGone
+import tel.jeelpa.plugininterface.models.Video
 import javax.inject.Inject
 
 
@@ -174,7 +174,7 @@ class ExoplayerFragment : Fragment() {
         }
 
         // Source Selection Dialog
-        val videoServers = exoNavArgs.videoServers.toList()
+        val videoServers = exoNavArgs.videoServers.list
 
         // collect the flow once, cache it
         val extractedSharedFlow = exoplayerViewModel.extractVideos(videoServers).shareIn(lifecycleScope, SharingStarted.Eagerly)

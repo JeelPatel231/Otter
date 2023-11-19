@@ -13,9 +13,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.databinding.ActivityOnboardingBinding
-import tel.jeelpa.otter.trackerinterface.TrackerManager
-import tel.jeelpa.otter.trackerinterface.TrackerStore
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.TrackerManager
+import tel.jeelpa.plugininterface.tracker.TrackerStore
 import javax.inject.Inject
 
 

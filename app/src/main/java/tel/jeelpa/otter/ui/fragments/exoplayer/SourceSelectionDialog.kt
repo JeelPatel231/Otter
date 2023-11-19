@@ -10,9 +10,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.otter.databinding.SourceSelectionBottomSheetBinding
-import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlow
+import tel.jeelpa.plugininterface.models.Video
 
 class SourceSelectionDialog(
     private val liveData: Flow<List<Video>>,

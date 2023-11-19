@@ -10,28 +10,24 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-
-dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":trackerinterface")))
+    implementation(project(mapOf("path" to ":plugininterface")))
+
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     // kotlinx serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
     // apollo client for anilist
     implementation("com.apollographql.apollo3:apollo-runtime:3.8.2")
 
     // Jsoup
-    implementation("org.jsoup:jsoup:1.16.1")
+//    implementation("org.jsoup:jsoup:1.16.1")
 }
 
 
@@ -43,4 +39,10 @@ apollo {
 
 tasks.withType<ShadowJar> {
     minimize()
+    dependencies {
+        exclude(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"))
+        exclude(dependency("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"))
+//        exclude(dependency(project(":trackerinterface")))
+//        exclude(dependency("org.jsoup:jsoup:1.16.1"))
+    }
 }

@@ -8,15 +8,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
+import kotlinx.serialization.Serializable
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
-import tel.jeelpa.otter.reference.Parser
 import tel.jeelpa.otter.ui.fragments.mediaCommon.WrongMediaSelectionBottomSheetDialog
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
 import tel.jeelpa.otter.ui.generic.observeFlow
+import tel.jeelpa.plugininterface.anime.parser.Parser
+import tel.jeelpa.plugininterface.models.VideoServer
+
+
+// Try to NOT use this wrapper, passing complex data structures is an anti pattern
+@Serializable
+class VideoServerWrapper(val list: List<VideoServer>): java.io.Serializable
 
 class AnimeDetailsWatchFragment : Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
@@ -52,7 +59,7 @@ class AnimeDetailsWatchFragment : Fragment() {
         val episodesAdapter = EpisodeAdapter(lifecycleScope) {
             val videoServers = animeDetailsViewModel.getVideoServers(it.link)
             requireActivity().getNavControllerFromHost(R.id.anime_activity_container_view).navigate(
-                AnimeDetailsFragmentDirections.toExoplayerFragment(videoServers.toTypedArray())
+                AnimeDetailsFragmentDirections.toExoplayerFragment(VideoServerWrapper(videoServers))
             )
         }
 

@@ -13,19 +13,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.OnBoardingActivity
 import tel.jeelpa.otter.databinding.ActivitySettingsBinding
-import tel.jeelpa.otter.trackerinterface.TrackerManager
-import tel.jeelpa.otter.trackerinterface.TrackerStore
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.restartApp
 import tel.jeelpa.otter.ui.generic.showToast
+import tel.jeelpa.plugininterface.storage.UserStorage
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    val trackerStore: TrackerStore,
-    private val trackerManager: TrackerManager,
+    val trackerStore: tel.jeelpa.plugininterface.tracker.TrackerStore,
+    private val trackerManager: tel.jeelpa.plugininterface.tracker.TrackerManager,
     private val userStorage: UserStorage,
 ) : ViewModel() {
     val trackers

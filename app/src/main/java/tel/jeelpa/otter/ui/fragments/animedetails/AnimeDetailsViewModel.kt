@@ -11,15 +11,15 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import tel.jeelpa.otter.reference.Parser
-import tel.jeelpa.otter.reference.ParserManager
-import tel.jeelpa.otter.reference.models.Episode
-import tel.jeelpa.otter.reference.models.ShowResponse
-import tel.jeelpa.otter.reference.models.VideoServer
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
-import tel.jeelpa.otter.trackerinterface.repository.AnimeClient
+import tel.jeelpa.otter.plugins.ParserManager
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
+import tel.jeelpa.plugininterface.anime.parser.Parser
+import tel.jeelpa.plugininterface.models.Episode
+import tel.jeelpa.plugininterface.models.ShowResponse
+import tel.jeelpa.plugininterface.models.VideoServer
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
 import javax.inject.Inject
 
 

@@ -1,8 +1,8 @@
 package tel.jeelpa.otter.ui.fragments.exoplayer
 
 import tel.jeelpa.otter.databinding.SimpleTextViewBinding
-import tel.jeelpa.otter.reference.models.Video
 import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
+import tel.jeelpa.plugininterface.models.Video
 
 class SourceSelectionAdapter(
     private val onItemClick : (Video) -> Unit

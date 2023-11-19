@@ -1,13 +1,17 @@
 
 import tel.jeelpa.anilisttrackerplugin.data.ClientHolderImpl
-import tel.jeelpa.otter.trackerinterface.RegisterTrackerUseCase
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.plugininterface.AppGivenDependencies
+import tel.jeelpa.plugininterface.LoadablePlugin
+import tel.jeelpa.plugininterface.PluginRegistrar
 
-class TrackerMetadata(
-    userStorage: UserStorage,
-    registerTrackerUseCase: RegisterTrackerUseCase,
-) {
-    init {
-        registerTrackerUseCase(ClientHolderImpl(userStorage))
+class Metadata(
+    private val pluginRegistrar: PluginRegistrar,
+    deps: AppGivenDependencies
+) : LoadablePlugin {
+
+    private val anilistTracker = ClientHolderImpl(deps.userStorage)
+
+    override fun load() {
+        pluginRegistrar.registerTracker(anilistTracker)
     }
 }

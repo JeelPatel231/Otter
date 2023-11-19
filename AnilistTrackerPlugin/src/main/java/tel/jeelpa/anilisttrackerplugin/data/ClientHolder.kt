@@ -3,8 +3,8 @@ package tel.jeelpa.anilisttrackerplugin.data
 import com.apollographql.apollo3.ApolloClient
 import okhttp3.OkHttpClient
 import tel.jeelpa.anilisttrackerplugin.models.AnilistData
-import tel.jeelpa.otter.trackerinterface.repository.ClientHolder
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
 
 class ClientHolderImpl(
     userStorage: UserStorage,

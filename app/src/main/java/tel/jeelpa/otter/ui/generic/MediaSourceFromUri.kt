@@ -14,8 +14,8 @@ import androidx.media3.exoplayer.source.BaseMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import okhttp3.OkHttpClient
-import tel.jeelpa.otter.reference.models.Video
-import tel.jeelpa.otter.reference.models.VideoType
+import tel.jeelpa.plugininterface.models.Video
+import tel.jeelpa.plugininterface.models.VideoType
 
 class CreateMediaSourceFromVideo(
      private val createMediaSourceFromUri: CreateMediaSourceFromUri

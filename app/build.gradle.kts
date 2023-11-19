@@ -108,8 +108,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // common plugin middleware reference
-    implementation(project(mapOf("path" to ":reference")))
-    implementation(project(mapOf("path" to ":trackerinterface")))
+    implementation(project(mapOf("path" to ":plugininterface")))
 
     // reflection
     implementation(kotlin("reflect"))

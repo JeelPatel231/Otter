@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.models.TrackerStoreImpl
 import tel.jeelpa.otter.models.UserStore
-import tel.jeelpa.otter.trackerinterface.TrackerManager
-import tel.jeelpa.otter.trackerinterface.TrackerStore
-import tel.jeelpa.otter.trackerinterface.repository.AnimeClient
-import tel.jeelpa.otter.trackerinterface.repository.CharacterClient
-import tel.jeelpa.otter.trackerinterface.repository.ClientHolder
-import tel.jeelpa.otter.trackerinterface.repository.MangaClient
-import tel.jeelpa.otter.trackerinterface.repository.UserClient
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.TrackerManager
+import tel.jeelpa.plugininterface.tracker.TrackerStore
+import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
+import tel.jeelpa.plugininterface.tracker.repository.CharacterClient
+import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
+import tel.jeelpa.plugininterface.tracker.repository.MangaClient
+import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import javax.inject.Named
 import javax.inject.Singleton
 

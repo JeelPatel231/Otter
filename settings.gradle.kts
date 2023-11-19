@@ -15,7 +15,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "otter"
 include(":app")
-include(":reference")
+include(":plugininterface")
 include(":plugin")
-include(":trackerinterface")
 include(":AnilistTrackerPlugin")

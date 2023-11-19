@@ -3,12 +3,13 @@ package tel.jeelpa.anilisttrackerplugin.data
 import com.apollographql.apollo3.ApolloClient
 import tel.jeelpa.anilisttrackerplugin.models.toApp
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetCharacterDataQuery
-import tel.jeelpa.otter.trackerinterface.models.CharacterDataFull
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.models.CharacterDataFull
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.repository.CharacterClient
 
 class CharacterClientImpl(
     private val apolloClient: ApolloClient
-) : tel.jeelpa.otter.trackerinterface.repository.CharacterClient {
+) : CharacterClient {
     override suspend fun getCharacterDetails(id: Int): CharacterDataFull {
         return apolloClient.query(GetCharacterDataQuery(id)).execute().data?.Character?.let {
             val mediaRoles = it.media?.edges?.mapNotNull { media ->

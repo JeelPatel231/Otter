@@ -14,7 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaInfoLayoutBinding
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
 import tel.jeelpa.otter.ui.adapters.CharacterCardAdapter
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
@@ -28,6 +27,7 @@ import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.toNullString
 import tel.jeelpa.otter.ui.generic.visibilityGone
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import javax.inject.Inject
 
 @AndroidEntryPoint

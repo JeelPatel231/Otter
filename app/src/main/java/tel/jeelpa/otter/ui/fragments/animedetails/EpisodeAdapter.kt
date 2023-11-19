@@ -6,9 +6,9 @@ import coil.size.Scale
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.databinding.ItemEpisodeLayoutBinding
-import tel.jeelpa.otter.reference.models.Episode
 import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
 import tel.jeelpa.otter.ui.generic.nullOnBlank
+import tel.jeelpa.plugininterface.models.Episode
 
 class EpisodeAdapter(
     private val lifecycleCoroutineScope: LifecycleCoroutineScope,

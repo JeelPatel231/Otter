@@ -26,11 +26,11 @@ import tel.jeelpa.otter.anilisttrackerplugin.models.GetUserRecommendationsQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetViewerDataQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaListStatus
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
-import tel.jeelpa.otter.trackerinterface.models.AppMediaListStatus
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
-import tel.jeelpa.otter.trackerinterface.models.User
-import tel.jeelpa.otter.trackerinterface.repository.UserClient
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.models.User
+import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import java.net.URI
 
 

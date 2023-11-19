@@ -10,10 +10,10 @@ import tel.jeelpa.anilisttrackerplugin.models.toApp
 import tel.jeelpa.otter.anilisttrackerplugin.models.AnimeRecentlyUpdatedQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaSort
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
-import tel.jeelpa.otter.trackerinterface.models.AppMediaType
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
-import tel.jeelpa.otter.trackerinterface.models.MediaDetailsFull
-import tel.jeelpa.otter.trackerinterface.repository.AnimeClient
+import tel.jeelpa.plugininterface.tracker.models.AppMediaType
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.models.MediaDetailsFull
+import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
 
 data class MalMediaScrapedDetails(
     val name: String,

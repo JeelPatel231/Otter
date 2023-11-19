@@ -2,37 +2,48 @@ package tel.jeelpa.otter.plugins
 
 import android.content.Context
 import dalvik.system.DexClassLoader
-import okhttp3.OkHttpClient
-import tel.jeelpa.otter.reference.RegisterExtractorUseCase
-import tel.jeelpa.otter.reference.RegisterParserUseCase
-import tel.jeelpa.otter.trackerinterface.RegisterTrackerUseCase
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.plugininterface.AppGivenDependencies
+import tel.jeelpa.plugininterface.LoadablePlugin
+import tel.jeelpa.plugininterface.PluginRegistrar
+import tel.jeelpa.plugininterface.anime.extractor.Extractor
+import tel.jeelpa.plugininterface.anime.parser.Parser
+import tel.jeelpa.plugininterface.tracker.TrackerManager
+import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.primaryConstructor
 
-class PluginInitializer (
-    private val context: Context,
-    private val httpClient: OkHttpClient,
-    private val extractorUseCase: RegisterExtractorUseCase,
-    private val parserUseCase: RegisterParserUseCase,
-    private val trackerUseCase: RegisterTrackerUseCase,
-    private val userStorage: UserStorage
-) {
-
-    enum class MetadataClassNames {
-        ParserMetadata,
-        ExtractorMetadata,
-        TrackerMetadata,
+class PluginRegistrarImpl(
+    private val parserManager: ParserManager,
+    private val trackerManager: TrackerManager,
+    private val extractorManager: ExtractorManager,
+): PluginRegistrar {
+    override fun registerAnimeExtractor(vararg extractors: Extractor) {
+        extractors.forEach { extractorManager.registerExtractor(it) }
     }
 
-    private fun getNamedClassConstructor(name: MetadataClassNames, classLoader: DexClassLoader): KFunction<Any>? {
-        return try {
-            Class.forName(name.name, true, classLoader)
-                .kotlin
-                .primaryConstructor!!
-        } catch (e: ClassNotFoundException) {
-            null
-        }
+    override fun registerAnimeParser(vararg parsers: Parser) {
+        parsers.forEach { parserManager.registerParser(it) }
+    }
+
+    override fun registerTracker(vararg trackers: ClientHolder) {
+        trackers.forEach { trackerManager.registerTracker(it) }
+    }
+
+    override fun registerMangaScraper(vararg scraper: Any?) {
+        TODO("Not yet implemented")
+    }
+
+}
+
+class PluginInitializer (
+    private val context: Context,
+    private val pluginRegistrar: PluginRegistrar,
+    private val appGivenDependencies: AppGivenDependencies,
+){
+    private fun getNamedClassConstructor(name: String, classLoader: DexClassLoader): KFunction<Any> {
+        return Class.forName(name, true, classLoader)
+            .kotlin
+            .primaryConstructor!!
     }
 
     operator fun invoke(pathToJar: String) {
@@ -43,13 +54,9 @@ class PluginInitializer (
             context.classLoader
         )
 
-        getNamedClassConstructor(MetadataClassNames.ParserMetadata, classLoader)
-            ?.call(httpClient, parserUseCase)
+        val pluginObj = getNamedClassConstructor("Metadata", classLoader).also { println(it) }
+            .call(pluginRegistrar, appGivenDependencies) as LoadablePlugin
 
-        getNamedClassConstructor(MetadataClassNames.ExtractorMetadata, classLoader)
-            ?.call(httpClient, extractorUseCase)
-
-        getNamedClassConstructor(MetadataClassNames.TrackerMetadata, classLoader)
-            ?.call(userStorage, trackerUseCase)
+        pluginObj.load()
     }
 }

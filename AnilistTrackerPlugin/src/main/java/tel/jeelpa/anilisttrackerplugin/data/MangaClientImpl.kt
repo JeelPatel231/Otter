@@ -4,13 +4,14 @@ import com.apollographql.apollo3.ApolloClient
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaFormat
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaSort
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
-import tel.jeelpa.otter.trackerinterface.models.AppMediaType
-import tel.jeelpa.otter.trackerinterface.models.MediaCardData
-import tel.jeelpa.otter.trackerinterface.models.MediaDetailsFull
+import tel.jeelpa.plugininterface.tracker.models.AppMediaType
+import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.plugininterface.tracker.models.MediaDetailsFull
+import tel.jeelpa.plugininterface.tracker.repository.MangaClient
 
 class MangaClientImpl(
     private val anilistApolloClient: ApolloClient
-) : BaseClient(anilistApolloClient), tel.jeelpa.otter.trackerinterface.repository.MangaClient {
+) : BaseClient(anilistApolloClient), MangaClient {
 
     override suspend fun search(query: String): List<MediaCardData> =
         super.search(query, null, null, AppMediaType.MANGA)

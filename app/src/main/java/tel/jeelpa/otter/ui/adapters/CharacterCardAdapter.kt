@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import coil.load
 import coil.size.Scale
 import tel.jeelpa.otter.databinding.CharacterSmallLayoutBinding
-import tel.jeelpa.otter.trackerinterface.models.CharacterCardData
 import tel.jeelpa.otter.ui.generic.GenericListAdapter
+import tel.jeelpa.plugininterface.tracker.models.CharacterCardData
 
 class CharacterCardAdapter(
     private val onItemClick : (CharacterCardData) -> Unit

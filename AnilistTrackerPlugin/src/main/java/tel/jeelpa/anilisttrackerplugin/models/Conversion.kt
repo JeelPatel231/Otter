@@ -5,10 +5,10 @@ import tel.jeelpa.otter.anilisttrackerplugin.models.GetCharacterDataQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaListStatus
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaStatus
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
-import tel.jeelpa.otter.trackerinterface.models.AppMediaListStatus
-import tel.jeelpa.otter.trackerinterface.models.AppMediaStatus
-import tel.jeelpa.otter.trackerinterface.models.AppMediaType
-import tel.jeelpa.otter.trackerinterface.models.AppNextAiringEpisode
+import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
+import tel.jeelpa.plugininterface.tracker.models.AppMediaStatus
+import tel.jeelpa.plugininterface.tracker.models.AppMediaType
+import tel.jeelpa.plugininterface.tracker.models.AppNextAiringEpisode
 
 fun GetCharacterDataQuery.DateOfBirth.toApp(): String {
     if((day ?: month ?: year) == null){

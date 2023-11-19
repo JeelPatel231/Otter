@@ -3,9 +3,9 @@ package tel.jeelpa.otter.ui.fragments.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import tel.jeelpa.otter.trackerinterface.repository.UserClient
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
+import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import javax.inject.Inject
 
 @HiltViewModel

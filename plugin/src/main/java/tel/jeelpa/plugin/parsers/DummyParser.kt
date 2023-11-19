@@ -1,21 +1,15 @@
 package tel.jeelpa.plugin.parsers
 
-import tel.jeelpa.otter.reference.BaseParser
-import tel.jeelpa.otter.reference.models.Episode
-import tel.jeelpa.otter.reference.models.FileUrl
-import tel.jeelpa.otter.reference.models.ShowResponse
-import tel.jeelpa.otter.reference.models.VideoServer
-
-class DummyParser : BaseParser() {
+class DummyParser : tel.jeelpa.plugininterface.anime.parser.BaseParser() {
     override val name: String = "DummyParser"
 
     override val isNSFW: Boolean = false
 
     override val dubAvailable: Boolean = false
 
-    override suspend fun search(query: String): List<ShowResponse> {
+    override suspend fun search(query: String): List<tel.jeelpa.plugininterface.models.ShowResponse> {
         return listOf(
-            ShowResponse(
+            tel.jeelpa.plugininterface.models.ShowResponse(
                 "Mock Name",
                 "https://example.com/MockLink",
                 "https://example.com/cover.jpg",
@@ -23,9 +17,9 @@ class DummyParser : BaseParser() {
         )
     }
 
-    override suspend fun loadEpisodes(animeLink: String): List<Episode> {
+    override suspend fun loadEpisodes(animeLink: String): List<tel.jeelpa.plugininterface.models.Episode> {
         return listOf(
-            Episode(
+            tel.jeelpa.plugininterface.models.Episode(
                 "Episode 1",
                 "https://example.com/mocklink/episode/1",
                 "Mock Title Episode 1",
@@ -33,7 +27,7 @@ class DummyParser : BaseParser() {
                 "Mock Description 1",
                 false
             ),
-            Episode(
+            tel.jeelpa.plugininterface.models.Episode(
                 "Episode 2",
                 "https://example.com/mocklink/episode/2",
                 "Mock Title Episode 2",
@@ -44,15 +38,15 @@ class DummyParser : BaseParser() {
         )
     }
 
-    override suspend fun loadVideoServers(episodeLink: String): List<VideoServer> {
+    override suspend fun loadVideoServers(episodeLink: String): List<tel.jeelpa.plugininterface.models.VideoServer> {
         return listOf(
-            VideoServer(
+            tel.jeelpa.plugininterface.models.VideoServer(
                 "Mock Video Server 1",
-                FileUrl("https://example.com")
+                tel.jeelpa.plugininterface.models.FileUrl("https://example.com")
             ),
-            VideoServer(
+            tel.jeelpa.plugininterface.models.VideoServer(
                 "Mock Video Server 2",
-                FileUrl("https://example.com")
+                tel.jeelpa.plugininterface.models.FileUrl("https://example.com")
             ),
         )
     }

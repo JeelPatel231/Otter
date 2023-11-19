@@ -10,12 +10,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.otter.databinding.MediaSmallLayoutBinding
 import tel.jeelpa.otter.databinding.WrongTitleSelectionBottomSheetBinding
-import tel.jeelpa.otter.reference.models.ShowResponse
 import tel.jeelpa.otter.ui.generic.GenericRecyclerAdapter
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.visibilityGone
+import tel.jeelpa.plugininterface.models.ShowResponse
 
 
 class ShowResponseAdapter(

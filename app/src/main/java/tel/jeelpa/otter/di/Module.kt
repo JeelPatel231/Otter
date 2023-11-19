@@ -15,17 +15,17 @@ import dagger.hilt.components.SingletonComponent
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import okhttp3.OkHttpClient
+import tel.jeelpa.otter.plugins.ExtractorManager
+import tel.jeelpa.otter.plugins.ParserManager
 import tel.jeelpa.otter.plugins.PluginInitializer
-import tel.jeelpa.otter.reference.ExtractorManager
-import tel.jeelpa.otter.reference.ParserManager
-import tel.jeelpa.otter.reference.RegisterExtractorUseCase
-import tel.jeelpa.otter.reference.RegisterParserUseCase
-import tel.jeelpa.otter.trackerinterface.RegisterTrackerUseCase
-import tel.jeelpa.otter.trackerinterface.TrackerManager
-import tel.jeelpa.otter.trackerinterface.repository.UserStorage
+import tel.jeelpa.otter.plugins.PluginRegistrarImpl
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromUri
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
+import tel.jeelpa.plugininterface.AppGivenDependencies
+import tel.jeelpa.plugininterface.PluginRegistrar
+import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.TrackerManager
 import java.io.File
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -101,21 +101,41 @@ class DIModule {
 
     @Provides
     @Singleton
-    fun providesPluginInstantiator(
-        application: Application,
-        httpClient: OkHttpClient,
-        extractorManager: ExtractorManager,
+    fun providesPluginDependencies(
+        okHttpClient: OkHttpClient,
+        userStorage: UserStorage
+    ) : AppGivenDependencies {
+        return object : AppGivenDependencies {
+            override val okHttpClient = okHttpClient
+            override val userStorage = userStorage
+        }
+    }
+
+    @Provides
+    @Singleton
+    fun providesPluginRegistrar(
         parserManager: ParserManager,
         trackerManager: TrackerManager,
-        userStorage: UserStorage
+        extractorManager: ExtractorManager,
+    ): PluginRegistrar {
+        return PluginRegistrarImpl(
+            parserManager,
+            trackerManager,
+            extractorManager,
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesPluginInstantiator(
+        application: Application,
+        pluginRegistrar: PluginRegistrar,
+        appGivenDependencies: AppGivenDependencies,
     ): PluginInitializer {
         return PluginInitializer(
             application,
-            httpClient,
-            RegisterExtractorUseCase(extractorManager),
-            RegisterParserUseCase(parserManager),
-            RegisterTrackerUseCase(trackerManager),
-            userStorage
+            pluginRegistrar,
+            appGivenDependencies,
         )
     }
 
