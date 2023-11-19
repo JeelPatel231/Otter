@@ -63,13 +63,15 @@ class PluginDeepLinkHandlerActivity : AppCompatActivity() {
 
                 if (firstUpdate) {
                     firstUpdate = false
-                    binding.downloadProgress.isIndeterminate = contentLength == -1L
+                    runOnUiThread { binding.downloadProgress.isIndeterminate = contentLength == -1L }
                 }
                 if (contentLength != -1L) {
                     val prog = 100 * bytesRead / contentLength
-                    binding.downloadProgress.setProgress(prog.toInt(), true)
-                    binding.bytesHolder.text =
-                        getString(R.string.bytes_downloaded, (bytesRead / 1000).toString())
+                    runOnUiThread {
+                        binding.downloadProgress.setProgress(prog.toInt(), true)
+                        binding.bytesHolder.text =
+                            getString(R.string.bytes_downloaded, (bytesRead / 1000).toString())
+                    }
                 }
             }
         }
