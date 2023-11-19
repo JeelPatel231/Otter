@@ -1,6 +1,7 @@
 package tel.jeelpa.otter.ui.fragments.anime
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.nullOnBlank
 import tel.jeelpa.otter.ui.generic.observeFlow
+import tel.jeelpa.otter.ui.generic.showToast
 
 
 @AndroidEntryPoint
@@ -75,15 +77,15 @@ class AnimeFragment : Fragment() {
         }
 
         binding.searchView.setupWithSearchBar(binding.searchBar)
-
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            showToast(actionId.toString())
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 textView.text.toString().nullOnBlank()?.let {
                     animeHomeViewModel.search(it)
-                    return@setOnEditorActionListener false
+                    return@setOnEditorActionListener true
                 }
             }
-            true
+            false
         }
 
 

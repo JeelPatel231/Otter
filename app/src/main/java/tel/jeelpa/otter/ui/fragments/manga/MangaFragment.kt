@@ -1,6 +1,7 @@
 package tel.jeelpa.otter.ui.fragments.manga
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,13 +74,13 @@ class MangaFragment : Fragment() {
         }
 
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 textView.text.toString().nullOnBlank()?.let {
                     mangaFragmentViewModel.search(it)
-                    return@setOnEditorActionListener false
+                    return@setOnEditorActionListener true
                 }
             }
-            true
+            false
         }
 
         initRecycler(
