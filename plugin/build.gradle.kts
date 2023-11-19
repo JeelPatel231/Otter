@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
@@ -61,8 +61,8 @@ val pluginDex = file("$buildDir/outputs/$JarName")
 //}
 
 tasks.register<Exec>("dexJar") {
-    val referenceBuildDir = project(":reference").buildDir
-    val classPathJar = file("$referenceBuildDir/intermediates/full_jar/debug/full.jar")
+    val referenceBuildDir = project(":plugininterface").buildDir
+    val classPathJar = file("$referenceBuildDir/libs/plugininterface.jar")
     dependsOn(":plugin:build")
     val dexExec =
         file(android.sdkDirectory.absolutePath + "/build-tools/" + android.buildToolsVersion + "/d8")
