@@ -1,6 +1,7 @@
 package tel.jeelpa.otter.ui.fragments.animedetails
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
-import kotlinx.serialization.Serializable
+import kotlinx.parcelize.Parcelize
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.ui.fragments.mediaCommon.WrongMediaSelectionBottomSheetDialog
@@ -22,8 +23,8 @@ import tel.jeelpa.plugininterface.models.VideoServer
 
 
 // Try to NOT use this wrapper, passing complex data structures is an anti pattern
-@Serializable
-class VideoServerWrapper(val list: List<VideoServer>): java.io.Serializable
+@Parcelize
+class VideoServerWrapper(val list: List<VideoServer>) : Parcelable
 
 class AnimeDetailsWatchFragment : Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
