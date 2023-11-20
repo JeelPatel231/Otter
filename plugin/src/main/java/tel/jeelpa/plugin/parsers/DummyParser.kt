@@ -1,15 +1,21 @@
 package tel.jeelpa.plugin.parsers
 
-class DummyParser : tel.jeelpa.plugininterface.anime.parser.BaseParser() {
+import tel.jeelpa.plugininterface.anime.parser.BaseParser
+import tel.jeelpa.plugininterface.models.Episode
+import tel.jeelpa.plugininterface.models.FileUrl
+import tel.jeelpa.plugininterface.models.ShowResponse
+import tel.jeelpa.plugininterface.models.VideoServer
+
+class DummyParser : BaseParser() {
     override val name: String = "DummyParser"
 
     override val isNSFW: Boolean = false
 
     override val dubAvailable: Boolean = false
 
-    override suspend fun search(query: String): List<tel.jeelpa.plugininterface.models.ShowResponse> {
+    override suspend fun search(query: String): List<ShowResponse> {
         return listOf(
-            tel.jeelpa.plugininterface.models.ShowResponse(
+            ShowResponse(
                 "Mock Name",
                 "https://example.com/MockLink",
                 "https://example.com/cover.jpg",
@@ -17,9 +23,9 @@ class DummyParser : tel.jeelpa.plugininterface.anime.parser.BaseParser() {
         )
     }
 
-    override suspend fun loadEpisodes(animeLink: String): List<tel.jeelpa.plugininterface.models.Episode> {
+    override suspend fun loadEpisodes(animeLink: String): List<Episode> {
         return listOf(
-            tel.jeelpa.plugininterface.models.Episode(
+            Episode(
                 "Episode 1",
                 "https://example.com/mocklink/episode/1",
                 "Mock Title Episode 1",
@@ -27,7 +33,7 @@ class DummyParser : tel.jeelpa.plugininterface.anime.parser.BaseParser() {
                 "Mock Description 1",
                 false
             ),
-            tel.jeelpa.plugininterface.models.Episode(
+            Episode(
                 "Episode 2",
                 "https://example.com/mocklink/episode/2",
                 "Mock Title Episode 2",
@@ -38,15 +44,15 @@ class DummyParser : tel.jeelpa.plugininterface.anime.parser.BaseParser() {
         )
     }
 
-    override suspend fun loadVideoServers(episodeLink: String): List<tel.jeelpa.plugininterface.models.VideoServer> {
+    override suspend fun loadVideoServers(episodeLink: String): List<VideoServer> {
         return listOf(
-            tel.jeelpa.plugininterface.models.VideoServer(
+            VideoServer(
                 "Mock Video Server 1",
-                tel.jeelpa.plugininterface.models.FileUrl("https://example.com")
+                FileUrl("https://example.com")
             ),
-            tel.jeelpa.plugininterface.models.VideoServer(
+            VideoServer(
                 "Mock Video Server 2",
-                tel.jeelpa.plugininterface.models.FileUrl("https://example.com")
+                FileUrl("https://example.com")
             ),
         )
     }
