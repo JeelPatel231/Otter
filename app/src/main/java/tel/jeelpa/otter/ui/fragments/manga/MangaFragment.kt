@@ -12,10 +12,10 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
-import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
+import tel.jeelpa.otter.ui.adapters.MediaCardPagingAdapter
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.initRecycler
+import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.nullOnBlank
 import tel.jeelpa.otter.ui.generic.observeFlow
@@ -30,7 +30,7 @@ class MangaFragment : Fragment() {
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
 
-    private val searchResultsAdapter = MediaCardAdapter(::navigateToDetails)
+    private val searchResultsAdapter = MediaCardPagingAdapter(::navigateToDetails)
 
     private val backPressedCallback by lazy {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -52,6 +52,13 @@ class MangaFragment : Fragment() {
         super.onResume()
     }
 
+    private fun observeSearchFlow(query: String){
+//        searchJob?.cancel()?.let { showToast("WAS SET, CANCELLED") }
+//        searchJob =
+        mangaFragmentViewModel.searchResults(query).observeFlow(viewLifecycleOwner){
+            searchResultsAdapter.submitData(it)
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,12 +69,6 @@ class MangaFragment : Fragment() {
         binding.secondRowText.text = getString(R.string.popular_manga)
         binding.thirdRowText.text = getString(R.string.trending_novel)
 
-        mangaFragmentViewModel.searchResults.observeFlow(viewLifecycleOwner) {
-            it?.let {
-                searchResultsAdapter.submitList(it)
-            }
-        }
-
         binding.searchRecycler.apply {
             adapter = searchResultsAdapter
             layoutManager = GridAutoFitLayoutManager(requireContext(),110)
@@ -76,29 +77,29 @@ class MangaFragment : Fragment() {
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 textView.text.toString().nullOnBlank()?.let {
-                    mangaFragmentViewModel.search(it)
+                    observeSearchFlow(it)
                     return@setOnEditorActionListener true
                 }
             }
             false
         }
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.firstRowRecyclerView,
             binding.firstRowShimmerView.root,
             mangaFragmentViewModel.trendingManga
         )
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.secondRowRecyclerView,
             binding.secondRowShimmerView.root,
             mangaFragmentViewModel.popularManga
         )
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.thirdRowRecyclerView,
             binding.thirdRowShimmerView.root,
             mangaFragmentViewModel.trendingNovel

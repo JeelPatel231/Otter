@@ -13,30 +13,30 @@ class MangaClientImpl(
     private val anilistApolloClient: ApolloClient
 ) : BaseClient(anilistApolloClient), MangaClient {
 
-    override suspend fun search(query: String): List<MediaCardData> =
-        super.search(query, null, null, AppMediaType.MANGA)
+    override suspend fun search(query: String, page: Int, itemsInPage: Int): List<MediaCardData> =
+        super.search(query, page, itemsInPage, AppMediaType.MANGA)
 
-    override suspend fun getTrendingManga(): List<MediaCardData> =
+    override suspend fun getTrendingManga(page: Int, itemsInPage: Int): List<MediaCardData> =
         executeBaselineMediaQuery(
-            page = 1,
-            perPage = 30,
+            page = page,
+            perPage = itemsInPage,
             sort = listOf(MediaSort.TRENDING_DESC),
             type = MediaType.MANGA
         )
 
-    override suspend fun getPopularManga(): List<MediaCardData> =
+    override suspend fun getPopularManga(page: Int, itemsInPage: Int): List<MediaCardData> =
         executeBaselineMediaQuery(
-            page = 1,
-            perPage = 30,
+            page = page,
+            perPage = itemsInPage,
             sort = listOf(MediaSort.POPULARITY_DESC),
             type = MediaType.MANGA
         )
 
 
-    override suspend fun getTrendingNovel(): List<MediaCardData> =
+    override suspend fun getTrendingNovel(page: Int, itemsInPage: Int): List<MediaCardData> =
         executeBaselineMediaQuery(
-            page = 1,
-            perPage = 30,
+            page = page,
+            perPage = itemsInPage,
             sort = listOf(MediaSort.TRENDING_DESC),
             type = MediaType.MANGA,
             format = MediaFormat.NOVEL

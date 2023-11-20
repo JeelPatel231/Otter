@@ -101,6 +101,11 @@ dependencies {
 
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 
+    // paging3
+    val paging_version = "3.2.1"
+    implementation("androidx.paging:paging-runtime:$paging_version")
+
+
     // memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
 

@@ -3,6 +3,7 @@ package tel.jeelpa.otter.ui.generic
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -135,3 +136,29 @@ fun <TData, TFlowSource : List<TData>, TPrimitive, TBinding, TAdapter : GenericL
     shimmerFrameLayout: ShimmerFrameLayout,
     flowSource: Flow<TFlowSource?>,
 ) = initRecycler(adapter, recyclerView, shimmerFrameLayout, flowSource) { it }
+
+
+
+fun <TData: Any, TPrimitive, TBinding, TAdapter : GenericPagingAdapter<TPrimitive, TData, TBinding>>
+Fragment.initPagedRecycler(
+    adapter: TAdapter,
+    recyclerView: RecyclerView,
+    shimmerFrameLayout: ShimmerFrameLayout,
+    flowSource: Flow<PagingData<TData>>,
+) {
+    var loaded = false
+    recyclerView.adapter = adapter
+    recyclerView.layoutManager =
+        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+    flowSource.observeFlow(viewLifecycleOwner) {
+        adapter.submitData(it)
+    }
+
+    adapter.addOnPagesUpdatedListener {
+        if (!loaded) {
+            crossfadeViews(recyclerView, shimmerFrameLayout)
+            loaded = true
+        }
+    }
+}

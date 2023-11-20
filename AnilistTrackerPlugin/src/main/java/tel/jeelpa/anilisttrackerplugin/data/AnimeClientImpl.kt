@@ -1,6 +1,7 @@
 package tel.jeelpa.anilisttrackerplugin.data
 
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Optional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -26,30 +27,34 @@ data class MalMediaScrapedDetails(
 class AnimeClientImpl(
     private val anilistApolloClient: ApolloClient
 ) : BaseClient(anilistApolloClient), AnimeClient {
-    override suspend fun search(query: String): List<MediaCardData> =
-        super.search(query, null, null, AppMediaType.ANIME)
+    override suspend fun search(query: String, page: Int, itemsInPage: Int): List<MediaCardData> =
+        super.search(query, page, itemsInPage, AppMediaType.ANIME)
 
-    override suspend fun getTrendingAnime(): List<MediaCardData> {
+    override suspend fun getTrendingAnime(page: Int, itemsInPage: Int): List<MediaCardData> {
         return executeBaselineMediaQuery(
-            page = 1,
-            perPage = 30,
+            page = page,
+            perPage = itemsInPage,
             sort = listOf(MediaSort.TRENDING_DESC),
             type = MediaType.ANIME
         )
     }
 
-    override suspend fun getPopularAnime(): List<MediaCardData> {
+    override suspend fun getPopularAnime(page: Int, itemsInPage: Int): List<MediaCardData> {
         return executeBaselineMediaQuery(
-            page = 1,
-            perPage = 30,
+            page = page,
+            perPage = itemsInPage,
             sort = listOf(MediaSort.POPULARITY_DESC),
             type = MediaType.ANIME
         )
     }
 
-    override suspend fun getRecentlyUpdated(): List<MediaCardData> {
+    override suspend fun getRecentlyUpdated(page: Int, itemsInPage: Int): List<MediaCardData> {
         return anilistApolloClient.query(
-            AnimeRecentlyUpdatedQuery(lesser = (System.currentTimeMillis() / 1000).toInt() - 10000)
+            AnimeRecentlyUpdatedQuery(
+                lesser = (System.currentTimeMillis() / 1000).toInt() - 10000,
+                page = Optional.present(page),
+                perPage = Optional.present(itemsInPage)
+            )
         ).execute().data?.Page?.airingSchedules?.mapNotNull { it?.media }?.map {
             MediaCardData(
                 id = it.id,

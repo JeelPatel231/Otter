@@ -12,10 +12,10 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
-import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
+import tel.jeelpa.otter.ui.adapters.MediaCardPagingAdapter
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.initRecycler
+import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.nullOnBlank
 import tel.jeelpa.otter.ui.generic.observeFlow
@@ -51,8 +51,18 @@ class AnimeFragment : Fragment() {
         super.onResume()
     }
 
+    // Do i even need to handle flow? its single producer single consumer
+    // i think the memory should be released when the consumer is gone
+//    private var searchJob: Job? = null
+    private fun observeSearchFlow(query: String){
+//        searchJob?.cancel()?.let { showToast("WAS SET, CANCELLED") }
+//        searchJob =
+            animeHomeViewModel.searchResults(query).observeFlow(viewLifecycleOwner){
+            searchResultsAdapter.submitData(it)
+        }
+    }
 
-    private val searchResultsAdapter = MediaCardAdapter(::navigateToDetails)
+    private val searchResultsAdapter = MediaCardPagingAdapter(::navigateToDetails)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,12 +74,6 @@ class AnimeFragment : Fragment() {
         binding.secondRowText.text = getString(R.string.recently_updated)
         binding.thirdRowText.text = getString(R.string.popular_anime)
 
-        animeHomeViewModel.searchResults.observeFlow(viewLifecycleOwner) {
-            it?.let {
-                searchResultsAdapter.submitList(it)
-            }
-        }
-
         binding.searchRecycler.apply {
             adapter = searchResultsAdapter
             layoutManager = GridAutoFitLayoutManager(requireContext(),110)
@@ -79,7 +83,7 @@ class AnimeFragment : Fragment() {
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 textView.text.toString().nullOnBlank()?.let {
-                    animeHomeViewModel.search(it)
+                    observeSearchFlow(it)
                     return@setOnEditorActionListener true
                 }
             }
@@ -87,22 +91,22 @@ class AnimeFragment : Fragment() {
         }
 
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.firstRowRecyclerView,
             binding.firstRowShimmerView.root,
             animeHomeViewModel.trendingAnime
         )
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.secondRowRecyclerView,
             binding.secondRowShimmerView.root,
             animeHomeViewModel.recentlyUpdated
         )
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.thirdRowRecyclerView,
             binding.thirdRowShimmerView.root,
             animeHomeViewModel.popularAnime

@@ -4,12 +4,12 @@ import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.MediaDetailsFull
 
 interface AnimeClient {
-    suspend fun search(query: String) : List<MediaCardData>
-    suspend fun getTrendingAnime() : List<MediaCardData>
+    suspend fun search(query: String, page: Int, itemsInPage: Int) : List<MediaCardData>
+    suspend fun getTrendingAnime(page:Int, itemsInPage: Int) : List<MediaCardData>
 
-    suspend fun getPopularAnime() : List<MediaCardData>
+    suspend fun getPopularAnime(page:Int, itemsInPage: Int) : List<MediaCardData>
 
-    suspend fun getRecentlyUpdated() : List<MediaCardData>
+    suspend fun getRecentlyUpdated(page: Int, itemsInPage: Int) : List<MediaCardData>
 
     suspend fun getAnimeDetails(id: Int) : MediaDetailsFull
 

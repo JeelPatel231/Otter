@@ -2,13 +2,11 @@ package tel.jeelpa.otter.ui.fragments.anime
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import tel.jeelpa.otter.ui.generic.cacheInScope
-import tel.jeelpa.otter.ui.generic.suspendToFlow
-import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.otter.ui.generic.GenericPagingSource
 import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
 import javax.inject.Inject
 
@@ -16,20 +14,39 @@ import javax.inject.Inject
 class AnimeFragmentViewModel @Inject constructor(
     private val animeClient: AnimeClient
 ): ViewModel() {
-    val trendingAnime = suspendToFlow { animeClient.getTrendingAnime() }
-        .cacheInScope(viewModelScope)
 
-    val popularAnime = suspendToFlow { animeClient.getPopularAnime() }
-        .cacheInScope(viewModelScope)
+    val trendingAnime = Pager(
+        config = PagingConfig(
+            30,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { GenericPagingSource(animeClient::getTrendingAnime) }
+    ).flow.cachedIn(viewModelScope)
 
-    val recentlyUpdated = suspendToFlow { animeClient.getRecentlyUpdated() }
-        .cacheInScope(viewModelScope)
 
-    private val _searchResults: MutableStateFlow<List<MediaCardData>?> = MutableStateFlow(null)
-    val searchResults = _searchResults.asStateFlow()
+    val recentlyUpdated = Pager(
+        config = PagingConfig(
+            30,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { GenericPagingSource(animeClient::getRecentlyUpdated) }
+    ).flow.cachedIn(viewModelScope)
 
-    fun search(query: String) = viewModelScope.launch {
-        _searchResults.value = animeClient.search(query)
-    }
+
+    val popularAnime = Pager(
+        config = PagingConfig(
+            30,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { GenericPagingSource(animeClient::getPopularAnime) }
+    ).flow.cachedIn(viewModelScope)
+
+    fun searchResults(query: String) = Pager(
+        config = PagingConfig(
+            pageSize = 30,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { GenericPagingSource( { page, perPage -> animeClient.search(query, page, perPage)} ) }
+    ).flow.cachedIn(viewModelScope)
 
 }

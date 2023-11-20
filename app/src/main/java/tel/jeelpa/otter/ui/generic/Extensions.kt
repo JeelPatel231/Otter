@@ -119,7 +119,7 @@ fun View.visibilityGone() {
     this.visibility = View.GONE
 }
 
-fun <X> Flow<X>.observeFlow(lifecycleOwner: LifecycleOwner, callback: (X) -> Unit) =
+fun <X> Flow<X>.observeFlow(lifecycleOwner: LifecycleOwner, callback: suspend (X) -> Unit) =
     lifecycleOwner.lifecycleScope.launch {
         flowWithLifecycle(
             lifecycleOwner.lifecycle,
