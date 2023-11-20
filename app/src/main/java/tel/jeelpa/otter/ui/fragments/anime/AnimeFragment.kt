@@ -19,7 +19,6 @@ import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.nullOnBlank
 import tel.jeelpa.otter.ui.generic.observeFlow
-import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 
 
@@ -78,7 +77,6 @@ class AnimeFragment : Fragment() {
 
         binding.searchView.setupWithSearchBar(binding.searchBar)
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
-            showToast(actionId.toString())
             if (actionId == EditorInfo.IME_ACTION_SEARCH || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 textView.text.toString().nullOnBlank()?.let {
                     animeHomeViewModel.search(it)
