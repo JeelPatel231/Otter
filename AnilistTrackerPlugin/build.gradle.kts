@@ -25,6 +25,7 @@ dependencies {
 
     // apollo client for anilist
     implementation("com.apollographql.apollo3:apollo-runtime:3.8.2")
+// etc.
 
     // Jsoup
 //    implementation("org.jsoup:jsoup:1.16.1")

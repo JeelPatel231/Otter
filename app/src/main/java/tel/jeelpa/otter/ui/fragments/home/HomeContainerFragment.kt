@@ -6,36 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.databinding.FragmentHomeBinding
+import tel.jeelpa.otter.models.UserClientHolderModel
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.observeFlowFlex
-import tel.jeelpa.plugininterface.tracker.repository.UserClient
-import javax.inject.Inject
-
-@HiltViewModel
-class HomeContainerViewModel @Inject constructor(
-    private val userClient: UserClient
-) : ViewModel() {
-
-    val loggedIn = flow {
-        emitAll(userClient.isLoggedIn())
-    }.shareIn(viewModelScope, SharingStarted.Eagerly, 1)
-}
 
 @AndroidEntryPoint
 class HomeContainerFragment : Fragment() {
     private var binding: FragmentHomeBinding by autoCleared()
-    private val viewModel: HomeContainerViewModel by viewModels()
+    private val viewModel: UserClientHolderModel by viewModels()
 
     private fun navigateTo(fragmentInstance: Fragment) {
         childFragmentManager.beginTransaction()

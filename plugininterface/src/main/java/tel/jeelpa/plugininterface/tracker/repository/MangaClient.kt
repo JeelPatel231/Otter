@@ -1,15 +1,17 @@
 package tel.jeelpa.plugininterface.tracker.repository
 
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.MediaDetailsFull
 
 interface MangaClient {
-    suspend fun search(query: String, page: Int, itemsInPage: Int) : List<MediaCardData>
-    suspend fun getTrendingManga(page:Int, itemsInPage: Int) : List<MediaCardData>
+    fun search(query: String) : Flow<PagingData<MediaCardData>>
+    fun getTrendingManga() : Flow<PagingData<MediaCardData>>
 
-    suspend fun getPopularManga(page:Int, itemsInPage: Int) : List<MediaCardData>
+    fun getPopularManga() : Flow<PagingData<MediaCardData>>
 
-    suspend fun getTrendingNovel(page: Int, itemsInPage: Int) : List<MediaCardData>
+    fun getTrendingNovel() : Flow<PagingData<MediaCardData>>
 
     suspend fun getMangaDetails(id: Int) : MediaDetailsFull
 }

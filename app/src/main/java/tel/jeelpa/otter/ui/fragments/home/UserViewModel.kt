@@ -10,18 +10,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    val userClient: UserClient
+    private val userClient: UserClient
 ): ViewModel() {
 
     val userData = suspendToFlow { userClient.getUser() }
         .cacheInScope(viewModelScope)
 
-    val currentAnime = suspendToFlow { userClient.getCurrentAnime() }
-        .cacheInScope(viewModelScope)
+    val currentAnime = userClient.getCurrentAnime() .cacheInScope(viewModelScope)
 
-    val currentManga = suspendToFlow { userClient.getCurrentManga() }
-        .cacheInScope(viewModelScope)
+    val currentManga = userClient.getCurrentManga().cacheInScope(viewModelScope)
 
-    val recommendations = suspendToFlow { userClient.getRecommendations() }
-        .cacheInScope(viewModelScope)
+    val recommendations = userClient.getRecommendations().cacheInScope(viewModelScope)
 }

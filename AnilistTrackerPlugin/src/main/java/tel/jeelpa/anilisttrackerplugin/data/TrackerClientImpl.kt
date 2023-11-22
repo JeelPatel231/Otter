@@ -1,5 +1,6 @@
 package tel.jeelpa.anilisttrackerplugin.data
 
+import androidx.paging.PagingData
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.api.http.HttpRequest
@@ -151,10 +152,30 @@ class TrackerClientImpl(
             ?.mapNotNull { it?.media } ?: emptyList()
     }
 
-    override suspend fun getCurrentAnime(): List<MediaCardData> {
+    override fun getCurrentAnime(): Flow<PagingData<MediaCardData>> = flow {
         val userId = getUser().userId
+        val listData = getUserMedia(userId, MediaType.ANIME, MediaListStatus.CURRENT).map {
+            MediaCardData(
+                id = it.id,
+                title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
+                status = it.status!!.toApp(),
+                type = it.type!!.toApp(),
+                isAdult = it.isAdult ?: false,
+                meanScore = (it.meanScore ?: 0) / 10f,
+                coverImage = it.coverImage?.large!!,
+                nextAiringEpisode = it.nextAiringEpisode?.episode,
+                episodes = it.episodes,
+                chapters = it.chapters,
+            )
+        }
 
-        return getUserMedia(userId, MediaType.ANIME, MediaListStatus.CURRENT).map {
+        emit(PagingData.from(listData))
+    }
+
+    override fun getCurrentManga(): Flow<PagingData<MediaCardData>> = flow {
+        val userId = getUser().userId
+        // anilist is not paged for user list
+        val listData = getUserMedia(userId, MediaType.MANGA, MediaListStatus.CURRENT).map {
             MediaCardData(
                 id = it.id,
                 title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
@@ -168,30 +189,13 @@ class TrackerClientImpl(
                 chapters = it.chapters,
             )
         }
-    }
 
-    override suspend fun getCurrentManga() : List<MediaCardData> {
-        val userId = getUser().userId
-
-        return getUserMedia(userId, MediaType.MANGA, MediaListStatus.CURRENT).map {
-            MediaCardData(
-                id = it.id,
-                title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
-                status = it.status!!.toApp(),
-                type = it.type!!.toApp(),
-                isAdult = it.isAdult ?: false,
-                meanScore = (it.meanScore ?: 0)/10f,
-                coverImage = it.coverImage?.large!!,
-                nextAiringEpisode = it.nextAiringEpisode?.episode,
-                episodes = it.episodes,
-                chapters = it.chapters,
-            )
-        }
+        emit(PagingData.from(listData))
     }
 
 
-    override suspend fun getRecommendations(): List<MediaCardData> {
-        return anilistApolloClient.query(GetUserRecommendationsQuery())
+    override fun getRecommendations(): Flow<PagingData<MediaCardData>> = flow {
+        val listData = anilistApolloClient.query(GetUserRecommendationsQuery())
             .execute()
             .data
             ?.Page
@@ -211,5 +215,7 @@ class TrackerClientImpl(
                     chapters = it.chapters,
                 )
             } ?: emptyList()
+
+        emit(PagingData.from(listData))
     }
 }

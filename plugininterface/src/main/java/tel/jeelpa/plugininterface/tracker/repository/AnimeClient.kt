@@ -1,15 +1,17 @@
 package tel.jeelpa.plugininterface.tracker.repository
 
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.MediaDetailsFull
 
 interface AnimeClient {
-    suspend fun search(query: String, page: Int, itemsInPage: Int) : List<MediaCardData>
-    suspend fun getTrendingAnime(page:Int, itemsInPage: Int) : List<MediaCardData>
+    fun search(query: String) : Flow<PagingData<MediaCardData>>
+    fun getTrendingAnime() : Flow<PagingData<MediaCardData>>
 
-    suspend fun getPopularAnime(page:Int, itemsInPage: Int) : List<MediaCardData>
+    fun getPopularAnime() : Flow<PagingData<MediaCardData>>
 
-    suspend fun getRecentlyUpdated(page: Int, itemsInPage: Int) : List<MediaCardData>
+    fun getRecentlyUpdated() : Flow<PagingData<MediaCardData>>
 
     suspend fun getAnimeDetails(id: Int) : MediaDetailsFull
 

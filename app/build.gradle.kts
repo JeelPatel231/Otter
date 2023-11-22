@@ -103,7 +103,7 @@ dependencies {
 
     // paging3
     val paging_version = "3.2.1"
-    implementation("androidx.paging:paging-runtime:$paging_version")
+    implementation("androidx.paging:paging-runtime-ktx:$paging_version")
 
 
     // memory leaks

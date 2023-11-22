@@ -1,8 +1,13 @@
 package tel.jeelpa.anilisttrackerplugin.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.anilisttrackerplugin.models.toApp
+import tel.jeelpa.anilisttrackerplugin.paging.AnilistPagingSource
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetMediaDetailsQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.MediaBaselineQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.MediaSearchQuery
@@ -21,6 +26,17 @@ import tel.jeelpa.plugininterface.tracker.models.MediaRelationType
 abstract class BaseClient (
     private val anilistClient: ApolloClient
 ) {
+
+    protected fun <TData : Any> delegateToPagingSource(dataCallback: suspend (Int, Int) -> List<TData>): Flow<PagingData<TData>> {
+        return Pager(
+            config = PagingConfig(
+                30,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { AnilistPagingSource(dataCallback) }
+        ).flow
+    }
+
     suspend fun search(query: String, page: Int?, perPage: Int?, mediaType: AppMediaType) : List<MediaCardData> {
         val mMediaType = when(mediaType) {
             AppMediaType.ANIME -> MediaType.ANIME

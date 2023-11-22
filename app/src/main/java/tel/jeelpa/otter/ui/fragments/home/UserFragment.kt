@@ -13,9 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.activities.SettingsActivity
 import tel.jeelpa.otter.databinding.FragmentUserBinding
-import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
+import tel.jeelpa.otter.ui.adapters.MediaCardPagingAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
-import tel.jeelpa.otter.ui.generic.initRecycler
+import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
@@ -54,22 +54,22 @@ class UserFragment : Fragment() {
             }
         }
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.animeContinueRecycler,
             binding.animeContinueShimmer.root,
             userViewModel.currentAnime
         )
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.mangaContinueRecycler,
             binding.mangaContinueShimmer.root,
             userViewModel.currentManga
         )
 
-        initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+        initPagedRecycler(
+            MediaCardPagingAdapter(::navigateToDetails),
             binding.recommendationsRecycler,
             binding.recommendationsShimmer.root,
             userViewModel.recommendations

@@ -1,5 +1,6 @@
 package tel.jeelpa.plugininterface.tracker.repository
 
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
@@ -18,11 +19,11 @@ interface UserClient {
 
     suspend fun updateMedia(id: Int, score: Int, mediaListStatus: AppMediaListStatus)
 
-    suspend fun getCurrentAnime(): List<MediaCardData>
+    fun getCurrentAnime(): Flow<PagingData<MediaCardData>>
 
-    suspend fun getCurrentManga(): List<MediaCardData>
+    fun getCurrentManga(): Flow<PagingData<MediaCardData>>
 
-    suspend fun getRecommendations(): List<MediaCardData>
+    fun getRecommendations(): Flow<PagingData<MediaCardData>>
 }
 
 abstract class ClientHolder {
