@@ -28,8 +28,6 @@ class AnilistPagingSource<TData : Any>(
             )
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
-        } catch (exception: Throwable){ //HttpException) {
-            return LoadResult.Error(exception)
         }
     }
     // The refresh key is used for subsequent refresh calls to PagingSource.load after the initial load

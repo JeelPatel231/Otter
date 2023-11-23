@@ -3,6 +3,7 @@ package tel.jeelpa.otter.ui.generic
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -153,6 +154,13 @@ Fragment.initPagedRecycler(
 
     flowSource.observeFlow(viewLifecycleOwner) {
         adapter.submitData(it)
+    }
+
+    adapter.loadStateFlow.observeFlow(viewLifecycleOwner) {
+        when(val currentState = it.refresh) {
+            is LoadState.Error -> showToast(currentState.error.message ?: "Error Loading Paged Data")
+            else -> {}
+        }
     }
 
     adapter.addOnPagesUpdatedListener {

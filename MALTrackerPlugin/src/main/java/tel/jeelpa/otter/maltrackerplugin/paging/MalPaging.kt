@@ -2,11 +2,12 @@ package tel.jeelpa.otter.maltrackerplugin.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import tel.jeelpa.otter.maltrackerplugin.models.MediaListNode
 import tel.jeelpa.otter.maltrackerplugin.models.CharacterNode
 import tel.jeelpa.otter.maltrackerplugin.models.MalResponse
+import tel.jeelpa.otter.maltrackerplugin.models.MediaListNode
 import tel.jeelpa.plugininterface.tracker.models.CharacterCardData
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import java.io.IOException
 
 class MalPagingSource(
     private val dataRequest: suspend (Int, Int) -> MalResponse<MediaListNode>,
@@ -32,7 +33,7 @@ class MalPagingSource(
                 // assume that if a full page is not loaded, that means the end of the data
                 nextKey = nextKey
             )
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             e.printStackTrace()
             LoadResult.Error(e)
         }
@@ -71,7 +72,7 @@ class MalCharacterPagingSource(
                 // assume that if a full page is not loaded, that means the end of the data
                 nextKey = nextKey
             )
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             e.printStackTrace()
             LoadResult.Error(e)
         }
