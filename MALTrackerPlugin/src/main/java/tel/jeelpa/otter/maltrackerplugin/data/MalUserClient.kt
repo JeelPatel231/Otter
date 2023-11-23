@@ -88,7 +88,7 @@ class MalUserClient(
             addPathSegment("@me")
             addPathSegment("animelist")
             addQueryParameter("status", "watching")
-            addQueryParameter("fields", "list_status,mean,num_episodes,nsfw")
+            addQueryParameter("fields", "list_status,mean,num_episodes,nsfw,media_type")
         }
     }
 
@@ -98,7 +98,7 @@ class MalUserClient(
             addPathSegment("@me")
             addPathSegment("mangalist")
             addQueryParameter("status", "reading")
-            addQueryParameter("fields", "list_status,mean,num_episodes,nsfw")
+            addQueryParameter("fields", "list_status,mean,num_episodes,nsfw,media_type")
         }
     }
 
@@ -106,7 +106,7 @@ class MalUserClient(
         return makePagedQuery {
             addPathSegment("anime")
             addPathSegment("suggestions")
-            addQueryParameter("fields", "list_status,mean,num_episodes,nsfw")
+            addQueryParameter("fields", "list_status,mean,num_episodes,nsfw,media_type")
         }
     }
 
