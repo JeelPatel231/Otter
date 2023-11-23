@@ -24,7 +24,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     val trackerStore: tel.jeelpa.plugininterface.tracker.TrackerStore,
     private val trackerManager: tel.jeelpa.plugininterface.tracker.TrackerManager,
-    private val userStorage: UserStorage,
+    val userStorage: UserStorage,
 ) : ViewModel() {
     val trackers
         get() = trackerManager.trackers
@@ -51,6 +51,7 @@ class SettingsActivity : AppCompatActivity() {
         val oldValue = settingsViewModel.trackerStore.getTracker().first()
         if (newValue != oldValue){
             settingsViewModel.trackerStore.saveTracker(newValue)
+            settingsViewModel.userStorage.clearData()
             return true
         }
         return false
