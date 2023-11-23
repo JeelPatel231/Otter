@@ -17,7 +17,6 @@ import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
 import tel.jeelpa.plugininterface.tracker.models.AppDate
 import tel.jeelpa.plugininterface.tracker.models.AppMediaType
 import tel.jeelpa.plugininterface.tracker.models.AppTrailer
-import tel.jeelpa.plugininterface.tracker.models.CharacterCardData
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.MediaDetailsFull
 import tel.jeelpa.plugininterface.tracker.models.MediaRelationCardData
@@ -62,6 +61,7 @@ abstract class BaseClient (
                 nextAiringEpisode = it.nextAiringEpisode?.episode,
                 episodes = it.episodes,
                 chapters = it.chapters,
+                userWatched = it.mediaListEntry?.progress
             )
         } } ?: emptyList()
     }
@@ -94,6 +94,7 @@ abstract class BaseClient (
                     nextAiringEpisode = it.nextAiringEpisode?.episode,
                     episodes = it.episodes,
                     chapters = it.chapters,
+                    userWatched = it.mediaListEntry?.progress
                 )
             }
         } ?: emptyList()
@@ -122,14 +123,14 @@ abstract class BaseClient (
                 idMal = idMal,
                 duration = duration,
                 format = format?.name ?: "Unknown",
-                characters = characters?.edges?.map { edge ->
-                    CharacterCardData(
-                        id = edge?.node?.id!!,
-                        name = edge.node.name?.full!!,
-                        avatar = edge.node.image?.medium!!,
-                        role = edge.role?.name!!,
-                    )
-                } ?: emptyList(),
+//                characters = characters?.edges?.map { edge ->
+//                    CharacterCardData(
+//                        id = edge?.node?.id!!,
+//                        name = edge.node.name?.full!!,
+//                        avatar = edge.node.image?.medium!!,
+//                        role = edge.role?.name!!,
+//                    )
+//                } ?: emptyList(),
                 endDate = AppDate(endDate?.day, endDate?.month, endDate?.year),
                 startDate = AppDate(startDate?.day, startDate?.month, startDate?.year),
                 genres = genres?.mapNotNull { it } ?: emptyList(),

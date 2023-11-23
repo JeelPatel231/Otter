@@ -166,6 +166,7 @@ class TrackerClientImpl(
                 nextAiringEpisode = it.nextAiringEpisode?.episode,
                 episodes = it.episodes,
                 chapters = it.chapters,
+                userWatched = it.mediaListEntry?.progress
             )
         }
 
@@ -187,6 +188,7 @@ class TrackerClientImpl(
                 nextAiringEpisode = it.nextAiringEpisode?.episode,
                 episodes = it.episodes,
                 chapters = it.chapters,
+                userWatched = it.mediaListEntry?.progress
             )
         }
 
@@ -213,6 +215,7 @@ class TrackerClientImpl(
                     nextAiringEpisode = it.nextAiringEpisode?.episode,
                     episodes = it.episodes,
                     chapters = it.chapters,
+                    userWatched = it.mediaListEntry?.progress
                 )
             } ?: emptyList()
 

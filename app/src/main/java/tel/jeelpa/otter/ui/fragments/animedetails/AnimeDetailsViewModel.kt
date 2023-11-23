@@ -3,6 +3,7 @@ package tel.jeelpa.otter.ui.fragments.animedetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,7 @@ import tel.jeelpa.plugininterface.models.ShowResponse
 import tel.jeelpa.plugininterface.models.VideoServer
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
+import tel.jeelpa.plugininterface.tracker.repository.CharacterClient
 import javax.inject.Inject
 
 
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class AnimeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val animeClient: AnimeClient,
+    private val characterClient: CharacterClient,
     private val parserManager: ParserManager,
 ) : ViewModel() {
     val navArgs = savedStateHandle.get<MediaCardData>("data")!!
@@ -41,6 +44,8 @@ class AnimeDetailsViewModel @Inject constructor(
     val mediaEndings = channelFlow { animeDetails.collectLatest {
         it.idMal?.let { idMal -> send(animeClient.getEndings(idMal)) }
     } }.cacheInScope(viewModelScope)
+
+    val characters = characterClient.getCharactersFromAnime(navArgs.id).cachedIn(viewModelScope)
 
     val parsers
         get() = parserManager.parsers

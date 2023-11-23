@@ -83,6 +83,10 @@ class MangaDetailsInfoFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
 
+        mangaDetailsViewModel.characters.observeFlow(viewLifecycleOwner) {
+            characterAdapter.submitData(it)
+        }
+
 
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner) {
             val ctx = requireContext()
@@ -120,10 +124,6 @@ class MangaDetailsInfoFragment : Fragment() {
                     tagsChipGroup.addView( Chip(ctx).apply { text = i } )
                 }
 
-                it.characters.let { characters ->
-                    if (characters.isEmpty()) charactersText.visibilityGone()
-                    else characterAdapter.submitList(characters)
-                }
             }
         }
 

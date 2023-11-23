@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import coil.load
 import coil.size.Scale
 import tel.jeelpa.otter.databinding.CharacterSmallLayoutBinding
-import tel.jeelpa.otter.ui.generic.GenericListAdapter
+import tel.jeelpa.otter.ui.generic.GenericPagingAdapter
 import tel.jeelpa.plugininterface.tracker.models.CharacterCardData
 
 class CharacterCardAdapter(
     private val onItemClick : (CharacterCardData) -> Unit
-): GenericListAdapter<Int, CharacterCardData, CharacterSmallLayoutBinding>(
+): GenericPagingAdapter<Int, CharacterCardData, CharacterSmallLayoutBinding>(
     primaryKey = { id }
 ) {
     override fun onBind(binding: CharacterSmallLayoutBinding, entry: CharacterCardData, position: Int) {

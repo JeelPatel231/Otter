@@ -82,6 +82,10 @@ class AnimeDetailsInfoFragment: Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
 
+        animeDetailsViewModel.characters.observeFlow(viewLifecycleOwner){
+            characterAdapter.submitData(it)
+        }
+
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner) {
             val ctx = requireContext()
             with(binding) {
@@ -117,8 +121,6 @@ class AnimeDetailsInfoFragment: Fragment() {
                 for (i in it.tags) {
                     tagsChipGroup.addView(Chip(ctx).apply { text = i })
                 }
-
-                characterAdapter.submitList(it.characters)
             }
         }
 

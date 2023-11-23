@@ -57,3 +57,23 @@ query getCharacterData($characterId: Int!){
         }
     }
 }
+
+
+query getCharactersFromMedia($mediaId: Int!){
+    Media(id: $mediaId) {
+        characters(sort:[RELEVANCE, ROLE]){
+            edges {
+                role
+                node {
+                    id
+                    image {
+                        medium
+                    }
+                    name {
+                        full
+                    }
+                }
+            }
+        }
+    }
+}

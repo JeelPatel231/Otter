@@ -40,7 +40,7 @@ data class AppNextAiringEpisode(
 data class CharacterCardData(
     val id: Int,
     val name: String,
-    val avatar: String,
+    val avatar: String?,
     val role: String,
 ): Equitable
 
@@ -48,7 +48,7 @@ data class CharacterCardData(
 data class CharacterDataFull(
     val id: Int,
     val name: String,
-    val avatar: String,
+    val avatar: String?,
     val age: String?,
     val gender: String?,
     val description: String?,
@@ -73,7 +73,9 @@ data class MediaCardData(
     val isAdult: Boolean,
     val status: AppMediaStatus,
     val meanScore: Float,
-    val coverImage: String,
+    val userWatched: Int? = null, // null when not logged in or not in list
+//    val userListStatus: AppMediaListStatus = AppMediaListStatus.UNKNOWN,
+    val coverImage: String?,
     val title: String,
     val episodes: Int?,
     val nextAiringEpisode: Int?,
@@ -87,7 +89,9 @@ data class MediaRelationCardData(
     val isAdult: Boolean,
     val status: AppMediaStatus,
     val meanScore: Float,
-    val coverImage: String,
+    val userWatched: Int? = null, // null when not logged in or not in list
+//    val userListStatus: AppMediaListStatus = AppMediaListStatus.UNKNOWN,
+    val coverImage: String?,
     val title: String,
     val episodes: Int?,
     val nextAiringEpisode: Int?,
@@ -98,12 +102,24 @@ data class MediaRelationCardData(
         return MediaCardData(
             id, type, isAdult,
             status,meanScore,
-            coverImage, title,
-            episodes,
+            userWatched, //userListStatus,
+            coverImage, title, episodes,
             nextAiringEpisode,
             chapters
         )
     }
+}
+
+
+fun MediaCardData.withRelation(relation: MediaRelationType): MediaRelationCardData {
+    return MediaRelationCardData(
+        id, type, isAdult,
+        status,meanScore,
+        userWatched, //userListStatus,
+        coverImage, title, episodes,
+        nextAiringEpisode,
+        chapters, relation
+    )
 }
 
 enum class MediaRelationType(val value: String) {
@@ -123,7 +139,7 @@ enum class MediaRelationType(val value: String) {
     UNKNOWN("UNKNOWN");
 
     companion object {
-        operator fun get(value: String): MediaRelationType = MediaRelationType.values().find { it.value == value } ?: UNKNOWN
+        operator fun get(value: String): MediaRelationType = MediaRelationType.values().find { it.value.equals(value, ignoreCase = true) } ?: UNKNOWN
     }
 }
 
@@ -147,7 +163,7 @@ data class MediaDetailsFull(
     val format: String,
     val source: String,
     val studios: List<String>,
-    val season: String,
+    val season: String?,
     val startDate: AppDate?,
     val endDate: AppDate?,
     val description: String,
@@ -157,7 +173,7 @@ data class MediaDetailsFull(
     val tags: List<String>,
     val recommendation: List<MediaCardData>,
     val relations: List<MediaRelationCardData>,
-    val characters: List<CharacterCardData>
+//    val characters: List<CharacterCardData>
 )
 
 data class AppTrailer(

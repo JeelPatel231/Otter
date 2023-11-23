@@ -2,10 +2,10 @@ query currentUserMedia($userId: Int!, $type: MediaType, $status: MediaListStatus
     MediaListCollection(userId: $userId, type: $type, status: $status , sort: UPDATED_TIME ) {
         lists {
             entries {
-                progress
+                #                progress
                 private
-                score(format:POINT_100)
-                status
+                #                score(format:POINT_100)
+                #                status
                 media {
                     id
                     idMal
@@ -27,6 +27,12 @@ query currentUserMedia($userId: Int!, $type: MediaType, $status: MediaListStatus
                         english
                         romaji
                         userPreferred
+                    }
+                    mediaListEntry {
+                        progress
+                        private
+                        score(format: POINT_100)
+                        status
                     }
                 }
             }
@@ -110,6 +116,12 @@ query getUserRecommendations {
                 bannerImage
                 coverImage {
                     large
+                }
+                mediaListEntry {
+                    progress
+                    private
+                    score(format: POINT_100)
+                    status
                 }
             }
         }

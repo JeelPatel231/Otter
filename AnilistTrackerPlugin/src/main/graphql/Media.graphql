@@ -22,6 +22,12 @@ query MediaBaseline($page: Int!, $perPage : Int!, $sort: [MediaSort!]!, $type: M
             chapters
             isAdult
             meanScore
+            mediaListEntry {
+                progress
+                private
+                score(format: POINT_100)
+                status
+            }
         }
     }
 }
@@ -51,6 +57,12 @@ query MediaSearch($search: String!, $page:Int = 1, $perPage:Int = 30, $type: Med
             chapters
             isAdult
             meanScore
+            mediaListEntry {
+                progress
+                private
+                score(format: POINT_100)
+                status
+            }
         }
     }
 }
@@ -212,21 +224,6 @@ query getMediaDetails($id: Int!){
                     }
                     episodes
                     chapters
-                }
-            }
-        }
-
-        characters(sort:[RELEVANCE, ROLE]){
-            edges {
-                role
-                node {
-                    id
-                    image {
-                        medium
-                    }
-                    name {
-                        full
-                    }
                 }
             }
         }

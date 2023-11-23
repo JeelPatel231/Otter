@@ -30,14 +30,14 @@ class MediaCardAdapter(
 
                 AppMediaType.ANIME -> binding.root.context.getString(
                     R.string.media_release_data,
-                    "~",
+                    (entry.userWatched ?: "~").toString(),
                     (entry.nextAiringEpisode ?: entry.episodes ?: "~").toString() ,
                     (entry.episodes ?: "~").toString()
                 )
 
                 AppMediaType.MANGA -> binding.root.context.getString(
                     R.string.media_release_data,
-                    "~",
+                    (entry.userWatched ?: "~").toString(),
                     (entry.chapters ?: "~").toString(),
                     ""
                 )
@@ -74,14 +74,14 @@ class MediaCardPagingAdapter(
 
                 AppMediaType.ANIME -> binding.root.context.getString(
                     R.string.media_release_data,
-                    "~",
+                    (entry.userWatched ?: "~").toString(),
                     (entry.nextAiringEpisode ?: entry.episodes ?: "~").toString() ,
                     (entry.episodes ?: "~").toString()
                 )
 
                 AppMediaType.MANGA -> binding.root.context.getString(
                     R.string.media_release_data,
-                    "~",
+                    (entry.userWatched ?: "~").toString(),
                     (entry.chapters ?: "~").toString(),
                     ""
                 )
