@@ -138,8 +138,8 @@ data class Genre(
 @Serializable
 data class MyListStatus(
     val status: String, // MAP TO APP TYPE
-    val score: Float,
-    val num_episodes_watched: Int,
-    val is_rewatching: Boolean,
-    val updated_at: String, // Date String
+    val score: Float? = null,
+    val num_episodes_watched: Int? = null,
+    val is_rewatching: Boolean? = null,
+    val updated_at: String? = null, // Date String
 )
