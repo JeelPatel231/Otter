@@ -16,7 +16,7 @@ class UserViewModel @Inject constructor(
     val userData = suspendToFlow { userClient.getUser() }
         .cacheInScope(viewModelScope)
 
-    val currentAnime = userClient.getCurrentAnime() .cacheInScope(viewModelScope)
+    val currentAnime = userClient.getCurrentAnime().cacheInScope(viewModelScope)
 
     val currentManga = userClient.getCurrentManga().cacheInScope(viewModelScope)
 
