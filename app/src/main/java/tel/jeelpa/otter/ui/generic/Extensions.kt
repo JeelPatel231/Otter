@@ -59,7 +59,7 @@ fun <T> Context.restartApp(activity: Class<T>) {
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     startActivity(intent)
     if (this is Activity) {
-        finish()
+        finishAffinity()
     }
     Runtime.getRuntime().exit(0)
 }
