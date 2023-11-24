@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import tel.jeelpa.otter.maltrackerplugin.models.CharacterData
@@ -54,7 +55,8 @@ class MalCharacterClient(
     }
     override fun getCharactersFromAnime(id: Int) = getCharacterFromMedia(id, "anime")
 
-    override fun getCharactersFromManga(id: Int) = getCharacterFromMedia(id, "manga")
+    // MAL doesnt provide character data from manga, or i dont know about it
+    override fun getCharactersFromManga(id: Int) = flowOf(PagingData.from(emptyList<CharacterCardData>()))
 
     override suspend fun getCharacterDetails(id: Int): CharacterDataFull {
         return makeMalQuery {
