@@ -30,6 +30,16 @@
         </activity>
 
         <activity
+            android:name="tel.jeelpa.otter.activities.SendLog"
+            android:theme="@style/Theme.Otter"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="tel.jeelpa.otter.SEND_LOG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Otter">
