@@ -1,6 +1,5 @@
 package tel.jeelpa.otter.activities
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +19,7 @@ import okio.Source
 import okio.buffer
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.ActivityPluginDownloadBinding
+import tel.jeelpa.otter.ui.generic.restartApp
 import tel.jeelpa.otter.ui.generic.showToast
 import java.io.File
 
@@ -55,10 +55,7 @@ class PluginDeepLinkHandlerActivity : AppCompatActivity() {
             override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
                 if (done) {
                     showToast("Plugin Added")
-                    val settingIntent =
-                        Intent(this@PluginDeepLinkHandlerActivity, SettingsActivity::class.java)
-                    startActivity(settingIntent)
-                    return finish()
+                    restartApp(SettingsActivity::class.java)
                 }
 
                 if (firstUpdate) {
