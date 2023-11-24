@@ -18,12 +18,14 @@ import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.restartApp
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.TrackerManager
+import tel.jeelpa.plugininterface.tracker.TrackerStore
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    val trackerStore: tel.jeelpa.plugininterface.tracker.TrackerStore,
-    private val trackerManager: tel.jeelpa.plugininterface.tracker.TrackerManager,
+    val trackerStore: TrackerStore,
+    private val trackerManager: TrackerManager,
     val userStorage: UserStorage,
 ) : ViewModel() {
     val trackers
