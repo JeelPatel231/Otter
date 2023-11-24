@@ -37,6 +37,10 @@ class SettingsActivity : AppCompatActivity() {
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by viewModels()
 
+    companion object {
+        private const val SELECT_TRACKER = "Select a Tracker"
+    }
+
     private fun showConfirmDialogWithText(body: String, onAccept: (DialogInterface, Int) -> Unit) {
         AlertDialog.Builder(this)
             .setTitle("Confirm")
@@ -49,12 +53,15 @@ class SettingsActivity : AppCompatActivity() {
     private suspend fun checkTrackerService(): Boolean {
         val newValue = binding.trackerServiceSelector.text.toString()
         val oldValue = settingsViewModel.trackerStore.getTracker().first()
-        if (newValue != oldValue){
-            settingsViewModel.trackerStore.saveTracker(newValue)
-            settingsViewModel.userStorage.clearData()
-            return true
-        }
-        return false
+
+        // if not tracker is selected and if its the default text
+        if (newValue == SELECT_TRACKER) return false
+        // if value didn't change
+        if (newValue == oldValue) return false
+
+        settingsViewModel.trackerStore.saveTracker(newValue)
+        settingsViewModel.userStorage.clearData()
+        return true
     }
 
     private val listOfChecks: Array<suspend () -> Boolean> =
@@ -67,7 +74,10 @@ class SettingsActivity : AppCompatActivity() {
 
         // set the Spinner text to current tracker
         settingsViewModel.trackerStore.getTracker().observeUntil(this, { true }) {
-            binding.trackerServiceSelector.setText(it!!)
+            when (it) {
+                null -> binding.trackerServiceSelector.setText(SELECT_TRACKER)
+                else -> binding.trackerServiceSelector.setText(it)
+            }
         }
 
         binding.trackerServiceSelector.apply {
@@ -83,7 +93,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.applyBtn.setOnClickListener {
             lifecycleScope.launch {
                 // if ATLEAST ONE value has been changed, ask to restart the app
-                if(listOfChecks.any { it() }){
+                if (listOfChecks.any { it() }) {
                     showConfirmDialogWithText("Restart App for changes to take effect.") { _, _ ->
                         finishAffinity()
                         restartApp(OnBoardingActivity::class.java)
