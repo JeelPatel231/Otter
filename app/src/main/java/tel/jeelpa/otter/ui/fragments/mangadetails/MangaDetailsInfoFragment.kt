@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
@@ -18,6 +17,7 @@ import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
 import tel.jeelpa.otter.ui.fragments.character.CharacterActivity
 import tel.jeelpa.otter.ui.generic.autoCleared
+import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
@@ -59,8 +59,7 @@ class MangaDetailsInfoFragment : Fragment() {
 
         initRecycler(
             RelationsAdapter(::navigateToDetails),
-            binding.relationsRecyclerView,
-            binding.relationShimmer.root,
+            binding.relationRecyclerView,
             mangaDetailsViewModel.mangaDetails,
             flowData = { it.relations }
         )
@@ -68,7 +67,6 @@ class MangaDetailsInfoFragment : Fragment() {
         initRecycler(
             MediaCardAdapter(::navigateToDetails),
             binding.recommendationRecyclerView,
-            binding.recommendationShimmer.root,
             mangaDetailsViewModel.mangaDetails,
             flowData = { it.recommendation }
         )
@@ -78,15 +76,11 @@ class MangaDetailsInfoFragment : Fragment() {
                 .putExtra("characterId", it.id)
             startActivity(intent)
         }
-        binding.charactersRecyclerView.apply {
-            adapter = characterAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        }
-
-        mangaDetailsViewModel.characters.observeFlow(viewLifecycleOwner) {
-            characterAdapter.submitData(it)
-        }
-
+        initPagedRecycler(
+            characterAdapter,
+            binding.charactersRecyclerView,
+            mangaDetailsViewModel.characters
+        )
 
         mangaDetailsViewModel.mangaDetails.observeFlow(viewLifecycleOwner) {
             val ctx = requireContext()

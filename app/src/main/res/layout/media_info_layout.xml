@@ -349,15 +349,10 @@
             android:layout_marginBottom="8dp"
             android:text="Characters" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <tel.jeelpa.otter.ui.customviews.ShimmerRecyclerView
             android:id="@+id/characters_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:paddingHorizontal="18dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/character_small_layout" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/relations_text"
@@ -369,30 +364,10 @@
             android:layout_marginBottom="8dp"
             android:text="Relations" />
 
-        <RelativeLayout
-            android:id="@+id/relations_recycler_view_container"
+        <tel.jeelpa.otter.ui.customviews.ShimmerRecyclerView
+            android:id="@+id/relation_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="230dp">
-
-            <include
-                android:id="@+id/relation_shimmer"
-                layout="@layout/media_card_shimmer_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/relations_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="18dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/media_relation_small_layout" />
-
-        </RelativeLayout>
-
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/recommendation_text"
@@ -404,28 +379,10 @@
             android:layout_marginBottom="8dp"
             android:text="Recommendation" />
 
-        <RelativeLayout
+        <tel.jeelpa.otter.ui.customviews.ShimmerRecyclerView
+            android:id="@+id/recommendation_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="220dp">
-
-            <include
-                android:id="@+id/recommendation_shimmer"
-                android:layout_marginStart="18dp"
-                layout="@layout/media_card_shimmer_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recommendation_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="18dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/media_small_layout" />
-
-        </RelativeLayout>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </ScrollView>

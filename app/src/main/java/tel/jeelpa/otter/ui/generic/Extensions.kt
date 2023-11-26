@@ -104,6 +104,31 @@ fun crossfadeViews(contentView: View, loadingView: View) {
 
 }
 
+fun View.fadeIn(duration: Long = 300L) {
+    alpha = 0F
+    visibility = View.VISIBLE
+    animate()
+        .alpha(1F)
+        .setDuration(duration)
+        .start()
+}
+
+
+fun View.fadeOut(duration: Long = 300L) {
+    val goneOnEnd = object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator) {
+            visibility = View.GONE
+        }
+    }
+    alpha = 1F
+    visibility = View.VISIBLE
+    animate()
+        .alpha(0F)
+        .setDuration(duration)
+        .setListener(goneOnEnd)
+        .start()
+}
+
 fun Context.navigateToMediaDetails(mediaCardData: MediaCardData) {
     val activity = when (mediaCardData.type) {
         AppMediaType.ANIME -> AnimeActivity::class.java

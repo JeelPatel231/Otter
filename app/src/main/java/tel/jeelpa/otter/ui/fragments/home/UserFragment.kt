@@ -56,29 +56,22 @@ class UserFragment : Fragment() {
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.animeContinueRecycler,
-            binding.animeContinueShimmer.root,
+            binding.animeContinue,
             userViewModel.currentAnime
         )
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.mangaContinueRecycler,
-            binding.mangaContinueShimmer.root,
+            binding.mangaContinue,
             userViewModel.currentManga
         )
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.recommendationsRecycler,
-            binding.recommendationsShimmer.root,
+            binding.recommendations,
             userViewModel.recommendations
         )
 
-//        binding.pluginsButton.setOnClickListener {
-//            showToast("Not Implemented")
-//            getOuterNavController().navigate(MainFragmentDirections.toPluginFragment())
-//        }
         return binding.root
     }
 }

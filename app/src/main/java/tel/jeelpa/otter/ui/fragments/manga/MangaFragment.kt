@@ -86,22 +86,19 @@ class MangaFragment : Fragment() {
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.firstRowRecyclerView,
-            binding.firstRowShimmerView.root,
+            binding.firstRowRecycler,
             mangaFragmentViewModel.trendingManga
         )
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.secondRowRecyclerView,
-            binding.secondRowShimmerView.root,
+            binding.secondRowRecycler,
             mangaFragmentViewModel.popularManga
         )
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.thirdRowRecyclerView,
-            binding.thirdRowShimmerView.root,
+            binding.thirdRowRecycler,
             mangaFragmentViewModel.trendingNovel
         )
 

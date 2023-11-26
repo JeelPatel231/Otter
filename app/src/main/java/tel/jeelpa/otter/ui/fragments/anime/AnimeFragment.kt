@@ -93,22 +93,19 @@ class AnimeFragment : Fragment() {
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.firstRowRecyclerView,
-            binding.firstRowShimmerView.root,
+            binding.firstRowRecycler,
             animeHomeViewModel.trendingAnime
         )
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.secondRowRecyclerView,
-            binding.secondRowShimmerView.root,
+            binding.secondRowRecycler,
             animeHomeViewModel.recentlyUpdated
         )
 
         initPagedRecycler(
             MediaCardPagingAdapter(::navigateToDetails),
-            binding.thirdRowRecyclerView,
-            binding.thirdRowShimmerView.root,
+            binding.thirdRowRecycler,
             animeHomeViewModel.popularAnime
         )
 

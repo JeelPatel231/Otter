@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.flow.Flow
+import tel.jeelpa.otter.ui.customviews.ShimmerRecyclerView
 
 abstract class GenericRecyclerAdapter<TData, TBindingType : ViewBinding>(
     private val inflateCallback: (LayoutInflater, ViewGroup?, Boolean) -> TBindingType,
@@ -110,50 +109,40 @@ abstract class GenericListAdapter<TComparable, TData: tel.jeelpa.plugininterface
 fun <TFlowSource, TData, TPrimitive, TBinding, TAdapter : GenericListAdapter<TPrimitive, TData, TBinding>>
 Fragment.initRecycler(
     adapter: TAdapter,
-    recyclerView: RecyclerView,
-    shimmerFrameLayout: ShimmerFrameLayout,
+    shimmerRecycler : ShimmerRecyclerView,
     flowSource: Flow<TFlowSource?>,
     flowData: (TFlowSource) -> List<TData>
 ) {
-    if (adapter.getCurrentList().isNotEmpty())
-        shimmerFrameLayout.visibilityGone()
-
-    recyclerView.adapter = adapter
-    recyclerView.layoutManager =
-        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    shimmerRecycler.setAdapter(adapter)
 
     flowSource.observeFlow(viewLifecycleOwner) {
         it?.let {
             adapter.submitList(flowData(it))
-            crossfadeViews(recyclerView, shimmerFrameLayout)
         }
     }
 }
 
 // when the list itself is the source of recycler view items
-fun <TData, TFlowSource : List<TData>, TPrimitive, TBinding, TAdapter : GenericListAdapter<TPrimitive, TData, TBinding>> Fragment.initRecycler(
+fun <TData, TFlowSource : List<TData>, TPrimitive, TBinding, TAdapter : GenericListAdapter<TPrimitive, TData, TBinding>>
+Fragment.initRecycler(
     adapter: TAdapter,
-    recyclerView: RecyclerView,
-    shimmerFrameLayout: ShimmerFrameLayout,
+    shimmerRecycler: ShimmerRecyclerView,
     flowSource: Flow<TFlowSource?>,
-) = initRecycler(adapter, recyclerView, shimmerFrameLayout, flowSource) { it }
+) = initRecycler(adapter, shimmerRecycler, flowSource) { it }
 
 
 
-fun <TData: Any, TPrimitive, TBinding, TAdapter : GenericPagingAdapter<TPrimitive, TData, TBinding>>
+fun <TData: Any, TFlowSource, TPrimitive, TBinding, TAdapter : GenericPagingAdapter<TPrimitive, TData, TBinding>>
 Fragment.initPagedRecycler(
     adapter: TAdapter,
-    recyclerView: RecyclerView,
-    shimmerFrameLayout: ShimmerFrameLayout,
-    flowSource: Flow<PagingData<TData>>,
+    view: ShimmerRecyclerView,
+    flowSource: Flow<TFlowSource>,
+    flowData: (TFlowSource) -> PagingData<TData>
 ) {
-    var loaded = false
-    recyclerView.adapter = adapter
-    recyclerView.layoutManager =
-        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    view.setAdapter(adapter)
 
     flowSource.observeFlow(viewLifecycleOwner) {
-        adapter.submitData(it)
+        adapter.submitData(flowData(it))
     }
 
     adapter.loadStateFlow.observeFlow(viewLifecycleOwner) {
@@ -162,11 +151,11 @@ Fragment.initPagedRecycler(
             else -> {}
         }
     }
-
-    adapter.addOnPagesUpdatedListener {
-        if (!loaded) {
-            crossfadeViews(recyclerView, shimmerFrameLayout)
-            loaded = true
-        }
-    }
 }
+
+fun <TData : Any, TFlowSource : PagingData<TData>, TPrimitive, TBinding, TAdapter : GenericPagingAdapter<TPrimitive, TData, TBinding>>
+Fragment.initPagedRecycler(
+    adapter: TAdapter,
+    view: ShimmerRecyclerView,
+    flowSource: Flow<TFlowSource>,
+) = initPagedRecycler(adapter, view, flowSource) { it }

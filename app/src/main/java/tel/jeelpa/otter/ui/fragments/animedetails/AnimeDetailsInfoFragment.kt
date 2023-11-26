@@ -21,6 +21,7 @@ import tel.jeelpa.otter.ui.adapters.SimpleTextRecyclerAdapter
 import tel.jeelpa.otter.ui.fragments.character.CharacterActivity
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.copyToClipboard
+import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.initRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
@@ -57,8 +58,7 @@ class AnimeDetailsInfoFragment: Fragment() {
 
         initRecycler(
             RelationsAdapter(::navigateToDetails),
-            binding.relationsRecyclerView,
-            binding.relationShimmer.root,
+            binding.relationRecyclerView,
             animeDetailsViewModel.animeDetails,
             flowData = { it.relations }
         )
@@ -66,7 +66,6 @@ class AnimeDetailsInfoFragment: Fragment() {
         initRecycler(
             MediaCardAdapter(::navigateToDetails),
             binding.recommendationRecyclerView,
-            binding.recommendationShimmer.root,
             animeDetailsViewModel.animeDetails,
             flowData = { it.recommendation }
         )
@@ -76,15 +75,11 @@ class AnimeDetailsInfoFragment: Fragment() {
                 .putExtra("characterId", it.id)
             startActivity(intent)
         }
-        binding.charactersRecyclerView.apply {
-            adapter = characterAdapter
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        }
-
-        animeDetailsViewModel.characters.observeFlow(viewLifecycleOwner){
-            characterAdapter.submitData(it)
-        }
+        initPagedRecycler(
+            characterAdapter,
+            binding.charactersRecyclerView,
+            animeDetailsViewModel.characters
+        )
 
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner) {
             val ctx = requireContext()
