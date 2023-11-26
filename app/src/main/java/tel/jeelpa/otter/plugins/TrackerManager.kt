@@ -1,4 +1,4 @@
-package tel.jeelpa.plugininterface.tracker
+package tel.jeelpa.otter.plugins
 
 import kotlinx.coroutines.flow.Flow
 import tel.jeelpa.plugininterface.tracker.repository.ClientHolder

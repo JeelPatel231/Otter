@@ -8,9 +8,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import tel.jeelpa.otter.plugins.TrackerStore
 
 class TrackerStoreImpl(private val context: Context) :
-    tel.jeelpa.plugininterface.tracker.TrackerStore {
+    TrackerStore {
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("trackerData")
         private val TRACKER_ID_KEY = stringPreferencesKey("tracker_id")

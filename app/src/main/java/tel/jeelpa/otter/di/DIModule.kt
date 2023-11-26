@@ -12,8 +12,8 @@ import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.models.TrackerStoreImpl
 import tel.jeelpa.otter.models.UserStore
 import tel.jeelpa.plugininterface.storage.UserStorage
-import tel.jeelpa.plugininterface.tracker.TrackerManager
-import tel.jeelpa.plugininterface.tracker.TrackerStore
+import tel.jeelpa.otter.plugins.TrackerManager
+import tel.jeelpa.otter.plugins.TrackerStore
 import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
 import tel.jeelpa.plugininterface.tracker.repository.CharacterClient
 import tel.jeelpa.plugininterface.tracker.repository.ClientHolder

@@ -18,8 +18,8 @@ import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.restartApp
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.plugininterface.storage.UserStorage
-import tel.jeelpa.plugininterface.tracker.TrackerManager
-import tel.jeelpa.plugininterface.tracker.TrackerStore
+import tel.jeelpa.otter.plugins.TrackerManager
+import tel.jeelpa.otter.plugins.TrackerStore
 import javax.inject.Inject
 
 @HiltViewModel

@@ -25,7 +25,7 @@ import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
 import tel.jeelpa.plugininterface.AppGivenDependencies
 import tel.jeelpa.plugininterface.PluginRegistrar
 import tel.jeelpa.plugininterface.storage.UserStorage
-import tel.jeelpa.plugininterface.tracker.TrackerManager
+import tel.jeelpa.otter.plugins.TrackerManager
 import java.io.File
 import java.security.SecureRandom
 import java.security.cert.X509Certificate

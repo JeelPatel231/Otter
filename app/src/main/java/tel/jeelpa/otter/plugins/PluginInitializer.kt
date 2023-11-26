@@ -7,7 +7,6 @@ import tel.jeelpa.plugininterface.LoadablePlugin
 import tel.jeelpa.plugininterface.PluginRegistrar
 import tel.jeelpa.plugininterface.anime.extractor.Extractor
 import tel.jeelpa.plugininterface.anime.parser.Parser
-import tel.jeelpa.plugininterface.tracker.TrackerManager
 import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.primaryConstructor
