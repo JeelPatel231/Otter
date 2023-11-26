@@ -1,4 +1,4 @@
-package tel.jeelpa.otter.ui.fragments.animedetails
+package tel.jeelpa.otter.ui.adapters
 
 import androidx.lifecycle.LifecycleCoroutineScope
 import coil.load

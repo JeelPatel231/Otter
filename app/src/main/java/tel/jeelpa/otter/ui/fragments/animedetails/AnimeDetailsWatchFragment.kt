@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.parcelize.Parcelize
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
+import tel.jeelpa.otter.ui.adapters.EpisodeAdapter
 import tel.jeelpa.otter.ui.fragments.mediaCommon.WrongMediaSelectionBottomSheetDialog
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
