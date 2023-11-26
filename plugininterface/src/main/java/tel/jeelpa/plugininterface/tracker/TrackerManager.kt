@@ -13,23 +13,17 @@ interface TrackerStore {
 }
 
 class TrackerManager {
-    private val _registeredTrackers = mutableListOf<ClientHolder>()
+    private val _registeredTrackers = mutableSetOf<ClientHolder>()
 
-    val trackers get() = _registeredTrackers.toList()
+    val trackers get() = _registeredTrackers.toSet()
 
     // SHOULD ONLY BE CALLED IN HILT MODULE, ONCE
     fun getTracker(id: String): ClientHolder {
-//        val trackerId = trackerStore.getTracker().first()
         return trackers.find { it.uniqueId.equals(id, true) }
                 ?: throw IllegalStateException("The Preferred client is not Registered.")
         }
 
-//    suspend fun setCurrentTracker(trackerClient: ClientHolder) {
-//        trackerStore.saveTracker(trackerClient.uniqueId)
-//    }
-
     fun registerTracker(trackerClient: ClientHolder){
-        // TODO : remove this when app has a setup screen
         _registeredTrackers.add(trackerClient)
     }
 }

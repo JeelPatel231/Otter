@@ -33,7 +33,19 @@ abstract class ClientHolder {
     abstract val mangaClient: MangaClient
     abstract val characterClient: CharacterClient
 
+    private val lowerCaseUniqueId
+        get() = uniqueId.lowercase()
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is ClientHolder) return false
+        return lowerCaseUniqueId == other.lowerCaseUniqueId
+    }
+
     override fun toString() : String {
         return this.uniqueId
+    }
+
+    override fun hashCode(): Int {
+        return lowerCaseUniqueId.hashCode()
     }
 }

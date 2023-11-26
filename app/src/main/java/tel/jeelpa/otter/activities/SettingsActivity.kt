@@ -87,7 +87,7 @@ class SettingsActivity : AppCompatActivity() {
                 MaterialSpinnerAdapter(
                     this@SettingsActivity,
                     android.R.layout.simple_spinner_dropdown_item,
-                    settingsViewModel.trackers
+                    settingsViewModel.trackers.toList()
                 )
             )
         }
