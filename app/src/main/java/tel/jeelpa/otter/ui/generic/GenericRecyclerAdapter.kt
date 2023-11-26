@@ -34,8 +34,10 @@ abstract class GenericRecyclerAdapter<TData, TBindingType : ViewBinding>(
     }
 
     fun setData(newData: Collection<TData>) {
+        val oldSize = data.size
         _data = newData.toMutableList()
-        notifyDataSetChanged()
+        notifyItemRangeRemoved(0, oldSize)
+        notifyItemRangeInserted(0, data.size)
     }
 
     override fun getItemCount() = data.size
