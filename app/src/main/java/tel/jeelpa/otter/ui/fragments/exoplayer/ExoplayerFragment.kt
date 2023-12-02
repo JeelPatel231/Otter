@@ -20,6 +20,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaSession
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.TrackSelectionDialogBuilder
 import androidx.navigation.fragment.navArgs
@@ -51,6 +52,7 @@ class ExoplayerFragment : Fragment() {
     private var exoplayerControllerBinding: ExoPlayerControlViewBinding by autoCleared()
     private val videoSourcesLiveDataCache = MutableStateFlow(listOf<Video>())
     private val exoNavArgs by navArgs<ExoplayerFragmentArgs>()
+    private lateinit var mediaSession: MediaSession
 
     @Inject lateinit var exoplayer: ExoPlayer
 
@@ -126,6 +128,7 @@ class ExoplayerFragment : Fragment() {
     ): View {
         binding = FragmentExoplayerBinding.inflate(inflater, container, false)
         exoplayerControllerBinding = ExoPlayerControlViewBinding.bind(binding.root)
+        mediaSession = MediaSession.Builder(requireContext(), exoplayer).build()
 
         binding.root.apply {
             player = exoplayer
@@ -214,6 +217,7 @@ class ExoplayerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        mediaSession.release()
         exoplayer.release()
         super.onDestroyView()
     }
