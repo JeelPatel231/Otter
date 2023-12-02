@@ -12,8 +12,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -31,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
 import tel.jeelpa.otter.R
+import tel.jeelpa.otter.databinding.ExoPlayerControlViewBinding
 import tel.jeelpa.otter.databinding.FragmentExoplayerBinding
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
@@ -49,6 +48,7 @@ import javax.inject.Inject
 class ExoplayerFragment : Fragment() {
     private val exoplayerViewModel: ExoPlayerViewModel by activityViewModels()
     private var binding: FragmentExoplayerBinding by autoCleared()
+    private var exoplayerControllerBinding: ExoPlayerControlViewBinding by autoCleared()
     private val videoSourcesLiveDataCache = MutableStateFlow(listOf<Video>())
     private val exoNavArgs by navArgs<ExoplayerFragmentArgs>()
 
@@ -90,12 +90,11 @@ class ExoplayerFragment : Fragment() {
     }
 
     private fun toggleLock() {
-        val lockBtn = binding.root.findViewById<ImageButton>(R.id.exo_lock)
-        val unlockBtn = binding.root.findViewById<ImageButton>(R.id.exo_unlock)
-        val timeline =
-            binding.root.findViewById<ExtendedTimeBar>(androidx.media3.ui.R.id.exo_progress)
-        val container = binding.root.findViewById<View>(R.id.exo_controller_cont)
-        val screen = binding.root.findViewById<View>(R.id.exo_black_screen)
+        val lockBtn = exoplayerControllerBinding.exoLock
+        val unlockBtn = exoplayerControllerBinding.exoUnlock
+        val timeline = exoplayerControllerBinding.exoProgress
+        val container = exoplayerControllerBinding.exoControllerCont
+        val screen = exoplayerControllerBinding.exoBlackScreen
 
         if (lockBtn.isVisible) {
             // IF UNLOCKED
@@ -126,6 +125,8 @@ class ExoplayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentExoplayerBinding.inflate(inflater, container, false)
+        exoplayerControllerBinding = ExoPlayerControlViewBinding.bind(binding.root)
+
         binding.root.apply {
             player = exoplayer
             setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
@@ -136,15 +137,12 @@ class ExoplayerFragment : Fragment() {
 
         // use the player itself to dictate some UI components reactively on state change
         exoplayer.addListener(object : Player.Listener {
-            val playPause =
-                binding.root.findViewById<ImageButton>(androidx.media3.ui.R.id.exo_play_pause)
-
             // animate Play/Pause Button on state change
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 if (isPlaying) {
-                    playPause.load(R.drawable.anim_play_to_pause)
+                    exoplayerControllerBinding.exoPlayPause.load(R.drawable.anim_play_to_pause)
                 } else {
-                    playPause.load(R.drawable.anim_pause_to_play)
+                    exoplayerControllerBinding.exoPlayPause.load(R.drawable.anim_pause_to_play)
                 }
             }
 
@@ -158,18 +156,17 @@ class ExoplayerFragment : Fragment() {
 
             // change title on media change
             override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                binding.root.findViewById<TextView>(R.id.exo_anime_title).text =
-                    mediaMetadata.title
+                exoplayerControllerBinding.exoAnimeTitle.text = mediaMetadata.title
             }
         })
 
         // Navigate Up on clicking back
-        binding.root.findViewById<ImageButton>(R.id.exo_back).setOnClickListener {
+        exoplayerControllerBinding.exoBack.setOnClickListener {
             requireActivity().getNavControllerFromHost(R.id.anime_activity_container_view)
                 .navigateUp()
         }
 
-        binding.root.findViewById<ImageButton>(R.id.exo_quality).setOnClickListener {
+        exoplayerControllerBinding.exoQuality.setOnClickListener {
             binding.root.showTrackSelectionDialog()
         }
 
@@ -202,15 +199,15 @@ class ExoplayerFragment : Fragment() {
 //        extractedSharedFlow.first()
 
         // Show Source Selector on Button click
-        binding.root.findViewById<ImageButton>(R.id.exo_source).setOnClickListener {
+        exoplayerControllerBinding.exoSource.setOnClickListener {
             showDialog()
         }
 
         // Lock Button
-        binding.root.findViewById<ImageButton>(R.id.exo_lock)
+        exoplayerControllerBinding.exoLock
             .setOnClickListener { toggleLock() }
         // Unlock Button
-        binding.root.findViewById<ImageButton>(R.id.exo_unlock)
+        exoplayerControllerBinding.exoUnlock
             .setOnClickListener { toggleLock() }
 
         return binding.root
