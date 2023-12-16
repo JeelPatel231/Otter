@@ -189,7 +189,7 @@ class TrackerClientImpl(
                 isAdult = it.isAdult ?: false,
                 meanScore = (it.meanScore ?: 0) / 10f,
                 coverImage = it.coverImage?.large!!,
-                nextAiringEpisode = it.nextAiringEpisode?.episode,
+                episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                 episodes = it.episodes,
                 chapters = it.chapters,
                 userWatched = it.mediaListEntry?.progress
@@ -211,7 +211,7 @@ class TrackerClientImpl(
                 isAdult = it.isAdult ?: false,
                 meanScore = (it.meanScore ?: 0)/10f,
                 coverImage = it.coverImage?.large!!,
-                nextAiringEpisode = it.nextAiringEpisode?.episode,
+                episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                 episodes = it.episodes,
                 chapters = it.chapters,
                 userWatched = it.mediaListEntry?.progress
@@ -238,7 +238,7 @@ class TrackerClientImpl(
                     isAdult = it.isAdult ?: false,
                     meanScore = (it.meanScore ?: 0)/10f,
                     coverImage = it.coverImage?.large!!,
-                    nextAiringEpisode = it.nextAiringEpisode?.episode,
+                    episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                     episodes = it.episodes,
                     chapters = it.chapters,
                     userWatched = it.mediaListEntry?.progress

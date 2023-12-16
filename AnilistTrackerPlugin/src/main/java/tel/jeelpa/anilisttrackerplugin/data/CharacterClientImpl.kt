@@ -50,7 +50,7 @@ class CharacterClientImpl(
                     isAdult = m.isAdult ?: false,
                     meanScore = (m.meanScore ?: 0) / 10f,
                     coverImage = m.coverImage?.large!!,
-                    nextAiringEpisode = m.nextAiringEpisode?.episode,
+                    episodesAired = m.nextAiringEpisode?.episode?.minus(1),
                     episodes = m.episodes,
                     chapters = m.chapters,
                     userWatched = m.mediaListEntry?.progress,

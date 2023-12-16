@@ -62,7 +62,7 @@ data class Node(
             status = AppMediaStatus.UNKNOWN,
             title = title,
             type = mediaTypeToApp(media_type),
-            nextAiringEpisode = null
+            episodesAired = null
         )
     }
 }

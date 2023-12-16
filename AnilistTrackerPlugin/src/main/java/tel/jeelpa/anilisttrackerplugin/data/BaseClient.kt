@@ -58,7 +58,7 @@ abstract class BaseClient (
                 isAdult = it.isAdult ?: false,
                 meanScore = (it.meanScore ?: 0) / 10f,
                 coverImage = it.coverImage?.large!!,
-                nextAiringEpisode = it.nextAiringEpisode?.episode,
+                episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                 episodes = it.episodes,
                 chapters = it.chapters,
                 userWatched = it.mediaListEntry?.progress
@@ -91,7 +91,7 @@ abstract class BaseClient (
                     isAdult = it.isAdult ?: false,
                     meanScore = (it.meanScore ?: 0) / 10f,
                     coverImage = it.coverImage?.large!!,
-                    nextAiringEpisode = it.nextAiringEpisode?.episode,
+                    episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                     episodes = it.episodes,
                     chapters = it.chapters,
                     userWatched = it.mediaListEntry?.progress
@@ -114,7 +114,7 @@ abstract class BaseClient (
                 episodes = episodes,
                 chapters = chapters,
                 countryOfOrigin = (countryOfOrigin ?: "Unknown").toString(),
-                nextAiringEpisode = nextAiringEpisode?.episode,
+                nextAiringEpisode = nextAiringEpisode?.episode?.minus(1),
                 isAdult = isAdult ?: false,
                 isFavourite = isFavourite,
                 id = id,
@@ -144,7 +144,7 @@ abstract class BaseClient (
                             isAdult = edge.isAdult ?: false,
                             meanScore = (edge.meanScore ?: 0) / 10f,
                             coverImage = edge.coverImage?.large!!,
-                            nextAiringEpisode = edge.nextAiringEpisode?.episode,
+                            episodesAired = edge.nextAiringEpisode?.episode?.minus(1),
                             episodes = edge.episodes,
                             chapters = edge.chapters,
                         )
@@ -160,7 +160,7 @@ abstract class BaseClient (
                             isAdult = node.isAdult ?: false,
                             meanScore = (node.meanScore ?: 0) / 10f,
                             coverImage = node.coverImage?.large!!,
-                            nextAiringEpisode = node.nextAiringEpisode?.episode,
+                            episodesAired = node.nextAiringEpisode?.episode?.minus(1),
                             episodes = node.episodes,
                             chapters = node.chapters,
                             relation = MediaRelationType[edge.relationType!!.name]

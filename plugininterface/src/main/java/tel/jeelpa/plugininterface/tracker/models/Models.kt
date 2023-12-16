@@ -78,7 +78,7 @@ data class MediaCardData(
     val coverImage: String?,
     val title: String,
     val episodes: Int?,
-    val nextAiringEpisode: Int?,
+    val episodesAired: Int?,
     val chapters: Int?,
 ) : Equitable, java.io.Serializable
 
@@ -94,7 +94,7 @@ data class MediaRelationCardData(
     val coverImage: String?,
     val title: String,
     val episodes: Int?,
-    val nextAiringEpisode: Int?,
+    val episodesAired: Int?,
     val chapters: Int?,
     val relation: MediaRelationType,
 ): Equitable {
@@ -104,7 +104,7 @@ data class MediaRelationCardData(
             status,meanScore,
             userWatched, //userListStatus,
             coverImage, title, episodes,
-            nextAiringEpisode,
+            episodesAired,
             chapters
         )
     }
@@ -117,7 +117,7 @@ fun MediaCardData.withRelation(relation: MediaRelationType): MediaRelationCardDa
         status,meanScore,
         userWatched, //userListStatus,
         coverImage, title, episodes,
-        nextAiringEpisode,
+        episodesAired,
         chapters, relation
     )
 }

@@ -55,7 +55,7 @@ class RelationsAdapter(
                 AppMediaType.ANIME -> binding.root.context.getString(
                     R.string.media_release_data,
                     "~",
-                    (entry.nextAiringEpisode ?: entry.episodes ?: "~").toString() ,
+                    (entry.episodesAired ?: entry.episodes ?: "~").toString() ,
                     (entry.episodes ?: "~").toString()
                 )
 
