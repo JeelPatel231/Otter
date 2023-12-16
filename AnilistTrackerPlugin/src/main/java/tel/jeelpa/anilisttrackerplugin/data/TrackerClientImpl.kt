@@ -25,14 +25,19 @@ import tel.jeelpa.anilisttrackerplugin.models.toApp
 import tel.jeelpa.otter.anilisttrackerplugin.models.CurrentUserMediaQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetUserRecommendationsQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetViewerDataQuery
+import tel.jeelpa.otter.anilisttrackerplugin.models.UpdateMediaDetailsMutation
+import tel.jeelpa.otter.anilisttrackerplugin.models.type.FuzzyDateInput
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaListStatus
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
 import tel.jeelpa.plugininterface.storage.UserStorage
 import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.User
+import tel.jeelpa.plugininterface.tracker.models.UserMediaAnime
+import tel.jeelpa.plugininterface.tracker.models.UserMediaManga
 import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import java.net.URI
+import java.time.LocalDate
 
 
 class AuthorizationInterceptor(
@@ -132,7 +137,28 @@ class TrackerClientImpl(
         return loggedInUserCache!!
     }
 
-    override suspend fun updateMedia(id: Int, score: Int, mediaListStatus: AppMediaListStatus) {
+    private fun LocalDate.toAnilist() : FuzzyDateInput {
+        return FuzzyDateInput(
+            year = Optional.presentIfNotNull(year),
+            month = Optional.presentIfNotNull(monthValue),
+            day = Optional.presentIfNotNull(dayOfMonth)
+        )
+    }
+
+    private fun AppMediaListStatus.toAnilist(): MediaListStatus {
+        return MediaListStatus.safeValueOf(this.name)
+    }
+
+    override suspend fun updateAnime(id: Int, status: UserMediaAnime) {
+        anilistApolloClient.mutation(UpdateMediaDetailsMutation(
+            mediaId = id,
+            status = status.status.toAnilist(),
+            progress = status.watched,
+            startedAt = Optional.presentIfNotNull(status.startDate?.toAnilist())
+        )).execute()
+    }
+
+    override suspend fun updateManga(id: Int, status: UserMediaManga) {
         TODO("Not yet implemented")
     }
 

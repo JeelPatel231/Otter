@@ -2,9 +2,10 @@ package tel.jeelpa.plugininterface.tracker.repository
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.User
+import tel.jeelpa.plugininterface.tracker.models.UserMediaAnime
+import tel.jeelpa.plugininterface.tracker.models.UserMediaManga
 
 interface UserClient {
     val loginUri: String
@@ -17,7 +18,9 @@ interface UserClient {
 
     suspend fun getUser(): User
 
-    suspend fun updateMedia(id: Int, score: Int, mediaListStatus: AppMediaListStatus)
+    suspend fun updateAnime(id: Int, status: UserMediaAnime)
+
+    suspend fun updateManga(id: Int, status: UserMediaManga)
 
     fun getCurrentAnime(): Flow<PagingData<MediaCardData>>
 

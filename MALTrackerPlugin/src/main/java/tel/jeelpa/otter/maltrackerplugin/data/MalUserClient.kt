@@ -11,9 +11,10 @@ import okhttp3.Request
 import tel.jeelpa.otter.maltrackerplugin.models.MalUser
 import tel.jeelpa.plugininterface.helpers.parsed
 import tel.jeelpa.plugininterface.storage.UserStorage
-import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.User
+import tel.jeelpa.plugininterface.tracker.models.UserMediaAnime
+import tel.jeelpa.plugininterface.tracker.models.UserMediaManga
 import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import java.net.URI
 import java.security.SecureRandom
@@ -78,7 +79,11 @@ class MalUserClient(
         )
     }
 
-    override suspend fun updateMedia(id: Int, score: Int, mediaListStatus: AppMediaListStatus) {
+    override suspend fun updateAnime(id: Int, status: UserMediaAnime) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateManga(id: Int, status: UserMediaManga) {
         TODO("Not yet implemented")
     }
 
