@@ -7,16 +7,17 @@ import tel.jeelpa.plugininterface.storage.UserStorage
 import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
 
 class ClientHolderImpl(
-    userStorage: UserStorage,
-    private val anilistClient: ApolloClient = buildAnilistApolloClient(),
+    private val userStorage: UserStorage,
     okHttpClient: OkHttpClient = buildOkHttpClient(),
 ) : ClientHolder() {
     override val uniqueId = "ANILIST"
 
+    private val anilistClient = ApolloClient.Builder()
+        .serverUrl("https://graphql.anilist.co")
+        .addHttpInterceptor(AuthorizationInterceptor(userStorage))
+        .build()
+
     companion object {
-        private fun buildAnilistApolloClient() = ApolloClient.Builder()
-            .serverUrl("https://graphql.anilist.co")
-            .build()
 
         private fun buildOkHttpClient() = OkHttpClient.Builder()
             .build()
@@ -29,7 +30,7 @@ class ClientHolderImpl(
     }
 
     // can be static, it doesn't hold any cache
-    override val userClient = TrackerClientImpl(anilistData, okHttpClient, userStorage)
+    override val userClient = TrackerClientImpl(anilistData, okHttpClient, userStorage, anilistClient)
     override val mangaClient = MangaClientImpl(anilistClient)
     override val characterClient = CharacterClientImpl(anilistClient)
 

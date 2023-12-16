@@ -10,7 +10,7 @@ import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
@@ -42,25 +42,32 @@ import java.time.LocalDate
 
 class AuthorizationInterceptor(
     private val userStore: UserStorage,
-    val refreshCallback: () -> Unit,
+//    val refreshCallback: () -> Unit,
 ) : HttpInterceptor {
+    private fun HttpRequest.addTokenHeader(token: String) =
+        newBuilder().addHeader("Authorization", "Bearer $token").build()
+
     override suspend fun intercept(
         request: HttpRequest,
         chain: HttpInterceptorChain
     ): HttpResponse {
-        val stringData = userStore.loadData().first()
-            ?: throw IllegalStateException("User Not Logged In")
-        val token = Json.decodeFromString<AnilistResponseBody>(stringData).access_token
+        val stringData = userStore.loadData().firstOrNull()
 
-        val response =
-            chain.proceed(request.newBuilder().addHeader("Authorization", "Bearer $token").build())
+        val newReq = if (stringData != null) {
+            // get the token and use it
+            val token = Json.decodeFromString<AnilistResponseBody>(stringData).access_token
+            request.addTokenHeader(token)
+        } else request
 
-        return if (response.statusCode == 401) {
-            refreshCallback()
-            chain.proceed(request.newBuilder().addHeader("Authorization", "Bearer $token").build())
-        } else {
-            response
-        }
+        // the anilist token wont expire i think
+
+        // TODO : check body for cause of 401, is it really auth token?
+//        // if 401, refresh the token and use it
+//        if (response.statusCode == 401) {
+//            refreshCallback()
+//            return chain.proceed(request.addTokenHeader(token))
+//       }
+        return chain.proceed(newReq)
     }
 }
 
@@ -68,18 +75,11 @@ class TrackerClientImpl(
     private val anilistData: AnilistData,
     private val httpClient: OkHttpClient,
     private val userStore: UserStorage,
+    private val anilistApolloClient: ApolloClient
 ): UserClient {
+
     override val loginUri = "https://anilist.co/api/v2/oauth/authorize?client_id=${anilistData.id}&redirect_uri=${anilistData.redirectUri}&response_type=code"
     private var loggedInUserCache: User? = null
-
-    private fun refreshToken(){
-        TODO("Anilist Token Expired :scull: no way")
-    }
-
-    private val anilistApolloClient = ApolloClient.Builder()
-        .serverUrl("https://graphql.anilist.co")
-        .addHttpInterceptor(AuthorizationInterceptor(userStore, ::refreshToken))
-        .build()
 
     override fun isLoggedIn(): Flow<Boolean> = flow {
         emitAll(userStore.loadData().map { it != null })
