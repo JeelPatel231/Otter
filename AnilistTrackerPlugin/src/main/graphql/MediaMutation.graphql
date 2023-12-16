@@ -1,0 +1,37 @@
+mutation UpdateMediaDetails(
+    $mediaId: Int!,
+    $status: MediaListStatus!,
+    $score: Float,
+    $progress: Int!,
+    $startedAt: FuzzyDateInput,
+    $completedAt: FuzzyDateInput
+) {
+    SaveMediaListEntry (
+        score: $score,
+        mediaId: $mediaId,
+        status: $status,
+        progress: $progress,
+        startedAt: $startedAt,
+        completedAt: $completedAt
+    ) {
+        id
+        status
+        score
+        startedAt {
+            year
+            month
+            day
+        }
+        completedAt {
+            year
+            month
+            day
+        }
+    }
+}
+
+mutation DeleteMediaFromList($mediaId: Int!) {
+    DeleteMediaListEntry(id: $mediaId) {
+        deleted
+    }
+}
