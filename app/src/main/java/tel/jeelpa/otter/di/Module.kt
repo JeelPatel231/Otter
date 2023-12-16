@@ -19,16 +19,19 @@ import tel.jeelpa.otter.plugins.ExtractorManager
 import tel.jeelpa.otter.plugins.ParserManager
 import tel.jeelpa.otter.plugins.PluginInitializer
 import tel.jeelpa.otter.plugins.PluginRegistrarImpl
+import tel.jeelpa.otter.plugins.TrackerManager
+import tel.jeelpa.otter.triggers.RefreshTrigger
+import tel.jeelpa.otter.triggers.RefreshableFlow
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromUri
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
 import tel.jeelpa.plugininterface.AppGivenDependencies
 import tel.jeelpa.plugininterface.PluginRegistrar
 import tel.jeelpa.plugininterface.storage.UserStorage
-import tel.jeelpa.otter.plugins.TrackerManager
 import java.io.File
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import javax.inject.Named
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -141,6 +144,31 @@ class DIModule {
 
 }
 
+@Module
+@InstallIn(SingletonComponent::class)
+class RefreshTriggersModule  {
+
+    /**
+     * Naming Convention :
+     *  - Actual Trigger -> XTrigger
+     *  - RefreshableFlow -> XRefreshFlow
+     *
+     *  where XRefreshFlow is added to kotlin flows and XTrigger will force
+     *  the XRefreshFlow to RESTART
+     **/
+    @Provides
+    @Singleton
+    @Named("UserDataRefreshFlow")
+    fun providesUserDataRefreshFlow() = RefreshableFlow()
+
+    @Provides
+    @Singleton
+    @Named("UserDataRefreshTrigger")
+    fun providesUserDataRefreshTrigger(
+        @Named("UserDataRefreshFlow") refreshableFlow: RefreshableFlow
+    ) =  RefreshTrigger(refreshableFlow)
+
+}
 
 @Module
 @InstallIn(FragmentComponent::class)
