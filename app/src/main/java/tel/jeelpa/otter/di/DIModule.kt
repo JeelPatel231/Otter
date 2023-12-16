@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.models.TrackerStoreImpl
 import tel.jeelpa.otter.models.UserStore
-import tel.jeelpa.plugininterface.storage.UserStorage
 import tel.jeelpa.otter.plugins.TrackerManager
 import tel.jeelpa.otter.plugins.TrackerStore
+import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
+import tel.jeelpa.plugininterface.storage.UserStorage
 import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
 import tel.jeelpa.plugininterface.tracker.repository.CharacterClient
 import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
@@ -71,14 +72,26 @@ class DILibModule {
 
 }
 
+
 @Module
-@InstallIn(ViewModelComponent::class)
-class ViewModelScopeClients {
+@InstallIn(SingletonComponent::class)
+class UserClientSingletonModule {
     @Provides
-    @ViewModelScoped
+    @Singleton
     //Private
     fun providesUserClient(clientHolder: ClientHolder): UserClient =
         clientHolder.userClient
+
+    @Provides
+    @Singleton
+    fun providesMediaEditorBottomSheetFactory(client: UserClient) =
+        MediaEditorBottomSheetFactory(client)
+
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class ViewModelScopeClients {
 
     @Provides
     @ViewModelScoped

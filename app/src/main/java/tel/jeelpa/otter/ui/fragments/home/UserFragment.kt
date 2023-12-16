@@ -14,20 +14,29 @@ import tel.jeelpa.otter.R
 import tel.jeelpa.otter.activities.SettingsActivity
 import tel.jeelpa.otter.databinding.FragmentUserBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardPagingAdapter
+import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class UserFragment : Fragment() {
 
     private var binding: FragmentUserBinding by autoCleared()
     private val userViewModel: UserViewModel by viewModels()
+    @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
 
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
+
+    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
+        val bottomSheet = getMediaEditorBottomSheet(mediaCardData.id, mediaCardData.type)
+        bottomSheet.show(parentFragmentManager, null)
+        return true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,19 +64,19 @@ class UserFragment : Fragment() {
         }
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem),
             binding.animeContinue,
             userViewModel.currentAnime
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem),
             binding.mangaContinue,
             userViewModel.currentManga
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem),
             binding.recommendations,
             userViewModel.recommendations
         )

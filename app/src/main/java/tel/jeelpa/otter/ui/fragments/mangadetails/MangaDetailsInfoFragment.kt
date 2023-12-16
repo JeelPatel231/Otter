@@ -16,6 +16,7 @@ import tel.jeelpa.otter.ui.adapters.CharacterCardAdapter
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
 import tel.jeelpa.otter.ui.fragments.character.CharacterActivity
+import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.initRecycler
@@ -29,12 +30,17 @@ import javax.inject.Inject
 class MangaDetailsInfoFragment : Fragment() {
     private var binding: MediaInfoLayoutBinding by autoCleared()
     private val mangaDetailsViewModel: MangaDetailsViewModel by activityViewModels()
-
+    @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
     @Inject lateinit var markwon: Markwon
 
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
 
+    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
+        val bottomSheet = getMediaEditorBottomSheet(mediaCardData.id, mediaCardData.type)
+        bottomSheet.show(parentFragmentManager, null)
+        return true
+    }
 
     override fun onResume() {
         super.onResume()
@@ -65,7 +71,7 @@ class MangaDetailsInfoFragment : Fragment() {
         )
 
         initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+            MediaCardAdapter(::navigateToDetails, ::editMediaItem),
             binding.recommendationRecyclerView,
             mangaDetailsViewModel.mangaDetails,
             flowData = { it.recommendation }

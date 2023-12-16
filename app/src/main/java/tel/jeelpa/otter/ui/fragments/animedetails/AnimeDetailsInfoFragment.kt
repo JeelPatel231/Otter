@@ -19,6 +19,7 @@ import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
 import tel.jeelpa.otter.ui.adapters.RelationsAdapter
 import tel.jeelpa.otter.ui.adapters.SimpleTextRecyclerAdapter
 import tel.jeelpa.otter.ui.fragments.character.CharacterActivity
+import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.copyToClipboard
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
@@ -35,10 +36,17 @@ import javax.inject.Inject
 class AnimeDetailsInfoFragment: Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
     private var binding: MediaInfoLayoutBinding by autoCleared()
+    @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
     @Inject lateinit var markwon: Markwon
 
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
+
+    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
+        val bottomSheet = getMediaEditorBottomSheet(mediaCardData.id, mediaCardData.type)
+        bottomSheet.show(parentFragmentManager, null)
+        return true
+    }
 
     override fun onResume() {
         super.onResume()
@@ -64,7 +72,7 @@ class AnimeDetailsInfoFragment: Fragment() {
         )
 
         initRecycler(
-            MediaCardAdapter(::navigateToDetails),
+            MediaCardAdapter(::navigateToDetails, ::editMediaItem),
             binding.recommendationRecyclerView,
             animeDetailsViewModel.animeDetails,
             flowData = { it.recommendation }

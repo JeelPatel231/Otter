@@ -12,7 +12,8 @@ import tel.jeelpa.plugininterface.tracker.models.AppMediaType
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 
 class MediaCardAdapter(
-    private val onItemClick : (MediaCardData) -> Unit
+    private val onItemClick : (MediaCardData) -> Unit,
+    private val onItemLongClick : (MediaCardData) -> Boolean,// = { false },
 ): GenericListAdapter<Int, MediaCardData, MediaSmallLayoutBinding>(
     primaryKey = { id }
 ) {
@@ -20,6 +21,11 @@ class MediaCardAdapter(
         binding.root.setOnClickListener {
             onItemClick(entry)
         }
+
+        binding.root.setOnLongClickListener {
+            onItemLongClick(entry)
+        }
+
         binding.coverImage.load(entry.coverImage){
             scale(Scale.FILL)
         }
@@ -56,7 +62,8 @@ class MediaCardAdapter(
 }
 
 class MediaCardPagingAdapter(
-    private val onItemClick : (MediaCardData) -> Unit
+    private val onItemClick : (MediaCardData) -> Unit,
+    private val onItemLongClick : (MediaCardData) -> Boolean,// = { false },
 ): GenericPagingAdapter<Int, MediaCardData, MediaSmallLayoutBinding>(
     primaryKey = { id }
 ) {
@@ -64,6 +71,11 @@ class MediaCardPagingAdapter(
         binding.root.setOnClickListener {
             onItemClick(entry)
         }
+
+        binding.root.setOnLongClickListener {
+            onItemLongClick(entry)
+        }
+
         binding.coverImage.load(entry.coverImage){
             scale(Scale.FILL)
         }

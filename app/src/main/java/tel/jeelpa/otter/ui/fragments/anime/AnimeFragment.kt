@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardPagingAdapter
+import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
@@ -20,12 +21,13 @@ import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.nullOnBlank
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class AnimeFragment : Fragment() {
     private var binding: MediaHomePageLayoutBinding by autoCleared()
-
+    @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
     private val animeHomeViewModel: AnimeFragmentViewModel by viewModels()
 
     private fun navigateToDetails(mediaCardData: MediaCardData) =
@@ -51,18 +53,19 @@ class AnimeFragment : Fragment() {
         super.onResume()
     }
 
-    // Do i even need to handle flow? its single producer single consumer
-    // i think the memory should be released when the consumer is gone
-//    private var searchJob: Job? = null
     private fun observeSearchFlow(query: String){
-//        searchJob?.cancel()?.let { showToast("WAS SET, CANCELLED") }
-//        searchJob =
-            animeHomeViewModel.searchResults(query).observeFlow(viewLifecycleOwner){
+        animeHomeViewModel.searchResults(query).observeFlow(viewLifecycleOwner){
             searchResultsAdapter.submitData(it)
         }
     }
 
-    private val searchResultsAdapter = MediaCardPagingAdapter(::navigateToDetails)
+    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
+        val bottomSheet = getMediaEditorBottomSheet(mediaCardData.id, mediaCardData.type)
+        bottomSheet.show(parentFragmentManager, null)
+        return true
+    }
+
+    private val searchResultsAdapter = MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,19 +95,19 @@ class AnimeFragment : Fragment() {
 
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails,  ::editMediaItem),
             binding.firstRowRecycler,
             animeHomeViewModel.trendingAnime
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails,  ::editMediaItem),
             binding.secondRowRecycler,
             animeHomeViewModel.recentlyUpdated
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails,  ::editMediaItem),
             binding.thirdRowRecycler,
             animeHomeViewModel.popularAnime
         )

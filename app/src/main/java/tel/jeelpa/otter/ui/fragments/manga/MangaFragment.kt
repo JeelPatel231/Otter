@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardPagingAdapter
+import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
@@ -20,17 +21,25 @@ import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.nullOnBlank
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MangaFragment : Fragment() {
     private var binding: MediaHomePageLayoutBinding by autoCleared()
     private val mangaFragmentViewModel: MangaFragmentViewModel by viewModels()
+    @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
 
+
+    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
+        val bottomSheet = getMediaEditorBottomSheet(mediaCardData.id, mediaCardData.type)
+        bottomSheet.show(parentFragmentManager, null)
+        return true
+    }
 
     private fun navigateToDetails(mediaCardData: MediaCardData) =
         requireContext().navigateToMediaDetails(mediaCardData)
 
-    private val searchResultsAdapter = MediaCardPagingAdapter(::navigateToDetails)
+    private val searchResultsAdapter = MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem)
 
     private val backPressedCallback by lazy {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -85,19 +94,19 @@ class MangaFragment : Fragment() {
         }
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem),
             binding.firstRowRecycler,
             mangaFragmentViewModel.trendingManga
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem),
             binding.secondRowRecycler,
             mangaFragmentViewModel.popularManga
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails),
+            MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem),
             binding.thirdRowRecycler,
             mangaFragmentViewModel.trendingNovel
         )
