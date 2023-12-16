@@ -36,8 +36,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.ui.fragments.animedetails.AnimeActivity
@@ -152,8 +151,7 @@ fun <X> Flow<X>.observeFlow(lifecycleOwner: LifecycleOwner, callback: suspend (X
         ).collect(callback)
     }
 
-fun <X> suspendToFlow(callback: suspend () -> X): Flow<X> = flow { emit(callback()) }
-fun <X> suspendToChannelFlow(callback: suspend () -> X): Flow<X> = channelFlow { send(callback()) }
+fun <X> suspendToFlow(callback: suspend () -> X): Flow<X> = suspend { callback() }.asFlow()
 
 fun <X> Flow<X>.cacheInScope(coroutineScope: CoroutineScope) =
     shareIn(coroutineScope, SharingStarted.Eagerly, 1)
