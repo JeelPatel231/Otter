@@ -14,6 +14,7 @@ import tel.jeelpa.otter.databinding.MediaUpdateBottomSheetBinding
 import tel.jeelpa.otter.triggers.RefreshTrigger
 import tel.jeelpa.otter.ui.generic.InputFilterMinMax
 import tel.jeelpa.otter.ui.generic.autoCleared
+import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.UserMediaAnime
@@ -86,11 +87,15 @@ class MediaEditorBottomSheet(
         binding.spinner.setAdapter(spinnerAdapter)
         binding.spinner.setText(media.userListStatus.emptyOnUnknown())
 
-        binding.mediaDetails.text = "Edit ${media.title}"
+        binding.mediaDetails.text = "Update ${media.title}"
         binding.progress.setText((media.userWatched ?: "").toString())
 
         binding.saveBtn.setOnClickListener {
             lifecycleScope.launch { updateData() }
+        }
+
+        binding.deleteBtn.setOnClickListener {
+            showToast("TODO: Not Implemented")
         }
 
         return binding.root
