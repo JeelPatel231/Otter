@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,20 +14,27 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import tel.jeelpa.otter.OnBoardingActivity
 import tel.jeelpa.otter.databinding.ActivitySettingsBinding
+import tel.jeelpa.otter.models.SettingsStore
+import tel.jeelpa.otter.plugins.TrackerManager
+import tel.jeelpa.otter.plugins.TrackerStore
+import tel.jeelpa.otter.triggers.RefreshTrigger
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
+import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.restartApp
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.plugininterface.storage.UserStorage
-import tel.jeelpa.otter.plugins.TrackerManager
-import tel.jeelpa.otter.plugins.TrackerStore
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     val trackerStore: TrackerStore,
     private val trackerManager: TrackerManager,
     val userStorage: UserStorage,
+    val settingsStore: SettingsStore,
+
+    @Named("UserDataRefreshTrigger") val userDataRefreshTrigger: RefreshTrigger
 ) : ViewModel() {
     val trackers
         get() = trackerManager.trackers
@@ -103,6 +111,20 @@ class SettingsActivity : AppCompatActivity() {
                 } else {
                     showToast("No Changes were made.")
                 }
+            }
+        }
+
+
+        // Live Refresh
+        settingsViewModel.settingsStore.liveRefresh.get().observeFlow(this) {
+            if(it) settingsViewModel.userDataRefreshTrigger()
+            binding.liveRefreshToggle.isChecked = it
+        }
+
+        binding.liveRefreshToggle.setOnClickListener {
+            val value = (it as SwitchCompat).isChecked
+            lifecycleScope.launch {
+                settingsViewModel.settingsStore.liveRefresh.set(value)
             }
         }
 

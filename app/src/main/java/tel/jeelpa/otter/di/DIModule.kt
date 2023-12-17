@@ -9,6 +9,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import tel.jeelpa.otter.models.SettingsStore
 import tel.jeelpa.otter.models.TrackerStoreImpl
 import tel.jeelpa.otter.models.UserStore
 import tel.jeelpa.otter.plugins.TrackerManager
@@ -40,6 +41,12 @@ class DILibModule {
     @Singleton
     fun providesTrackerStore(application: Application): TrackerStore {
         return TrackerStoreImpl(application)
+    }
+
+    @Provides
+    @Singleton
+    fun providesSettingsOfApp(application: Application) : SettingsStore {
+        return SettingsStore(application)
     }
 
     @Provides
