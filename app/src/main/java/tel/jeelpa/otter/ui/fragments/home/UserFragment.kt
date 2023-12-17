@@ -33,7 +33,7 @@ class UserFragment : Fragment() {
         requireContext().navigateToMediaDetails(mediaCardData)
 
     private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
-        val bottomSheet = getMediaEditorBottomSheet(mediaCardData.id, mediaCardData.type)
+        val bottomSheet = getMediaEditorBottomSheet(mediaCardData)
         bottomSheet.show(parentFragmentManager, null)
         return true
     }

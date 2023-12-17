@@ -196,6 +196,13 @@ query getMediaDetails($id: Int!){
                         }
                         episodes
                         chapters
+
+                        mediaListEntry {
+                            progress
+                            private
+                            score(format: POINT_100)
+                            status
+                        }
                     }
                 }
             }
@@ -224,6 +231,13 @@ query getMediaDetails($id: Int!){
                     }
                     episodes
                     chapters
+
+                    mediaListEntry {
+                        progress
+                        private
+                        score(format: POINT_100)
+                        status
+                    }
                 }
             }
         }

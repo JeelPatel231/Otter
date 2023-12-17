@@ -13,6 +13,7 @@ import tel.jeelpa.otter.models.TrackerStoreImpl
 import tel.jeelpa.otter.models.UserStore
 import tel.jeelpa.otter.plugins.TrackerManager
 import tel.jeelpa.otter.plugins.TrackerStore
+import tel.jeelpa.otter.triggers.RefreshTrigger
 import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.plugininterface.storage.UserStorage
 import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
@@ -84,8 +85,10 @@ class UserClientSingletonModule {
 
     @Provides
     @Singleton
-    fun providesMediaEditorBottomSheetFactory(client: UserClient) =
-        MediaEditorBottomSheetFactory(client)
+    fun providesMediaEditorBottomSheetFactory(
+        client: UserClient,
+        @Named("UserDataRefreshTrigger") userDataRefreshTrigger: RefreshTrigger
+    ) = MediaEditorBottomSheetFactory(client, userDataRefreshTrigger)
 
 }
 

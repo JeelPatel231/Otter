@@ -73,8 +73,9 @@ data class MediaCardData(
     val isAdult: Boolean,
     val status: AppMediaStatus,
     val meanScore: Float,
+    val userScore: Double?, //? = null, // null when not logged in or not in list
     val userWatched: Int? = null, // null when not logged in or not in list
-//    val userListStatus: AppMediaListStatus = AppMediaListStatus.UNKNOWN,
+    val userListStatus: AppMediaListStatus, // = AppMediaListStatus.UNKNOWN,
     val coverImage: String?,
     val title: String,
     val episodes: Int?,
@@ -89,8 +90,9 @@ data class MediaRelationCardData(
     val isAdult: Boolean,
     val status: AppMediaStatus,
     val meanScore: Float,
+    val userScore: Double?, //? = null, // null when not logged in or not in list
     val userWatched: Int? = null, // null when not logged in or not in list
-//    val userListStatus: AppMediaListStatus = AppMediaListStatus.UNKNOWN,
+    val userListStatus: AppMediaListStatus, // = AppMediaListStatus.UNKNOWN,
     val coverImage: String?,
     val title: String,
     val episodes: Int?,
@@ -101,8 +103,8 @@ data class MediaRelationCardData(
     fun toMediaCardData() : MediaCardData {
         return MediaCardData(
             id, type, isAdult,
-            status,meanScore,
-            userWatched, //userListStatus,
+            status,meanScore, userScore,
+            userWatched, userListStatus,
             coverImage, title, episodes,
             episodesAired,
             chapters
@@ -114,8 +116,8 @@ data class MediaRelationCardData(
 fun MediaCardData.withRelation(relation: MediaRelationType): MediaRelationCardData {
     return MediaRelationCardData(
         id, type, isAdult,
-        status,meanScore,
-        userWatched, //userListStatus,
+        status,meanScore, userScore,
+        userWatched, userListStatus,
         coverImage, title, episodes,
         episodesAired,
         chapters, relation
@@ -139,7 +141,11 @@ enum class MediaRelationType(val value: String) {
     UNKNOWN("UNKNOWN");
 
     companion object {
-        operator fun get(value: String): MediaRelationType = MediaRelationType.values().find { it.value.equals(value, ignoreCase = true) } ?: UNKNOWN
+        operator fun get(value: String): MediaRelationType =
+            MediaRelationType
+                .values()
+                .find { it.value.equals(value, ignoreCase = true) }
+                ?: UNKNOWN
     }
 }
 

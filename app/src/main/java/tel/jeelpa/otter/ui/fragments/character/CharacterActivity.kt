@@ -25,7 +25,7 @@ class CharacterActivity : AppCompatActivity() {
     private val characterDataViewModel: CharacterViewModel by viewModels()
 
     private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
-        val bottomSheet = getMediaEditorBottomSheet(mediaCardData.id, mediaCardData.type)
+        val bottomSheet = getMediaEditorBottomSheet(mediaCardData)
         bottomSheet.show(supportFragmentManager, null)
         return true
     }

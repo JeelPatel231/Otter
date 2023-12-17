@@ -62,7 +62,9 @@ data class Node(
             status = AppMediaStatus.UNKNOWN,
             title = title,
             type = mediaTypeToApp(media_type),
-            episodesAired = null
+            episodesAired = null,
+            userListStatus = AppMediaListStatus.UNKNOWN,//it.mediaListEntry?.status.toApp(),
+            userScore = null,
         )
     }
 }

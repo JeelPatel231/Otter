@@ -192,7 +192,9 @@ class TrackerClientImpl(
                 episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                 episodes = it.episodes,
                 chapters = it.chapters,
-                userWatched = it.mediaListEntry?.progress
+                userWatched = it.mediaListEntry?.progress,
+                userListStatus = it.mediaListEntry?.status.toApp(),
+                userScore = it.mediaListEntry?.score,
             )
         }
 
@@ -214,7 +216,9 @@ class TrackerClientImpl(
                 episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                 episodes = it.episodes,
                 chapters = it.chapters,
-                userWatched = it.mediaListEntry?.progress
+                userWatched = it.mediaListEntry?.progress,
+                userListStatus = it.mediaListEntry?.status.toApp(),
+                userScore = it.mediaListEntry?.score,
             )
         }
 
@@ -241,7 +245,9 @@ class TrackerClientImpl(
                     episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                     episodes = it.episodes,
                     chapters = it.chapters,
-                    userWatched = it.mediaListEntry?.progress
+                    userWatched = it.mediaListEntry?.progress,
+                    userListStatus = it.mediaListEntry?.status.toApp(),
+                    userScore = it.mediaListEntry?.score,
                 )
             } ?: emptyList()
 

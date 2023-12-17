@@ -54,6 +54,8 @@ class CharacterClientImpl(
                     episodes = m.episodes,
                     chapters = m.chapters,
                     userWatched = m.mediaListEntry?.progress,
+                    userListStatus = m.mediaListEntry?.status.toApp(),
+                    userScore = m.mediaListEntry?.score
                 )
             } ?: emptyList()
 

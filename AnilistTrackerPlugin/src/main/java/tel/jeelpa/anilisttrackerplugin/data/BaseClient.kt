@@ -61,7 +61,9 @@ abstract class BaseClient (
                 episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                 episodes = it.episodes,
                 chapters = it.chapters,
-                userWatched = it.mediaListEntry?.progress
+                userWatched = it.mediaListEntry?.progress,
+                userListStatus = it.mediaListEntry?.status.toApp(),
+                userScore = it.mediaListEntry?.score,
             )
         } } ?: emptyList()
     }
@@ -94,7 +96,9 @@ abstract class BaseClient (
                     episodesAired = it.nextAiringEpisode?.episode?.minus(1),
                     episodes = it.episodes,
                     chapters = it.chapters,
-                    userWatched = it.mediaListEntry?.progress
+                    userWatched = it.mediaListEntry?.progress,
+                    userListStatus = it.mediaListEntry?.status.toApp(),
+                    userScore = it.mediaListEntry?.score,
                 )
             }
         } ?: emptyList()
@@ -147,6 +151,8 @@ abstract class BaseClient (
                             episodesAired = edge.nextAiringEpisode?.episode?.minus(1),
                             episodes = edge.episodes,
                             chapters = edge.chapters,
+                            userListStatus = edge.mediaListEntry?.status.toApp(),
+                            userScore = edge.mediaListEntry?.score,
                         )
                     } ?: emptyList(),
                 relations = relations?.edges?.mapNotNull { edge ->
@@ -163,7 +169,9 @@ abstract class BaseClient (
                             episodesAired = node.nextAiringEpisode?.episode?.minus(1),
                             episodes = node.episodes,
                             chapters = node.chapters,
-                            relation = MediaRelationType[edge.relationType!!.name]
+                            relation = MediaRelationType[edge.relationType!!.name],
+                            userListStatus = node.mediaListEntry?.status.toApp(),
+                            userScore = node.mediaListEntry?.score,
                         )
                     }
                 } ?: emptyList(),
