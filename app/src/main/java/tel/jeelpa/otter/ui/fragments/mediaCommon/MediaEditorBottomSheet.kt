@@ -42,7 +42,7 @@ class MediaEditorBottomSheet(
 
     private suspend fun updateData() = withContext(Dispatchers.IO){
         val appMediaListStatus = UserMediaAnime(
-            status = AppMediaListStatus.CURRENT,
+            status = AppMediaListStatus.valueOf(binding.spinner.text.toString()),
             finishDate = null,
             startDate = null,
             score = binding.score.text.toString().toFloatOrNull(),
