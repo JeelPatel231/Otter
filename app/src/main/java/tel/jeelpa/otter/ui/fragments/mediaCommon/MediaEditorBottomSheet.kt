@@ -84,13 +84,25 @@ class MediaEditorBottomSheet(
             AppMediaListStatus.entries.filter { it != AppMediaListStatus.UNKNOWN }
         )
 
-        binding.spinner.setAdapter(spinnerAdapter)
-        binding.spinner.setText(media.userListStatus.emptyOnUnknown())
+        binding.spinner.apply {
+            setAdapter(spinnerAdapter)
+
+            setText(media.userListStatus.emptyOnUnknown())
+
+            setOnItemClickListener { adapterView, _, idx, _ ->
+                val selected = adapterView.getItemAtPosition(idx) as AppMediaListStatus
+                if (selected == AppMediaListStatus.COMPLETED) {
+                    // if COMPLETED is selected, autofill the maximum available episodes
+                    binding.progress.setText((episodeMaxValue ?: "").toString())
+                }
+            }
+        }
 
         binding.mediaDetails.text = "Update ${media.title}"
         binding.progress.setText((media.userWatched ?: "").toString())
 
         binding.saveBtn.setOnClickListener {
+            // TODO: add checks for filling data before making api request
             lifecycleScope.launch { updateData() }
         }
 
