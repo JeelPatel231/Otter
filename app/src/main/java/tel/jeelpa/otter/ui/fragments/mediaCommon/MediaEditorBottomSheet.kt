@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +12,7 @@ import kotlinx.coroutines.withContext
 import tel.jeelpa.otter.databinding.MediaUpdateBottomSheetBinding
 import tel.jeelpa.otter.triggers.RefreshTrigger
 import tel.jeelpa.otter.ui.generic.InputFilterMinMax
+import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
@@ -78,7 +78,7 @@ class MediaEditorBottomSheet(
             binding.progress.setText(finalString)
         }
 
-        val spinnerAdapter = ArrayAdapter(
+        val spinnerAdapter = MaterialSpinnerAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             AppMediaListStatus.entries.filter { it != AppMediaListStatus.UNKNOWN }
