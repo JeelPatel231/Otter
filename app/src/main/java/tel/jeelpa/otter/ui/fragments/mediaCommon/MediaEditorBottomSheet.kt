@@ -77,14 +77,18 @@ class MediaEditorBottomSheet(
     ): View {
         binding = MediaUpdateBottomSheetBinding.inflate(inflater, container, false)
 
-        val episodeMaxValue = media.episodesAired ?: media.episodes
-        if(episodeMaxValue != null) {
-            binding.progress.filters = arrayOf(InputFilterMinMax(0, episodeMaxValue))
+        val mediaReleaseProgress = when(media.type) {
+            AppMediaType.ANIME -> media.episodesAired ?: media.episodes
+            AppMediaType.MANGA -> media.chapters
+            else -> null
+        }
+        if(mediaReleaseProgress != null) {
+            binding.progress.filters = arrayOf(InputFilterMinMax(0, mediaReleaseProgress))
         }
 
         binding.increment.setOnClickListener {
             val initialValue = binding.progress.text.toString().toIntOrNull() ?: 0
-            val finalString = initialValue.inc().coerceIn(0, episodeMaxValue).toString()
+            val finalString = initialValue.inc().coerceIn(0, mediaReleaseProgress).toString()
             binding.progress.setText(finalString)
         }
 
@@ -103,7 +107,7 @@ class MediaEditorBottomSheet(
                 val selected = adapterView.getItemAtPosition(idx) as AppMediaListStatus
                 if (selected == AppMediaListStatus.COMPLETED) {
                     // if COMPLETED is selected, autofill the maximum available episodes
-                    binding.progress.setText((episodeMaxValue ?: "").toString())
+                    binding.progress.setText((mediaReleaseProgress ?: "").toString())
                 }
             }
         }
