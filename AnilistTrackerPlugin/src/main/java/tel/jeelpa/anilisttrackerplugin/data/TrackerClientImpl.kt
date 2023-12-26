@@ -169,7 +169,9 @@ class TrackerClientImpl(
     }
 
     private suspend fun deleteMedia(id: Int) {
-        anilistApolloClient.mutation(DeleteMediaFromListMutation(id)).execute()
+        anilistApolloClient.mutation(DeleteMediaFromListMutation(
+            mediaId = id
+        )).execute()
     }
 
     override suspend fun deleteAnime(id: Int) = deleteMedia(id)

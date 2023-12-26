@@ -121,16 +121,19 @@ class MediaEditorBottomSheet(
         }
 
         binding.deleteBtn.setOnClickListener {
-            return@setOnClickListener showToast("Not Implemented")
-            lifecycleScope.launch {
-                when(media.type) {
-                    AppMediaType.ANIME -> client.deleteAnime(media.id)
-                    AppMediaType.MANGA -> client.deleteManga(media.id)
-                    AppMediaType.UNKNOWN -> error("Cannot delete unknown media type")
-                }
-                onUpdate()
-                dismiss()
-            }
+            showToast("Not Implemented")
+            /**
+             * This throws 400 for some reason, sometimes 401 too, WITH BEARER TOKEN // need to checkout why
+             */
+//            lifecycleScope.launch {
+//                when(media.type) {
+//                    AppMediaType.ANIME -> client.deleteAnime(media.id)
+//                    AppMediaType.MANGA -> client.deleteManga(media.id)
+//                    AppMediaType.UNKNOWN -> error("Cannot delete unknown media type")
+//                }
+//                onUpdate()
+//                dismiss()
+//            }
         }
 
         return binding.root

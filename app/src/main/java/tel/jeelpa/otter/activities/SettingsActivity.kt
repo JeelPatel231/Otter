@@ -109,7 +109,7 @@ class SettingsActivity : AppCompatActivity() {
                         restartApp(OnBoardingActivity::class.java)
                     }
                 } else {
-                    showToast("No Changes were made.")
+                    showToast("No Restart needed.")
                 }
             }
         }
