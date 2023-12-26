@@ -46,7 +46,7 @@ class MediaEditorBottomSheet(
             finishDate = null,
             startDate = null,
             score = binding.score.text.toString().toFloatOrNull(),
-            watched = binding.progress.text.toString().toInt()
+            watched = binding.progress.text.toString().toIntOrNull() ?: 0
         )
 
         client.updateAnime(media.id, appMediaListStatus)
