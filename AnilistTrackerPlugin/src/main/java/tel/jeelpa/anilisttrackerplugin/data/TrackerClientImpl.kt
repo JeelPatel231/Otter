@@ -165,13 +165,13 @@ class TrackerClientImpl(
     private suspend fun getUserMedia(
         userId: Int,
         type: MediaType? = null,
-        status: MediaListStatus
+        statusIn: List<MediaListStatus>
     ): List<CurrentUserMediaQuery.Media> {
         return anilistApolloClient.query(
             CurrentUserMediaQuery(
                 userId = userId,
                 type = Optional.present(type),
-                status = Optional.present(status)
+                statusIn = Optional.present(statusIn)
             )
         ).execute()
             .data?.MediaListCollection?.lists?.flatMap { it?.entries ?: emptyList() }
@@ -180,7 +180,7 @@ class TrackerClientImpl(
 
     override fun getCurrentAnime(): Flow<PagingData<MediaCardData>> = flow {
         val userId = getUser().userId
-        val listData = getUserMedia(userId, MediaType.ANIME, MediaListStatus.CURRENT).map {
+        val listData = getUserMedia(userId, MediaType.ANIME, listOf(MediaListStatus.CURRENT, MediaListStatus.PLANNING)).map {
             MediaCardData(
                 id = it.id,
                 title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
@@ -204,7 +204,7 @@ class TrackerClientImpl(
     override fun getCurrentManga(): Flow<PagingData<MediaCardData>> = flow {
         val userId = getUser().userId
         // anilist is not paged for user list
-        val listData = getUserMedia(userId, MediaType.MANGA, MediaListStatus.CURRENT).map {
+        val listData = getUserMedia(userId, MediaType.MANGA, listOf(MediaListStatus.CURRENT,MediaListStatus.PLANNING)).map {
             MediaCardData(
                 id = it.id,
                 title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,

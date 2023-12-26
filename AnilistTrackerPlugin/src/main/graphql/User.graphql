@@ -1,5 +1,5 @@
-query currentUserMedia($userId: Int!, $type: MediaType, $status: MediaListStatus){
-    MediaListCollection(userId: $userId, type: $type, status: $status , sort: UPDATED_TIME ) {
+query currentUserMedia($userId: Int!, $type: MediaType, $statusIn: [MediaListStatus]){
+    MediaListCollection(userId: $userId, type: $type, status_in: $statusIn , sort: UPDATED_TIME_DESC ) {
         lists {
             entries {
                 #                progress
