@@ -16,8 +16,10 @@ import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.plugininterface.tracker.models.AppMediaListStatus
+import tel.jeelpa.plugininterface.tracker.models.AppMediaType
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.models.UserMediaAnime
+import tel.jeelpa.plugininterface.tracker.models.UserMediaManga
 import tel.jeelpa.plugininterface.tracker.repository.UserClient
 
 
@@ -41,17 +43,25 @@ class MediaEditorBottomSheet(
     private var binding: MediaUpdateBottomSheetBinding by autoCleared()
 
     private suspend fun updateData() = withContext(Dispatchers.IO){
-        val appMediaListStatus = UserMediaAnime(
-            status = AppMediaListStatus.valueOf(binding.spinner.text.toString()),
-            finishDate = null,
-            startDate = null,
-            score = binding.score.text.toString().toFloatOrNull(),
-            watched = binding.progress.text.toString().toIntOrNull() ?: 0
-        )
+        when(media.type) {
+            AppMediaType.ANIME -> client.updateAnime(media.id, UserMediaAnime(
+                status = AppMediaListStatus.valueOf(binding.spinner.text.toString()),
+                finishDate = null,
+                startDate = null,
+                score = binding.score.text.toString().toFloatOrNull(),
+                watched = binding.progress.text.toString().toIntOrNull() ?: 0
+            ))
 
-        client.updateAnime(media.id, appMediaListStatus)
-        onUpdate()
-        dismiss()
+            AppMediaType.MANGA -> client.updateManga(media.id, UserMediaManga(
+                status = AppMediaListStatus.valueOf(binding.spinner.text.toString()),
+                finishDate = null,
+                startDate = null,
+                score = binding.score.text.toString().toFloatOrNull(),
+                chapters = binding.progress.text.toString().toIntOrNull() ?: 0,
+            ))
+
+            AppMediaType.UNKNOWN -> error("Cannot update media of unknown type")
+        }
     }
 
     private fun AppMediaListStatus.emptyOnUnknown() = when(this){
@@ -103,11 +113,24 @@ class MediaEditorBottomSheet(
 
         binding.saveBtn.setOnClickListener {
             // TODO: add checks for filling data before making api request
-            lifecycleScope.launch { updateData() }
+            lifecycleScope.launch {
+                updateData()
+                onUpdate()
+                dismiss()
+            }
         }
 
         binding.deleteBtn.setOnClickListener {
-            showToast("TODO: Not Implemented")
+            return@setOnClickListener showToast("Not Implemented")
+            lifecycleScope.launch {
+                when(media.type) {
+                    AppMediaType.ANIME -> client.deleteAnime(media.id)
+                    AppMediaType.MANGA -> client.deleteManga(media.id)
+                    AppMediaType.UNKNOWN -> error("Cannot delete unknown media type")
+                }
+                onUpdate()
+                dismiss()
+            }
         }
 
         return binding.root

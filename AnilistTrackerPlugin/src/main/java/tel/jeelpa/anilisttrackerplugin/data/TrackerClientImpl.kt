@@ -23,6 +23,7 @@ import tel.jeelpa.anilisttrackerplugin.models.AnilistRequestBody
 import tel.jeelpa.anilisttrackerplugin.models.AnilistResponseBody
 import tel.jeelpa.anilisttrackerplugin.models.toApp
 import tel.jeelpa.otter.anilisttrackerplugin.models.CurrentUserMediaQuery
+import tel.jeelpa.otter.anilisttrackerplugin.models.DeleteMediaFromListMutation
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetUserRecommendationsQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetViewerDataQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.UpdateMediaDetailsMutation
@@ -166,6 +167,14 @@ class TrackerClientImpl(
             startedAt = Optional.presentIfNotNull(status.startDate?.toAnilist())
         )).execute()
     }
+
+    private suspend fun deleteMedia(id: Int) {
+        anilistApolloClient.mutation(DeleteMediaFromListMutation(id)).execute()
+    }
+
+    override suspend fun deleteAnime(id: Int) = deleteMedia(id)
+
+    override suspend fun deleteManga(id: Int) = deleteMedia(id)
 
     private suspend fun getUserMedia(
         userId: Int,

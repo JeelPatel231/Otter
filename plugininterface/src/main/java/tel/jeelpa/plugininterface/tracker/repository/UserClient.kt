@@ -22,6 +22,10 @@ interface UserClient {
 
     suspend fun updateManga(id: Int, status: UserMediaManga)
 
+    suspend fun deleteAnime(id: Int)
+
+    suspend fun deleteManga(id: Int)
+
     fun getCurrentAnime(): Flow<PagingData<MediaCardData>>
 
     fun getCurrentManga(): Flow<PagingData<MediaCardData>>
