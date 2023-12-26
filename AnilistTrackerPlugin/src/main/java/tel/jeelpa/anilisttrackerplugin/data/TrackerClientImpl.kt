@@ -159,7 +159,12 @@ class TrackerClientImpl(
     }
 
     override suspend fun updateManga(id: Int, status: UserMediaManga) {
-        TODO("Not yet implemented")
+        anilistApolloClient.mutation(UpdateMediaDetailsMutation(
+            mediaId = id,
+            status = status.status.toAnilist(),
+            progress = status.chapters,
+            startedAt = Optional.presentIfNotNull(status.startDate?.toAnilist())
+        )).execute()
     }
 
     private suspend fun getUserMedia(

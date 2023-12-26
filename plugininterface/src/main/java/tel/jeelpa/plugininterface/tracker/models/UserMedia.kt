@@ -12,7 +12,7 @@ data class UserMediaAnime(
 
 data class UserMediaManga(
     val status: AppMediaListStatus,
-    val volumes: Int,
+//    val volumes: Int,
     val chapters: Int,
     val score: Float?,
     val startDate: LocalDate?,
