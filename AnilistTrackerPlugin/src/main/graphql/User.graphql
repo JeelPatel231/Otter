@@ -16,6 +16,7 @@ query currentUserMedia($userId: Int!, $type: MediaType, $statusIn: [MediaListSta
                     episodes
                     nextAiringEpisode {
                         episode
+                        airingAt
                     }
                     meanScore
                     isFavourite
@@ -101,6 +102,7 @@ query getUserRecommendations {
                 episodes
                 nextAiringEpisode {
                     episode
+                    airingAt
                 }
                 popularity
                 meanScore

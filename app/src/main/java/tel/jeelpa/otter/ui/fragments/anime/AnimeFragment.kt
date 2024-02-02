@@ -9,17 +9,19 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.MediaHomePageLayoutBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardPagingAdapter
-import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
-import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.nullOnBlank
 import tel.jeelpa.otter.ui.generic.observeFlow
+import tel.jeelpa.otter.usecases.EditMediaStatusUseCase
+import tel.jeelpa.otter.usecases.GetNavigationUseCase
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import javax.inject.Inject
 
@@ -27,11 +29,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AnimeFragment : Fragment() {
     private var binding: MediaHomePageLayoutBinding by autoCleared()
-    @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
+    @Inject lateinit var editMediaStatusUseCase: EditMediaStatusUseCase
+    @Inject lateinit var navigate: GetNavigationUseCase
     private val animeHomeViewModel: AnimeFragmentViewModel by viewModels()
-
-    private fun navigateToDetails(mediaCardData: MediaCardData) =
-        requireContext().navigateToMediaDetails(mediaCardData)
 
     private val backPressedCallback by lazy {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -53,24 +53,21 @@ class AnimeFragment : Fragment() {
         super.onResume()
     }
 
-    private fun observeSearchFlow(query: String){
+    private fun <VH : RecyclerView.ViewHolder> PagingDataAdapter<MediaCardData, VH>.observeSearchFlow(query: String){
         animeHomeViewModel.searchResults(query).observeFlow(viewLifecycleOwner){
-            searchResultsAdapter.submitData(it)
+            submitData(it)
         }
     }
 
-    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
-        val bottomSheet = getMediaEditorBottomSheet(mediaCardData)
-        bottomSheet.show(parentFragmentManager, null)
-        return true
-    }
-
-    private val searchResultsAdapter = MediaCardPagingAdapter(::navigateToDetails, ::editMediaItem)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val editMediaItem = editMediaStatusUseCase.forFragment(requireActivity())
+
+        val searchResultsAdapter = MediaCardPagingAdapter(navigate::invoke, editMediaItem::invoke)
+
         binding = MediaHomePageLayoutBinding.inflate(inflater, container, false)
 
         binding.firstRowText.text = getString(R.string.trending_anime)
@@ -86,7 +83,7 @@ class AnimeFragment : Fragment() {
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 textView.text.toString().nullOnBlank()?.let {
-                    observeSearchFlow(it)
+                    searchResultsAdapter.observeSearchFlow(it)
                     return@setOnEditorActionListener true
                 }
             }
@@ -95,19 +92,19 @@ class AnimeFragment : Fragment() {
 
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails,  ::editMediaItem),
+            MediaCardPagingAdapter(navigate::invoke, editMediaItem::invoke),
             binding.firstRowRecycler,
             animeHomeViewModel.trendingAnime
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails,  ::editMediaItem),
+            MediaCardPagingAdapter(navigate::invoke,  editMediaItem::invoke),
             binding.secondRowRecycler,
             animeHomeViewModel.recentlyUpdated
         )
 
         initPagedRecycler(
-            MediaCardPagingAdapter(::navigateToDetails,  ::editMediaItem),
+            MediaCardPagingAdapter(navigate::invoke,  editMediaItem::invoke),
             binding.thirdRowRecycler,
             animeHomeViewModel.popularAnime
         )

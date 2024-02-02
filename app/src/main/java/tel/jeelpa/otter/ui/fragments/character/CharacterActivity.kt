@@ -9,26 +9,21 @@ import io.noties.markwon.Markwon
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.ActivityCharacterBinding
 import tel.jeelpa.otter.ui.adapters.MediaCardAdapter
-import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.GridAutoFitLayoutManager
-import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
-import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.otter.usecases.EditMediaStatusUseCase
+import tel.jeelpa.otter.usecases.GetNavigationUseCase
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class CharacterActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityCharacterBinding
     private val binding get() = _binding
-    @Inject lateinit var markwon: Markwon
-    @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
     private val characterDataViewModel: CharacterViewModel by viewModels()
 
-    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
-        val bottomSheet = getMediaEditorBottomSheet(mediaCardData)
-        bottomSheet.show(supportFragmentManager, null)
-        return true
-    }
+    @Inject lateinit var markwon: Markwon
+    @Inject lateinit var navigate: GetNavigationUseCase
+    @Inject lateinit var editMediaStatusUseCase: EditMediaStatusUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val characterId = intent.getIntExtra("characterId", -1)
@@ -39,9 +34,11 @@ class CharacterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val editMedia = editMediaStatusUseCase.forFragment(this)
+
         val rolesAdapter = MediaCardAdapter(
-            onItemClick = ::navigateToMediaDetails,
-            onItemLongClick = ::editMediaItem
+            onItemClick = navigate::invoke,
+            onItemLongClick = editMedia::invoke
         )
         binding.rolesRecycler.adapter = rolesAdapter
         binding.rolesRecycler.layoutManager = GridAutoFitLayoutManager(this,110)

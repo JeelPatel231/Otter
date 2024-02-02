@@ -34,6 +34,7 @@ enum class AppMediaType(value: String) {
 
 data class AppNextAiringEpisode(
     val episode: Int,
+    val airingAt: Int,
 )
 
 //@Parcelize
@@ -142,18 +143,15 @@ enum class MediaRelationType(val value: String) {
 
     companion object {
         operator fun get(value: String): MediaRelationType =
-            MediaRelationType
-                .values()
-                .find { it.value.equals(value, ignoreCase = true) }
+            entries.find { it.value.equals(value, ignoreCase = true) }
                 ?: UNKNOWN
     }
 }
 
-
 data class MediaDetailsFull(
     val id: Int,
     val idMal: Int?,
-    val nextAiringEpisode: Int?,
+    val nextAiringEpisode: AppNextAiringEpisode?,
     val countryOfOrigin: String,
     val isAdult: Boolean,
     val isFavourite: Boolean,

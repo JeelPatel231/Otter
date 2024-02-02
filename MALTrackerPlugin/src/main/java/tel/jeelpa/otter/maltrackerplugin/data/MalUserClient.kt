@@ -87,6 +87,14 @@ class MalUserClient(
         TODO("Not yet implemented")
     }
 
+    override suspend fun deleteAnime(id: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteManga(id: Int) {
+        TODO("Not yet implemented")
+    }
+
     override fun getCurrentAnime(): Flow<PagingData<MediaCardData>> {
         return makePagedQuery {
             addPathSegment("users")

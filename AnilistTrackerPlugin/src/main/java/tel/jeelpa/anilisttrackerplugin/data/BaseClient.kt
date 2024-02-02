@@ -118,7 +118,7 @@ abstract class BaseClient (
                 episodes = episodes,
                 chapters = chapters,
                 countryOfOrigin = (countryOfOrigin ?: "Unknown").toString(),
-                nextAiringEpisode = nextAiringEpisode?.episode?.minus(1),
+                nextAiringEpisode = nextAiringEpisode?.toApp(), //?.episode?.minus(1),
                 isAdult = isAdult ?: false,
                 isFavourite = isFavourite,
                 id = id,

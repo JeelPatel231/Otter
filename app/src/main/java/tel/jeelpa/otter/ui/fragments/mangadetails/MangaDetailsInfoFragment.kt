@@ -20,10 +20,10 @@ import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.initRecycler
-import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.visibilityGone
-import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.otter.usecases.EditMediaStatusUseCase
+import tel.jeelpa.otter.usecases.GetNavigationUseCase
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,16 +31,9 @@ class MangaDetailsInfoFragment : Fragment() {
     private var binding: MediaInfoLayoutBinding by autoCleared()
     private val mangaDetailsViewModel: MangaDetailsViewModel by activityViewModels()
     @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
+    @Inject lateinit var navigate: GetNavigationUseCase
+    @Inject lateinit var editMediaStatusUseCase: EditMediaStatusUseCase
     @Inject lateinit var markwon: Markwon
-
-    private fun navigateToDetails(mediaCardData: MediaCardData) =
-        requireContext().navigateToMediaDetails(mediaCardData)
-
-    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
-        val bottomSheet = getMediaEditorBottomSheet(mediaCardData)
-        bottomSheet.show(parentFragmentManager, null)
-        return true
-    }
 
     override fun onResume() {
         super.onResume()
@@ -53,6 +46,8 @@ class MangaDetailsInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val editMedia = editMediaStatusUseCase.forFragment(requireActivity())
+
         binding = MediaInfoLayoutBinding.inflate(inflater, container, false)
 
         binding.totalMediaItemText.text = getString(R.string.total_media, "Chapters")
@@ -64,14 +59,14 @@ class MangaDetailsInfoFragment : Fragment() {
         val maxLines = binding.synopsisTextHolder.maxLines
 
         initRecycler(
-            RelationsAdapter(::navigateToDetails),
+            RelationsAdapter(navigate::invoke),
             binding.relationRecyclerView,
             mangaDetailsViewModel.mangaDetails,
             flowData = { it.relations }
         )
 
         initRecycler(
-            MediaCardAdapter(::navigateToDetails, ::editMediaItem),
+            MediaCardAdapter(navigate::invoke, editMedia::invoke),
             binding.recommendationRecyclerView,
             mangaDetailsViewModel.mangaDetails,
             flowData = { it.recommendation }

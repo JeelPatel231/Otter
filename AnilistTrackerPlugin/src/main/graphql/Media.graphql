@@ -119,6 +119,7 @@ query getMediaDetails($id: Int!){
         id
         idMal
         nextAiringEpisode {
+            airingAt
             episode
         }
         countryOfOrigin

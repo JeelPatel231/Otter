@@ -24,29 +24,29 @@ import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.copyToClipboard
 import tel.jeelpa.otter.ui.generic.initPagedRecycler
 import tel.jeelpa.otter.ui.generic.initRecycler
-import tel.jeelpa.otter.ui.generic.navigateToMediaDetails
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.showToast
 import tel.jeelpa.otter.ui.generic.toNullString
 import tel.jeelpa.otter.ui.generic.visibilityGone
-import tel.jeelpa.plugininterface.tracker.models.MediaCardData
+import tel.jeelpa.otter.usecases.EditMediaStatusUseCase
+import tel.jeelpa.otter.usecases.GetNavigationUseCase
+import java.util.Date
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AnimeDetailsInfoFragment: Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
     private var binding: MediaInfoLayoutBinding by autoCleared()
+    @Inject lateinit var navigate: GetNavigationUseCase
+    @Inject lateinit var editMediaStatusUseCase: EditMediaStatusUseCase
     @Inject lateinit var getMediaEditorBottomSheet: MediaEditorBottomSheetFactory
     @Inject lateinit var markwon: Markwon
 
-    private fun navigateToDetails(mediaCardData: MediaCardData) =
-        requireContext().navigateToMediaDetails(mediaCardData)
-
-    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
-        val bottomSheet = getMediaEditorBottomSheet(mediaCardData)
-        bottomSheet.show(parentFragmentManager, null)
-        return true
-    }
+//    private fun editMediaItem(mediaCardData: MediaCardData): Boolean {
+//        val bottomSheet = getMediaEditorBottomSheet(mediaCardData)
+//        bottomSheet.show(parentFragmentManager, null)
+//        return true
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -60,19 +60,20 @@ class AnimeDetailsInfoFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val editMedia = editMediaStatusUseCase.forFragment(requireActivity())
         binding = MediaInfoLayoutBinding.inflate(inflater, container, false)
         binding.totalMediaItemText.text = getString(R.string.total_media, "Episodes")
         val maxLines = binding.synopsisTextHolder.maxLines
 
         initRecycler(
-            RelationsAdapter(::navigateToDetails),
+            RelationsAdapter(navigate::invoke),
             binding.relationRecyclerView,
             animeDetailsViewModel.animeDetails,
             flowData = { it.relations }
         )
 
         initRecycler(
-            MediaCardAdapter(::navigateToDetails, ::editMediaItem),
+            MediaCardAdapter(navigate::invoke, editMedia::invoke),
             binding.recommendationRecyclerView,
             animeDetailsViewModel.animeDetails,
             flowData = { it.recommendation }
@@ -91,6 +92,9 @@ class AnimeDetailsInfoFragment: Fragment() {
 
         animeDetailsViewModel.animeDetails.observeFlow(viewLifecycleOwner) {
             val ctx = requireContext()
+            val airing = it.nextAiringEpisode?.airingAt?.times(1000L)?.let { e ->
+                Date(e).toLocaleString()
+            }
             with(binding) {
                 meanScoreHolder.text = it.meanScore.toString()
                 statusHolder.text = it.status.name
@@ -102,6 +106,7 @@ class AnimeDetailsInfoFragment: Fragment() {
                 seasonHolder.text = it.season
                 startDateHolder.text = it.startDate.toNullString()
                 endDateHolder.text = it.endDate.toNullString()
+                nextAiringDateHolder.text = airing ?: "??"
 
                 markwon.setMarkdown(synopsisTextHolder, it.description)
 

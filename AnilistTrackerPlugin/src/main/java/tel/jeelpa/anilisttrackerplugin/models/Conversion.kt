@@ -1,7 +1,7 @@
 package tel.jeelpa.anilisttrackerplugin.models
 
-import tel.jeelpa.otter.anilisttrackerplugin.models.CurrentUserMediaQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.GetCharacterDataQuery
+import tel.jeelpa.otter.anilisttrackerplugin.models.GetMediaDetailsQuery
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaListStatus
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaStatus
 import tel.jeelpa.otter.anilisttrackerplugin.models.type.MediaType
@@ -30,6 +30,10 @@ fun MediaListStatus?.toApp(): AppMediaListStatus {
     }
 }
 
+fun GetMediaDetailsQuery.NextAiringEpisode.toApp() : AppNextAiringEpisode {
+    return AppNextAiringEpisode(this.episode, this.airingAt)
+}
+
 fun MediaStatus?.toApp(): AppMediaStatus {
     return when (this) {
         MediaStatus.HIATUS -> AppMediaStatus.HIATUS
@@ -48,6 +52,3 @@ fun MediaType?.toApp(): AppMediaType {
         MediaType.UNKNOWN__, null -> AppMediaType.UNKNOWN
     }
 }
-
-fun CurrentUserMediaQuery.NextAiringEpisode.toApp() =
-    AppNextAiringEpisode(this.episode)

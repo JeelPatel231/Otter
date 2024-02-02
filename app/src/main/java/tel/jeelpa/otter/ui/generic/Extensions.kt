@@ -128,16 +128,16 @@ fun View.fadeOut(duration: Long = 300L) {
         .start()
 }
 
-fun Context.navigateToMediaDetails(mediaCardData: MediaCardData) {
-    val activity = when (mediaCardData.type) {
-        AppMediaType.ANIME -> AnimeActivity::class.java
-        AppMediaType.MANGA -> MangaActivity::class.java
-        else -> throw IllegalStateException("Unknown Media Type")
-    }
-    val newIntent = Intent(this, activity)
-        .putExtra("data", mediaCardData)
-    startActivity(newIntent)
-}
+//fun Context.navigateToMediaDetails(mediaCardData: MediaCardData) {
+//    val activity = when (mediaCardData.type) {
+//        AppMediaType.ANIME -> AnimeActivity::class.java
+//        AppMediaType.MANGA -> MangaActivity::class.java
+//        else -> throw IllegalStateException("Unknown Media Type")
+//    }
+//    val newIntent = Intent(this, activity)
+//        .putExtra("data", mediaCardData)
+//    startActivity(newIntent)
+//}
 
 fun View.visibilityGone() {
     this.visibility = View.GONE

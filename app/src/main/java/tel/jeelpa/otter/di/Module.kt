@@ -22,12 +22,16 @@ import tel.jeelpa.otter.plugins.PluginRegistrarImpl
 import tel.jeelpa.otter.plugins.TrackerManager
 import tel.jeelpa.otter.triggers.RefreshTrigger
 import tel.jeelpa.otter.triggers.RefreshableFlow
+import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromUri
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
+import tel.jeelpa.otter.usecases.EditMediaStatusUseCase
+import tel.jeelpa.otter.usecases.GetNavigationUseCase
 import tel.jeelpa.plugininterface.AppGivenDependencies
 import tel.jeelpa.plugininterface.PluginRegistrar
 import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import java.io.File
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -61,6 +65,25 @@ class DIModule {
             .build()
     }
 
+    @Provides
+    @Singleton
+    fun providesEditMediaUseCase(
+        userClient: UserClient,
+        bottomSheetFactory: MediaEditorBottomSheetFactory,
+    ) : EditMediaStatusUseCase {
+        return EditMediaStatusUseCase(
+            userClient,
+            bottomSheetFactory
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesNavigationUseCase(
+        application: Application,
+    ) : GetNavigationUseCase {
+        return GetNavigationUseCase(application)
+    }
 
     @Provides
     @Singleton

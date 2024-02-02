@@ -178,6 +178,23 @@
                 android:layout_alignParentEnd="true"
                 tools:text="\?\?" />
 
+
+            <TextView
+                android:id="@+id/next_airing_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/end_date_text"
+                android:text="Releasing Next at" />
+                <!-- TODO: ^ use entry from strings.xml -->
+
+            <TextView
+                android:id="@+id/next_airing_date_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/end_date_text"
+                android:layout_alignParentEnd="true"
+                tools:text="\?\?" />
+
         </RelativeLayout>
 
         <TextView
