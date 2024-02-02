@@ -199,8 +199,12 @@ class DIFragmentModule {
 
     @Provides
     @FragmentScoped
+    @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     fun providesExoplayer(application: Application): ExoPlayer {
-        return ExoPlayer.Builder(application).build()
+        return ExoPlayer.Builder(application)
+            .setSeekBackIncrementMs(10_000)
+            .setSeekForwardIncrementMs(10_000)
+            .build()
     }
 }
 

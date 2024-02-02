@@ -266,10 +266,9 @@ class ExoplayerGestureView(
     private val gesturesDetector = GestureDetector(context, object : SimpleOnGestureListener(){
 
         // TODO : play animations when triggered
-        override fun onDoubleTapEvent(e: MotionEvent): Boolean {
+        override fun onDoubleTap(e: MotionEvent): Boolean {
             // if no media is playing, dont handle the event
             if (player?.mediaItemCount == 0) return false
-
             hideController()
             when (getViewSide(e)){
                 ViewSide.LEFT -> player?.seekBack()
