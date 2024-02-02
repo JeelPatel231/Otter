@@ -79,7 +79,6 @@ class AnimeFragment : Fragment() {
             layoutManager = GridAutoFitLayoutManager(requireContext(),110)
         }
 
-        binding.searchView.setupWithSearchBar(binding.searchBar)
         binding.searchView.editText.setOnEditorActionListener { textView, actionId, keyEvent ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH || keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
                 textView.text.toString().nullOnBlank()?.let {
