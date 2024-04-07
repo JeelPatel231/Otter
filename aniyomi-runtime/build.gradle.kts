@@ -83,4 +83,8 @@ dependencies {
     implementation("com.squareup.logcat:logcat:0.1")
     implementation("io.github.pdvrieze.xmlutil:core-android:0.84.3")
     implementation("io.github.pdvrieze.xmlutil:serialization-android:0.84.3")
+
+
+    /// MY DEPENDENCIES
+    implementation("com.github.jeelpatel231:plugger:1.2.0")
 }
