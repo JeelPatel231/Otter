@@ -115,6 +115,8 @@ dependencies {
     // common plugin middleware reference
     implementation(project(mapOf("path" to ":plugininterface")))
 
+    implementation(project(mapOf("path" to ":aniyomi-runtime")))
+
     // reflection
     implementation(kotlin("reflect"))
 }

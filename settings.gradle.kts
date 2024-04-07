@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 
@@ -19,3 +20,4 @@ include(":plugininterface")
 include(":plugin")
 include(":AnilistTrackerPlugin")
 include(":MALTrackerPlugin")
+include(":aniyomi-runtime")
