@@ -21,28 +21,28 @@ import kotlinx.coroutines.runBlocking
  */
 class AnimeExtensionLoader {
 
-//        private val preferences: SourcePreferences by injectLazy()
+    //        private val preferences: SourcePreferences by injectLazy()
 //    private val loadNsfwSource by lazy {
 //        preferences.showNsfwSource().get()
 //    }
-     val loadNsfwSource = true
+    val loadNsfwSource = true
 
-    private  val TAG = "AnimeExtensionLoader"
+    private val TAG = "AnimeExtensionLoader"
 
-    private  val EXTENSION_FEATURE = "tachiyomi.animeextension"
-    private  val METADATA_SOURCE_CLASS = "tachiyomi.animeextension.class"
-    private  val METADATA_SOURCE_FACTORY = "tachiyomi.animeextension.factory"
-    private  val METADATA_NSFW = "tachiyomi.animeextension.nsfw"
-    private  val METADATA_HAS_README = "tachiyomi.animeextension.hasReadme"
-    private  val METADATA_HAS_CHANGELOG = "tachiyomi.animeextension.hasChangelog"
-     val LIB_VERSION_MIN = 12
-     val LIB_VERSION_MAX = 14
+    private val EXTENSION_FEATURE = "tachiyomi.animeextension"
+    private val METADATA_SOURCE_CLASS = "tachiyomi.animeextension.class"
+    private val METADATA_SOURCE_FACTORY = "tachiyomi.animeextension.factory"
+    private val METADATA_NSFW = "tachiyomi.animeextension.nsfw"
+    private val METADATA_HAS_README = "tachiyomi.animeextension.hasReadme"
+    private val METADATA_HAS_CHANGELOG = "tachiyomi.animeextension.hasChangelog"
+    val LIB_VERSION_MIN = 12
+    val LIB_VERSION_MAX = 14
 
-    private  val PACKAGE_FLAGS =
+    private val PACKAGE_FLAGS =
         PackageManager.GET_CONFIGURATIONS or PackageManager.GET_SIGNATURES
 
     // jmir1's key
-    private  val officialSignature =
+    private val officialSignature =
         "50ab1d1e3a20d204d0ad6d334c7691c632e41b98dfa132bf385695fdfa63839c"
 
     /**
