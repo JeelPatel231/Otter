@@ -5,12 +5,14 @@ import eu.kanade.tachiyomi.animesource.AnimeCatalogueSource
 import eu.kanade.tachiyomi.extension.anime.model.AnimeLoadResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import tel.jeelpa.aniyomi_runtime.adapter.AnimeCatalogueSourceToParser
 import tel.jeelpa.plugger.PluginRepo
+import tel.jeelpa.plugininterface.anime.parser.Parser
 import uy.kohesive.injekt.Injekt
 
 class AniyomiPluginRepo(
     private val appContext: Application
-) : PluginRepo<AnimeCatalogueSource> {
+) : PluginRepo<Parser> {
 
     init {
         Injekt.importModule(AppModule(appContext))
@@ -30,9 +32,10 @@ class AniyomiPluginRepo(
         .filterIsInstance<AnimeLoadResult.Success>()
         .flatMap { it.extension.sources }
         .filterIsInstance<AnimeCatalogueSource>()
+        .map { AnimeCatalogueSourceToParser(it) }
         .map { Result.success(it) }
 
-    override fun getAllPlugins(): Flow<List<Result<AnimeCatalogueSource>>> {
+    override fun getAllPlugins(): Flow<List<Result<Parser>>> {
         return flowOf(loaded)
     }
 }

@@ -87,4 +87,6 @@ dependencies {
 
     /// MY DEPENDENCIES
     implementation("com.github.jeelpatel231:plugger:1.2.0")
+    implementation(project(":plugininterface"))
+
 }
