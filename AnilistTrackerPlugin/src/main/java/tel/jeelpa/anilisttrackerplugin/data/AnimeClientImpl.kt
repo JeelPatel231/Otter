@@ -68,7 +68,7 @@ class AnimeClientImpl(
                     page = Optional.presentIfNotNull(page),
                     perPage = Optional.presentIfNotNull(perPage)
                 )
-            ).execute().data?.Page?.airingSchedules?.mapNotNull { it?.media }?.map {
+            ).execute().data?.Page?.airingSchedules?.mapNotNull { it?.media?.mediaDetails }?.map {
                 MediaCardData(
                     id = it.id,
                     title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,

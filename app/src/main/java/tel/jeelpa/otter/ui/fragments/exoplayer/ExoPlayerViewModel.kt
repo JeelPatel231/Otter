@@ -2,11 +2,11 @@ package tel.jeelpa.otter.ui.fragments.exoplayer
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.channelFlow
-import tel.jeelpa.otter.plugins.ExtractorManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import tel.jeelpa.aniyomi_runtime.AniyomiPluginRepo
 import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
-import tel.jeelpa.otter.ui.generic.asyncForEach
-import tel.jeelpa.plugininterface.models.VideoServer
 import javax.inject.Inject
 
 
@@ -28,13 +28,16 @@ import javax.inject.Inject
 @HiltViewModel
 class ExoPlayerViewModel @Inject constructor(
     val createMediaSourceFromVideo: CreateMediaSourceFromVideo,
-    private val extractorManager: ExtractorManager
+    private val aniyomiPlugins: AniyomiPluginRepo
 ) : ViewModel() {
-    fun extractVideos(videoServers: Collection<VideoServer>) = channelFlow {
-        videoServers.asyncForEach { vidServer ->
-            extractorManager.extract(vidServer).asyncForEach { video ->
-                send(video)
+
+    fun getVideoLinks(episodeLink: String, selectedPlugin: String) =
+        aniyomiPlugins.getAllPlugins().map { pluginList ->
+            withContext(Dispatchers.IO) {
+                pluginList.mapNotNull { it.getOrNull() }
+                    .first { it.first.uniqueId == selectedPlugin }
+                    .second
+                    .loadVideoLinks(episodeLink)
             }
         }
-    }
 }

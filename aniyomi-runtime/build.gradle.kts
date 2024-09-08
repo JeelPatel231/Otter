@@ -29,6 +29,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+        )
     }
 }
 
@@ -69,7 +72,7 @@ dependencies {
 //    debugImplementation 'androidx.compose.ui:ui-tooling'
 //    debugImplementation 'androidx.compose.ui:ui-test-manifest'// delay()
     implementation("androidx.preference:preference-ktx:1.2.1")
-    implementation("com.github.inorichi.injekt:injekt-core:65b0440")
+    implementation("uy.kohesive.injekt:injekt-core:1.16.+")
     implementation("androidx.paging:paging-runtime:3.2.0")
 
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
@@ -86,7 +89,7 @@ dependencies {
 
 
     /// MY DEPENDENCIES
-    implementation("com.github.jeelpatel231:plugger:1.2.0")
+    api("tel.jeelpa:plugger:SNAPSHOT")
     implementation(project(":plugininterface"))
 
 }

@@ -8,7 +8,12 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import tel.jeelpa.otter.plugins.TrackerStore
+
+interface TrackerStore {
+    suspend fun clearTracker()
+    suspend fun saveTracker(trackerId: String)
+    fun getTracker(): Flow<String?>
+}
 
 class TrackerStoreImpl(private val context: Context) :
     TrackerStore {

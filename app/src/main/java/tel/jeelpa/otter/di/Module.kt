@@ -15,11 +15,6 @@ import dagger.hilt.components.SingletonComponent
 import io.noties.markwon.Markwon
 import io.noties.markwon.SoftBreakAddsNewLinePlugin
 import okhttp3.OkHttpClient
-import tel.jeelpa.otter.plugins.ExtractorManager
-import tel.jeelpa.otter.plugins.ParserManager
-import tel.jeelpa.otter.plugins.PluginInitializer
-import tel.jeelpa.otter.plugins.PluginRegistrarImpl
-import tel.jeelpa.otter.plugins.TrackerManager
 import tel.jeelpa.otter.triggers.RefreshTrigger
 import tel.jeelpa.otter.triggers.RefreshableFlow
 import tel.jeelpa.otter.ui.fragments.mediaCommon.MediaEditorBottomSheetFactory
@@ -28,9 +23,6 @@ import tel.jeelpa.otter.ui.generic.CreateMediaSourceFromVideo
 import tel.jeelpa.otter.ui.markwon.SpoilerPlugin
 import tel.jeelpa.otter.usecases.EditMediaStatusUseCase
 import tel.jeelpa.otter.usecases.GetNavigationUseCase
-import tel.jeelpa.plugininterface.AppGivenDependencies
-import tel.jeelpa.plugininterface.PluginRegistrar
-import tel.jeelpa.plugininterface.storage.UserStorage
 import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import java.io.File
 import java.security.SecureRandom
@@ -109,60 +101,6 @@ class DIModule {
     ): CreateMediaSourceFromVideo {
         val uriSource = CreateMediaSourceFromUri(okHttpClient, simpleVideoCache)
         return CreateMediaSourceFromVideo(uriSource)
-    }
-
-
-    // plugin manager
-    @Provides
-    @Singleton
-    fun providesParserManager(): ParserManager {
-        return ParserManager()
-    }
-
-    @Provides
-    @Singleton
-    fun providesExtractorManager(): ExtractorManager {
-        return ExtractorManager()
-    }
-
-    @Provides
-    @Singleton
-    fun providesPluginDependencies(
-        okHttpClient: OkHttpClient,
-        userStorage: UserStorage
-    ) : AppGivenDependencies {
-        return object : AppGivenDependencies {
-            override val okHttpClient = okHttpClient
-            override val userStorage = userStorage
-        }
-    }
-
-    @Provides
-    @Singleton
-    fun providesPluginRegistrar(
-        parserManager: ParserManager,
-        trackerManager: TrackerManager,
-        extractorManager: ExtractorManager,
-    ): PluginRegistrar {
-        return PluginRegistrarImpl(
-            parserManager,
-            trackerManager,
-            extractorManager,
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun providesPluginInstantiator(
-        application: Application,
-        pluginRegistrar: PluginRegistrar,
-        appGivenDependencies: AppGivenDependencies,
-    ): PluginInitializer {
-        return PluginInitializer(
-            application,
-            pluginRegistrar,
-            appGivenDependencies,
-        )
     }
 
 }

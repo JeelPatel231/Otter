@@ -1,15 +1,15 @@
 package tel.jeelpa.otter.ui.fragments.animedetails
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Job
-import kotlinx.parcelize.Parcelize
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import tel.jeelpa.aniyomi_runtime.AniyomiPluginMeta
 import tel.jeelpa.otter.R
 import tel.jeelpa.otter.databinding.FragmentAnimeDetailsWatchBinding
 import tel.jeelpa.otter.ui.adapters.EpisodeAdapter
@@ -19,18 +19,11 @@ import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.autoCleared
 import tel.jeelpa.otter.ui.generic.getNavControllerFromHost
 import tel.jeelpa.otter.ui.generic.observeFlow
-import tel.jeelpa.plugininterface.anime.parser.Parser
-import tel.jeelpa.plugininterface.models.VideoServer
 
-
-// Try to NOT use this wrapper, passing complex data structures is an anti pattern
-@Parcelize
-class VideoServerWrapper(val list: List<VideoServer>) : Parcelable
 
 class AnimeDetailsWatchFragment : Fragment() {
     private val animeDetailsViewModel: AnimeDetailsViewModel by activityViewModels()
     private var binding: FragmentAnimeDetailsWatchBinding by autoCleared()
-    private var episodeScrapeJob: Job? = null
 
     override fun onResume() {
         super.onResume()
@@ -39,18 +32,14 @@ class AnimeDetailsWatchFragment : Fragment() {
     }
 
     private fun showDialog() {
-        val dialog = WrongMediaSelectionBottomSheetDialog(
-            animeDetailsViewModel.searchedAnimes,
+        val dialog = WrongMediaSelectionBottomSheetDialog(animeDetailsViewModel.searchedAnimes,
             onItemClick = { animeDetailsViewModel.onSelectAnime(it) },
-            onSearchClick = { animeDetailsViewModel.searchAnime(it) }
-        )
+            onSearchClick = { animeDetailsViewModel.searchAnime(it) })
         dialog.show(childFragmentManager, "WrongTitle")
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentAnimeDetailsWatchBinding.inflate(inflater, container, false)
 
@@ -59,35 +48,40 @@ class AnimeDetailsWatchFragment : Fragment() {
         }
 
         val episodesAdapter = EpisodeAdapter(lifecycleScope) {
-            val videoServers = animeDetailsViewModel.getVideoServers(it.link)
+            val selectedParser = animeDetailsViewModel.selectedParserId.first()!!
             requireActivity().getNavControllerFromHost(R.id.anime_activity_container_view).navigate(
-                AnimeDetailsFragmentDirections.toExoplayerFragment(VideoServerWrapper(videoServers))
+                AnimeDetailsFragmentDirections.toExoplayerFragment(
+                    episodeLink = it.link, selectedParser = selectedParser
+                )
             )
         }
 
-        binding.parserServiceSelector.apply {
-            setAdapter(
-                MaterialSpinnerAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
-                    animeDetailsViewModel.parsers
-                )
-            )
-            setOnItemClickListener { adapterView, _, idx, _ ->
-                // cancel the old job
-                binding.selectedAnimeTitle.text = "Searching..."
-                // clear the episodes array
-                episodesAdapter.setData(emptyList())
-                // start scaping with the new parser
+        binding.parserServiceSelector.setOnItemClickListener { adapterView, _, idx, _ ->
+            binding.selectedAnimeTitle.text = "Searching..."
+            // clear the episodes array
+            episodesAdapter.setData(emptyList())
+            // start scraping with the new parser
+            lifecycleScope.launch {
                 try {
-                    animeDetailsViewModel.onParserChange(adapterView.getItemAtPosition(idx) as Parser)
+                    animeDetailsViewModel.onParserChange(
+                        (adapterView.getItemAtPosition(idx) as AniyomiPluginMeta).uniqueId
+                    )
                 } catch (e: Throwable) {
                     binding.selectedAnimeTitle.text = e.message
                 }
             }
         }
 
-        animeDetailsViewModel.selectedParser.observeFlow(viewLifecycleOwner) {
+        animeDetailsViewModel.parsers.observeFlow(this) {
+            val adapter = MaterialSpinnerAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                it.map { plugin -> plugin.first }
+            )
+            binding.parserServiceSelector.setAdapter(adapter)
+        }
+
+        animeDetailsViewModel.selectedParserId.observeFlow(viewLifecycleOwner) {
             binding.wrongTitle.visibility = when (it) {
                 null -> View.GONE
                 else -> View.VISIBLE

@@ -7,18 +7,20 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import tel.jeelpa.otter.plugins.ParserManager
+import tel.jeelpa.aniyomi_runtime.AniyomiPluginMeta
+import tel.jeelpa.aniyomi_runtime.AniyomiPluginRepo
 import tel.jeelpa.otter.ui.generic.cacheInScope
 import tel.jeelpa.otter.ui.generic.suspendToFlow
+import tel.jeelpa.plugger.utils.mapState
 import tel.jeelpa.plugininterface.anime.parser.Parser
 import tel.jeelpa.plugininterface.models.Episode
 import tel.jeelpa.plugininterface.models.ShowResponse
-import tel.jeelpa.plugininterface.models.VideoServer
 import tel.jeelpa.plugininterface.tracker.models.MediaCardData
 import tel.jeelpa.plugininterface.tracker.repository.AnimeClient
 import tel.jeelpa.plugininterface.tracker.repository.CharacterClient
@@ -30,8 +32,10 @@ class AnimeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val animeClient: AnimeClient,
     private val characterClient: CharacterClient,
-    private val parserManager: ParserManager,
+    private val aniyomiPluginRepo: AniyomiPluginRepo,
+//    private val parserManager: ParserManager,
 ) : ViewModel() {
+
     val navArgs = savedStateHandle.get<MediaCardData>("data")!!
 
     val animeDetails = suspendToFlow { animeClient.getAnimeDetails(navArgs.id) }
@@ -47,17 +51,21 @@ class AnimeDetailsViewModel @Inject constructor(
 
     val characters = characterClient.getCharactersFromAnime(navArgs.id).cachedIn(viewModelScope)
 
-    val parsers
-        get() = parserManager.parsers
+    val parsers: StateFlow<List<Pair<AniyomiPluginMeta, Parser>>>
+        get() = aniyomiPluginRepo.getAllPlugins()
+            .mapState { list -> list.mapNotNull { it.getOrNull() } }
 
     // Watch Fragment Data
-    private val _selectedParser: MutableStateFlow<Parser?> = MutableStateFlow(null)
+    private val _selectedParserId: MutableStateFlow<String?> = MutableStateFlow(null)
     private val _searchedAnimes = MutableStateFlow(emptyList<ShowResponse>())
     private val _selectedAnime: MutableStateFlow<ShowResponse?> = MutableStateFlow(null)
     private val _episodesScraped = MutableStateFlow(emptyList<Episode>())
 
-    val selectedParser
-        get() = _selectedParser.asStateFlow()
+    private val selectedParser
+        get() = parsers.value.find { it.first.uniqueId == selectedParserId.value }!!.second
+
+    val selectedParserId
+        get() = _selectedParserId.asStateFlow()
     val searchedAnimes
         get() = _searchedAnimes.asStateFlow()
     val selectedAnime
@@ -70,35 +78,30 @@ class AnimeDetailsViewModel @Inject constructor(
     // onParserChange -> clear everything
     // onAnimeChange -> clear anime and episodes
 
-    fun onParserChange(parser: Parser) = viewModelScope.launch {
-        _selectedParser.value = parser
+    suspend fun onParserChange(parser: String) {
+        _selectedParserId.value = parser
         _episodesScraped.value = emptyList() // don't wait for searching, clear episodes asap
         searchAnime(navArgs.title).join()
         val firstAnime = searchedAnimes.value.firstOrNull()
-            ?: throw Exception("No Anime Found")
+                ?: throw Exception("No Anime Found")
         onSelectAnime(firstAnime).join()
     }
 
     fun searchAnime(query: String) = viewModelScope.launch {
         _searchedAnimes.value = emptyList()
         _searchedAnimes.value = withContext(Dispatchers.IO){
-            selectedParser.value!!.search(query)
+            selectedParser.search(query)
         }
     }
+
     fun onSelectAnime(anime: ShowResponse) = viewModelScope.launch {
         _episodesScraped.value = emptyList()
         _selectedAnime.value = anime
         loadEpisodes()
     }
 
-    suspend fun getVideoServers(episodeLink: String): List<VideoServer> {
-        return withContext(Dispatchers.IO){
-            selectedParser.value!!.loadVideoServers(episodeLink)
-        }
-    }
-
     private suspend fun loadEpisodes() = withContext(Dispatchers.IO){
-        _episodesScraped.value = selectedParser.value!!.loadEpisodes(selectedAnime.value!!.link)
+        _episodesScraped.value = selectedParser.loadEpisodes(selectedAnime.value!!.link)
     }
 
 }

@@ -19,10 +19,16 @@
         android:id="@+id/exoplayerFragment"
         android:name="tel.jeelpa.otter.ui.fragments.exoplayer.ExoplayerFragment"
         android:label="ExoplayerFragment"
-        tools:layout="@layout/fragment_exoplayer" >
+        tools:layout="@layout/fragment_exoplayer">
+
         <argument
-            android:name="videoServers"
-            app:argType="tel.jeelpa.otter.ui.fragments.animedetails.VideoServerWrapper" />
+            android:name="episodeLink"
+            app:argType="string" />
+
+        <argument
+            android:name="selectedParser"
+            app:argType="string" />
+
     </fragment>
 
 </navigation>

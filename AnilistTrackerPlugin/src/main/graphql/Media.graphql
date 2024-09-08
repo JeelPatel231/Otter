@@ -1,33 +1,7 @@
 query MediaBaseline($page: Int!, $perPage : Int!, $sort: [MediaSort!]!, $type: MediaType!, $format: MediaFormat) {
     Page(page: $page, perPage: $perPage){
         media(type: $type, sort: $sort, format: $format){
-            id
-            idMal
-            type
-            title {
-                english
-                romaji
-                userPreferred
-                native
-            }
-            coverImage {
-                large
-            }
-            bannerImage
-            status
-            episodes
-            nextAiringEpisode {
-                episode
-            }
-            chapters
-            isAdult
-            meanScore
-            mediaListEntry {
-                progress
-                private
-                score(format: POINT_100)
-                status
-            }
+            ...mediaDetails
         }
     }
 }
@@ -35,39 +9,12 @@ query MediaBaseline($page: Int!, $perPage : Int!, $sort: [MediaSort!]!, $type: M
 query MediaSearch($search: String!, $page:Int = 1, $perPage:Int = 30, $type: MediaType!){
     Page(page: $page, perPage: $perPage){
         media(search: $search, type: $type){
-            id
-            type
-            idMal
-            title {
-                english
-                romaji
-                userPreferred
-                native
-            }
-            coverImage {
-                large
-            }
-            nextAiringEpisode {
-                episode
-            }
-            chapters
-            bannerImage
-            status
-            episodes
-            chapters
-            isAdult
-            meanScore
-            mediaListEntry {
-                progress
-                private
-                score(format: POINT_100)
-                status
-            }
+            ...mediaDetails
         }
     }
 }
 
-query AnimeRecentlyUpdated( $lesser: Int!, $greater:Int = 0, $page: Int = 1, $perPage: Int = 50){
+query AnimeRecentlyUpdated($lesser: Int!, $greater:Int = 0, $page: Int = 1, $perPage: Int = 50){
     Page(page: $page, perPage: $perPage) {
         pageInfo {
             hasNextPage
@@ -79,36 +26,7 @@ query AnimeRecentlyUpdated( $lesser: Int!, $greater:Int = 0, $page: Int = 1, $pe
             sort: TIME_DESC,
         ){
             media {
-                id
-                idMal
-                status
-                chapters
-                episodes
-                nextAiringEpisode {
-                    episode
-                }
-                chapters
-                isAdult
-                type
-                meanScore
-                isFavourite
-                bannerImage
-                countryOfOrigin
-                coverImage {
-                    large
-                }
-                title {
-                    english
-                    romaji
-                    native
-                    userPreferred
-                }
-                mediaListEntry {
-                    progress
-                    private
-                    score(format: POINT_100)
-                    status
-                }
+                ...mediaDetails
             }
         }
     }
@@ -116,94 +34,13 @@ query AnimeRecentlyUpdated( $lesser: Int!, $greater:Int = 0, $page: Int = 1, $pe
 
 query getMediaDetails($id: Int!){
     Media(id: $id) {
-        id
-        idMal
-        nextAiringEpisode {
-            airingAt
-            episode
-        }
-        countryOfOrigin
-        isAdult
-        isFavourite
-        type
-
-        bannerImage
-        coverImage {
-            large
-            extraLarge
-        }
-        title {
-            english
-            romaji
-            native
-            userPreferred
-        }
-        meanScore
-        status
-        episodes
-        chapters
-        duration
-        format
-        source
-        studios(isMain:true) {
-            nodes {
-                name
-            }
-        }
-        season
-        startDate {
-            day
-            month
-            year
-        }
-        endDate {
-            day
-            month
-            year
-        }
-        description
-        synonyms
-        trailer {
-            id
-            site
-            thumbnail
-        }
-#        OPENINGS/ENDINGS NOT AVAILABLE IN ANILIST
-        genres
-        tags {
-            name
-        }
+        ...mediaDetails
 
         recommendations(sort:[RATING_DESC]){
             edges {
                 node {
                     mediaRecommendation {
-                        id
-                        status
-                        title {
-                            romaji
-                            native
-                            userPreferred
-                            english
-                        }
-                        type
-                        isAdult
-                        meanScore
-                        coverImage {
-                             large
-                        }
-                        nextAiringEpisode {
-                            episode
-                        }
-                        episodes
-                        chapters
-
-                        mediaListEntry {
-                            progress
-                            private
-                            score(format: POINT_100)
-                            status
-                        }
+                        ...mediaDetails
                     }
                 }
             }
@@ -213,43 +50,9 @@ query getMediaDetails($id: Int!){
             edges {
                 relationType(version: 2)
                 node {
-                    id
-                    title {
-                        romaji
-                        english
-                        native
-                        userPreferred
-                    }
-                    status
-                    type
-                    isAdult
-                    meanScore
-                    coverImage {
-                        large
-                    }
-                    nextAiringEpisode {
-                        episode
-                    }
-                    episodes
-                    chapters
-
-                    mediaListEntry {
-                        progress
-                        private
-                        score(format: POINT_100)
-                        status
-                    }
+                    ...mediaDetails
                 }
             }
         }
-
-#       idk when i will use this
-        mediaListEntry {
-            progress
-            private
-            score(format: POINT_100)
-            status
-        }
-
     }
 }

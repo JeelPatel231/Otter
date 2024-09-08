@@ -1,5 +1,6 @@
 package tel.jeelpa.otter.activities
 
+import android.R
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -15,30 +16,29 @@ import kotlinx.coroutines.launch
 import tel.jeelpa.otter.OnBoardingActivity
 import tel.jeelpa.otter.databinding.ActivitySettingsBinding
 import tel.jeelpa.otter.models.SettingsStore
-import tel.jeelpa.otter.plugins.TrackerManager
-import tel.jeelpa.otter.plugins.TrackerStore
+import tel.jeelpa.otter.models.TrackerStore
+import tel.jeelpa.otter.plugins.PluginManifest
 import tel.jeelpa.otter.triggers.RefreshTrigger
 import tel.jeelpa.otter.ui.generic.MaterialSpinnerAdapter
 import tel.jeelpa.otter.ui.generic.observeFlow
 import tel.jeelpa.otter.ui.generic.observeUntil
 import tel.jeelpa.otter.ui.generic.restartApp
 import tel.jeelpa.otter.ui.generic.showToast
+import tel.jeelpa.plugger.PluginRepo
 import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     val trackerStore: TrackerStore,
-    private val trackerManager: TrackerManager,
+    val trackers: PluginRepo<PluginManifest, ClientHolder>,
     val userStorage: UserStorage,
     val settingsStore: SettingsStore,
 
     @Named("UserDataRefreshTrigger") val userDataRefreshTrigger: RefreshTrigger
-) : ViewModel() {
-    val trackers
-        get() = trackerManager.trackers
-}
+) : ViewModel()
 
 
 @AndroidEntryPoint
@@ -90,14 +90,13 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        binding.trackerServiceSelector.apply {
-            setAdapter(
-                MaterialSpinnerAdapter(
-                    this@SettingsActivity,
-                    android.R.layout.simple_spinner_dropdown_item,
-                    settingsViewModel.trackers.toList()
-                )
-            )
+        settingsViewModel.trackers.getAllPlugins().observeFlow(this){ pluginList ->
+            val loaded = pluginList.mapNotNull { it.getOrNull() }.map { it.first.name }
+            val spinnerAdapter = MaterialSpinnerAdapter(this, R.layout.simple_spinner_dropdown_item, loaded)
+
+            binding.trackerServiceSelector.apply {
+                setAdapter(spinnerAdapter)
+            }
         }
 
         binding.applyBtn.setOnClickListener {

@@ -51,8 +51,9 @@ class ExoplayerFragment : Fragment() {
     private var binding: FragmentExoplayerBinding by autoCleared()
     private var exoplayerControllerBinding: ExoPlayerControlViewBinding by autoCleared()
     private val videoSourcesLiveDataCache = MutableStateFlow(listOf<Video>())
-    private val exoNavArgs by navArgs<ExoplayerFragmentArgs>()
     private lateinit var mediaSession: MediaSession
+
+    private val args : ExoplayerFragmentArgs by navArgs()
 
     @Inject lateinit var exoplayer: ExoPlayer
 
@@ -174,20 +175,26 @@ class ExoplayerFragment : Fragment() {
         }
 
         // Source Selection Dialog
-        val videoServers = exoNavArgs.videoServers.list
 
         // collect the flow once, cache it
-        val extractedSharedFlow = exoplayerViewModel.extractVideos(videoServers).shareIn(lifecycleScope, SharingStarted.Eagerly)
+        val extractedSharedFlow = exoplayerViewModel
+            .getVideoLinks(args.episodeLink, args.selectedParser)
+            .shareIn(lifecycleScope, SharingStarted.Eagerly)
+
         extractedSharedFlow.observeFlow(viewLifecycleOwner) {
-            videoSourcesLiveDataCache.value += it
+            videoSourcesLiveDataCache.value = it
         }
+        // TODO: extract these in EXOPLAYER FRAGMENT
+        // TODO: remove extractors and its manager altogether
+
         // also start playing in exoplayer when first video source arrives
         // observe only the first event from shared flow
         // apparently this works too
         extractedSharedFlow.observeUntil(viewLifecycleOwner, predicate = { true }){
-            val mediaSource = exoplayerViewModel.createMediaSourceFromVideo(it)
+            val mediaSource = exoplayerViewModel.createMediaSourceFromVideo(it.first())
             exoplayer.setMediaSource(mediaSource)
         }
+//        }
 
         // THIS WORKS, TESTED
 //        lifecycleScope.launch {

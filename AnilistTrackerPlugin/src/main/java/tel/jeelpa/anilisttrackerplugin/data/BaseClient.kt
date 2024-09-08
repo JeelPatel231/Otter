@@ -49,7 +49,7 @@ abstract class BaseClient (
             Optional.presentIfNotNull(perPage),
             mMediaType
         )
-        ).execute().data?.Page?.media?.mapNotNull { it?.let {
+        ).execute().data?.Page?.media?.mapNotNull { wrapper -> wrapper?.mediaDetails?.let {
             MediaCardData(
                 id = it.id,
                 title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
@@ -83,8 +83,8 @@ abstract class BaseClient (
                 type = type,
                 format = format?.let { Optional.present(format) } ?: Optional.absent()
             )
-        ).execute().data?.Page?.media?.mapNotNull {
-            it?.let {
+        ).execute().data?.Page?.media?.mapNotNull { wrapper ->
+            wrapper?.mediaDetails?.let {
                 MediaCardData(
                     id = it.id,
                     title = it.title?.english ?: it.title?.romaji ?: it.title?.userPreferred!!,
@@ -108,7 +108,7 @@ abstract class BaseClient (
         val media = anilistClient.query(GetMediaDetailsQuery(id)).execute().data?.Media
             ?: throw IllegalStateException("ID data not available on anilist")
 
-        with(media) {
+        with(media.mediaDetails) {
             return MediaDetailsFull(
                 title = title?.english ?: title?.romaji ?: title?.userPreferred ?: "Unknown Title",
                 bannerImage = bannerImage ?: coverImage?.large!!,
@@ -138,7 +138,7 @@ abstract class BaseClient (
                 endDate = AppDate(endDate?.day, endDate?.month, endDate?.year),
                 startDate = AppDate(startDate?.day, startDate?.month, startDate?.year),
                 genres = genres?.mapNotNull { it } ?: emptyList(),
-                recommendation = recommendations?.edges?.mapNotNull { it?.node?.mediaRecommendation }
+                recommendation = media.recommendations?.edges?.mapNotNull { it?.node?.mediaRecommendation?.mediaDetails }
                     ?.map { edge ->
                         MediaCardData(
                             id = edge.id,
@@ -153,10 +153,11 @@ abstract class BaseClient (
                             chapters = edge.chapters,
                             userListStatus = edge.mediaListEntry?.status.toApp(),
                             userScore = edge.mediaListEntry?.score,
+                            userWatched = edge.mediaListEntry?.progress
                         )
                     } ?: emptyList(),
-                relations = relations?.edges?.mapNotNull { edge ->
-                    edge?.node?.let { node ->
+                relations = media.relations?.edges?.mapNotNull { edge ->
+                    edge?.node?.mediaDetails?.let { node ->
                         MediaRelationCardData(
                             id = node.id,
                             title = node.title?.english ?: node.title?.romaji
@@ -172,6 +173,7 @@ abstract class BaseClient (
                             relation = MediaRelationType[edge.relationType!!.name],
                             userListStatus = node.mediaListEntry?.status.toApp(),
                             userScore = node.mediaListEntry?.score,
+                            userWatched = node.mediaListEntry?.progress
                         )
                     }
                 } ?: emptyList(),
@@ -181,6 +183,7 @@ abstract class BaseClient (
                 studios = studios?.nodes?.mapNotNull { node -> node?.name } ?: emptyList(),
                 synonyms = synonyms?.mapNotNull { it } ?: emptyList(),
                 tags = tags?.mapNotNull { it?.name } ?: emptyList(),
+                userWatched = mediaListEntry?.progress
             )
         }
     }

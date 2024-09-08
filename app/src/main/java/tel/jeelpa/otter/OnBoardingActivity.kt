@@ -3,7 +3,6 @@ package tel.jeelpa.otter
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup.LayoutParams
-import android.view.ViewGroup.VISIBLE
 import android.widget.RadioButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,16 +12,23 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import tel.jeelpa.otter.databinding.ActivityOnboardingBinding
-import tel.jeelpa.otter.plugins.TrackerManager
-import tel.jeelpa.otter.plugins.TrackerStore
+import tel.jeelpa.otter.di.CurrentTrackerNameFlow
+import tel.jeelpa.otter.models.TrackerStore
+import tel.jeelpa.otter.plugins.PluginManifest
+import tel.jeelpa.otter.ui.generic.observeUntil
+import tel.jeelpa.plugger.PluginRepo
 import tel.jeelpa.plugininterface.storage.UserStorage
+import tel.jeelpa.plugininterface.tracker.repository.ClientHolder
+import tel.jeelpa.plugininterface.tracker.repository.UserClient
 import javax.inject.Inject
 
 
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
+    val trackerName: CurrentTrackerNameFlow,
+    val trackerClient: UserClient,
+    val trackerRepo: PluginRepo<PluginManifest, ClientHolder>,
     val trackerStore: TrackerStore,
-    val trackerManager: TrackerManager,
     val userStorage: UserStorage,
 ) : ViewModel()
 
@@ -40,23 +46,24 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private suspend fun checkTrackerHealth(): Boolean {
-        // Tracker Store has ID, but the class wasnt loaded
-        val registeredId = onBoardingVM.trackerStore.getTracker().firstOrNull()
+        return true;
+        // return if no name is stored
+        val preferredClientName = onBoardingVM.trackerName.value.firstOrNull()
             ?: return false
-        return try {
-            // throws exception when not found
-            onBoardingVM.trackerManager.getTracker(registeredId)
-            true
-        } catch (e: Throwable) {
-            // clear the set tracker and user data to mitigate any inconsistencies on changing clients
-            onBoardingVM.trackerStore.clearTracker()
-            onBoardingVM.userStorage.clearData()
-            binding.trackerHealthError.apply {
-                text = "ERROR: Could not load your registered tracker. User Data was Cleared, reconfigure the app to proceed."
-                visibility = VISIBLE
-            }
-            false
-        }
+
+        // return if name is stored but class not loaded
+        val client = onBoardingVM.trackerClient
+            .also { println("CLIENT: $it") }
+            ?: return false
+
+        return true
+        // clear the set tracker and user data to mitigate any inconsistencies on changing clients
+//        onBoardingVM.trackerStore.clearTracker()
+//        onBoardingVM.userStorage.clearData()
+//        binding.trackerHealthError.apply {
+//            text = "ERROR: Could not load your registered tracker. User Data was Cleared, reconfigure the app to proceed."
+//            visibility = VISIBLE
+//        }
     }
 
     private val healthChecks: Array<suspend  () -> Boolean> =
@@ -79,13 +86,18 @@ class OnBoardingActivity : AppCompatActivity() {
             binding.proceedBtn.isEnabled = true
         }
         val btnLayoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        onBoardingVM.trackerManager.trackers
-            .map { it.uniqueId }
-            .map { RadioButton(this).apply {
-                text = it
-                layoutParams = btnLayoutParams
-            } }
+
+        onBoardingVM.trackerRepo.getAllPlugins().observeUntil(this, { true }) { pluginList ->
+        pluginList.mapNotNull { it.getOrNull()?.first }
+            .map { it.className }
+            .map {
+                RadioButton(this).apply {
+                    text = it
+                    layoutParams = btnLayoutParams
+                }
+            }
             .forEach { binding.trackerSelector.addView(it) }
+        }
 
         binding.proceedBtn.setOnClickListener {
             val selectedRadioBtnId = binding.trackerSelector.checkedRadioButtonId

@@ -4,15 +4,16 @@ import eu.kanade.tachiyomi.animesource.AnimeCatalogueSource
 import eu.kanade.tachiyomi.animesource.model.AnimeFilterList
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
-import tel.jeelpa.plugininterface.anime.parser.Parser
+import tel.jeelpa.plugininterface.anime.parser.BaseParser
 import tel.jeelpa.plugininterface.models.Episode
 import tel.jeelpa.plugininterface.models.FileUrl
 import tel.jeelpa.plugininterface.models.ShowResponse
-import tel.jeelpa.plugininterface.models.VideoServer
+import tel.jeelpa.plugininterface.models.Video
+import tel.jeelpa.plugininterface.models.VideoType
 
 class AnimeCatalogueSourceToParser(
     private val animeSource: AnimeCatalogueSource
-): Parser {
+): BaseParser() {
     override val name = animeSource.name
     override val isNSFW = false
 
@@ -41,14 +42,31 @@ class AnimeCatalogueSourceToParser(
         }
     }
 
-    override suspend fun loadVideoServers(episodeLink: String): List<VideoServer> {
+    override suspend fun loadVideoLinks(episodeLink: String): List<Video> {
         val adapted = SEpisode.create().apply { url = episodeLink }
         val videoLinks = animeSource.getVideoList(adapted)
-        return videoLinks.map {
-            VideoServer(
-                name = it.url,
-                embedUrl = it.videoUrl ?: it.url,
+        return videoLinks.map { video ->
+            // TODO: BRUH?????
+            val fileUrl =
+                video.headers?.toMap()
+                    ?.let { FileUrl(video.videoUrl ?: video.url, it) }
+                    ?: FileUrl(video.videoUrl ?: video.url)
+
+            Video(
+                title = video.quality,
+                quality = null,
+                format = videoTypeFromUrl(video.videoUrl ?: video.url),
+                url = fileUrl,
+                size = null,
+                extraNote = null
             )
         }
+    }
+
+    private fun videoTypeFromUrl(url: String): VideoType = when {
+        url.endsWith(".m3u8") -> VideoType.M3U8
+        url.endsWith(".hls") -> VideoType.M3U8
+        url.endsWith(".mpd") -> VideoType.DASH
+        else -> VideoType.CONTAINER
     }
 }

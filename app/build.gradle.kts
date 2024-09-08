@@ -63,15 +63,15 @@ dependencies {
     // shimmer effect
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     // image loading
-    implementation("io.coil-kt:coil:2.3.0")
+    implementation("io.coil-kt:coil:2.5.0")
     // markwon markdown
     implementation("io.noties.markwon:core:4.6.2")
 
     // serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // exoplayer
-    val media3_version = "1.1.1"
+    val media3_version = "1.3.0"
     // For media playback using ExoPlayer
     implementation("androidx.media3:media3-exoplayer:$media3_version")
 
@@ -90,11 +90,11 @@ dependencies {
     implementation("androidx.core:core-ktx:${core_ktx_version}")
     implementation("androidx.appcompat:appcompat:1.6.1")
 
-    val material_version = "1.10.0"
+    val material_version = "1.11.0"
     implementation("com.google.android.material:material:${material_version}")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -116,6 +116,8 @@ dependencies {
     implementation(project(mapOf("path" to ":plugininterface")))
 
     implementation(project(mapOf("path" to ":aniyomi-runtime")))
+
+    implementation(project(mapOf("path" to ":AnilistTrackerPlugin")))
 
     // reflection
     implementation(kotlin("reflect"))

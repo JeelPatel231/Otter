@@ -30,7 +30,8 @@ class ClientHolderImpl(
     }
 
     // can be static, it doesn't hold any cache
-    override val userClient = TrackerClientImpl(anilistData, okHttpClient, userStorage, anilistClient)
+    override val userClient =
+        TrackerClientImpl(anilistData, okHttpClient, userStorage, anilistClient)
     override val mangaClient = MangaClientImpl(anilistClient)
     override val characterClient = CharacterClientImpl(anilistClient)
 

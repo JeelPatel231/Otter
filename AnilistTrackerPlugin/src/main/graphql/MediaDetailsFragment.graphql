@@ -1,0 +1,67 @@
+fragment mediaDetails on Media {
+    id
+    idMal
+    nextAiringEpisode {
+        airingAt
+        episode
+    }
+    countryOfOrigin
+    isAdult
+    isFavourite
+    type
+
+    bannerImage
+    coverImage {
+        large
+        extraLarge
+    }
+    title {
+        english
+        romaji
+        native
+        userPreferred
+    }
+    meanScore
+    status
+    episodes
+    chapters
+    duration
+    format
+    source
+    studios(isMain:true) {
+        nodes {
+            name
+        }
+    }
+    season
+
+    mediaListEntry {
+        progress
+        private
+        score(format: POINT_100)
+        status
+    }
+
+    startDate {
+        day
+        month
+        year
+    }
+    endDate {
+        day
+        month
+        year
+    }
+    description
+    synonyms
+    trailer {
+        id
+        site
+        thumbnail
+    }
+    #        OPENINGS/ENDINGS NOT AVAILABLE IN ANILIST
+    genres
+    tags {
+        name
+    }
+}

@@ -84,6 +84,16 @@ data class Video(
 
     constructor(title:String, quality: Int? = null, videoType: VideoType, url: String)
             : this(title, quality, videoType, FileUrl(url))
+
+    companion object {
+        fun fromUrl(url: String, type: VideoType = VideoType.CONTAINER) =
+            Video(
+                title = "Title",
+                quality = null,
+                videoType = type,
+                url = url,
+            )
+    }
 }
 
 /**

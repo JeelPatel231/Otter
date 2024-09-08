@@ -177,6 +177,7 @@ data class MediaDetailsFull(
     val tags: List<String>,
     val recommendation: List<MediaCardData>,
     val relations: List<MediaRelationCardData>,
+    val userWatched: Int? = null, // null when not logged in or not in list
 //    val characters: List<CharacterCardData>
 )
 
